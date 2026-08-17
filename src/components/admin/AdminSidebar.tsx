@@ -1,0 +1,140 @@
+"use client";
+
+import { useState } from "react";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
+import { createClient } from "@/lib/supabase/client";
+import {
+  LayoutDashboard,
+  Briefcase,
+  Image,
+  Wrench,
+  Milestone,
+  Layers,
+  Info,
+  Settings,
+  Mail,
+  LogOut,
+  Menu,
+  X,
+} from "lucide-react";
+
+interface AdminSidebarProps {
+  userEmail?: string;
+}
+
+export default function AdminSidebar({ userEmail }: AdminSidebarProps) {
+  const [isOpen, setIsOpen] = useState(false);
+  const pathname = usePathname();
+  const router = useRouter();
+  const supabase = createClient();
+
+  const navItems = [
+    { label: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard },
+    { label: "Projects", href: "/admin/projects", icon: Briefcase },
+    { label: "Studio", href: "/admin/studio", icon: Image },
+    { label: "Services", href: "/admin/services", icon: Wrench },
+    { label: "Process", href: "/admin/process", icon: Milestone },
+    { label: "Materials", href: "/admin/materials", icon: Layers },
+    { label: "About", href: "/admin/about", icon: Info },
+    { label: "Settings", href: "/admin/settings", icon: Settings },
+    { label: "Inquiries", href: "/admin/inquiries", icon: Mail },
+  ];
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    // Use window.location to force full reload and trigger middleware redirect
+    window.location.href = "/admin/login";
+  };
+
+  const toggleSidebar = () => setIsOpen(!isOpen);
+
+  return (
+    <>
+      {/* Mobile Top Bar */}
+      <header className="md:hidden w-full bg-milan-primary border-b border-milan-border px-6 py-4 flex items-center justify-between z-40 sticky top-0">
+        <span className="heading-display text-sm tracking-[0.2em] text-milan-gold font-serif">
+          MILAN ADMIN
+        </span>
+        <button
+          onClick={toggleSidebar}
+          className="text-milan-ivory hover:text-milan-gold focus:outline-none cursor-pointer"
+        >
+          {isOpen ? <X size={24} /> : <Menu size={24} />}
+        </button>
+      </header>
+
+      {/* Backdrop for Mobile */}
+      {isOpen && (
+        <div
+          onClick={toggleSidebar}
+          className="md:hidden fixed inset-0 bg-black/60 z-30 transition-opacity"
+        />
+      )}
+
+      {/* Sidebar Container */}
+      <aside
+        className={`fixed md:sticky top-[61px] md:top-0 left-0 h-[calc(100vh-61px)] md:h-screen w-64 bg-milan-primary border-r border-milan-border flex flex-col justify-between p-6 z-30 transition-transform duration-300 md:translate-x-0 ${
+          isOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
+      >
+        <div className="flex flex-col flex-1">
+          {/* Logo - Desktop only */}
+          <div className="hidden md:block pb-6 border-b border-milan-border mb-6">
+            <span className="heading-display text-base tracking-[0.25em] text-milan-gold block font-serif">
+              MILAN INTERIO
+            </span>
+            <span className="text-[9px] tracking-widest text-milan-muted uppercase font-mono block mt-1">
+              Admin Console
+            </span>
+          </div>
+
+          {/* Navigation Links */}
+          <nav className="space-y-1 flex-1 overflow-y-auto pr-2">
+            {navItems.map((item) => {
+              const Icon = item.icon;
+              const isActive = pathname.startsWith(item.href);
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={() => setIsOpen(false)}
+                  className={`flex items-center space-x-3 px-4 py-3 text-xs tracking-wider uppercase transition-colors duration-200 ${
+                    isActive
+                      ? "bg-milan-emerald border border-milan-gold/30 text-milan-gold font-semibold"
+                      : "text-milan-muted hover:text-milan-ivory hover:bg-milan-charcoal/50"
+                  }`}
+                >
+                  <Icon size={16} />
+                  <span>{item.label}</span>
+                </Link>
+              );
+            })}
+          </nav>
+        </div>
+
+        {/* Footer info & Logout */}
+        <div className="pt-6 border-t border-milan-border mt-auto space-y-4">
+          {userEmail && (
+            <div className="px-4">
+              <span className="text-[9px] tracking-wider text-milan-muted uppercase font-mono block">
+                Logged in as:
+              </span>
+              <span className="text-xs text-milan-ivory font-mono truncate block mt-0.5" title={userEmail}>
+                {userEmail}
+              </span>
+            </div>
+          )}
+
+          <button
+            onClick={handleLogout}
+            className="w-full flex items-center space-x-3 px-4 py-3 text-xs tracking-wider uppercase text-red-400 hover:text-red-300 hover:bg-red-950/20 transition-colors duration-200 cursor-pointer"
+          >
+            <LogOut size={16} />
+            <span>Sign Out</span>
+          </button>
+        </div>
+      </aside>
+    </>
+  );
+}
