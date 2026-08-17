@@ -20,11 +20,10 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 -- TABLE CREATION
 -- -------------------------------------------------------------------------
 
--- Admin Users authorization table
+-- Admin Users authorization table (Simplified active-admin model)
 CREATE TABLE IF NOT EXISTS public.admin_users (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     user_id UUID NOT NULL UNIQUE REFERENCES auth.users(id) ON DELETE CASCADE,
-    role TEXT NOT NULL DEFAULT 'ADMIN' CHECK (role IN ('SUPER_ADMIN', 'ADMIN', 'EDITOR')),
     is_active BOOLEAN NOT NULL DEFAULT true,
     created_at TIMESTAMPTZ DEFAULT now() NOT NULL,
     updated_at TIMESTAMPTZ DEFAULT now() NOT NULL
@@ -215,38 +214,13 @@ CREATE OR REPLACE TRIGGER update_projects_updated_at BEFORE UPDATE ON public.pro
 -- ADMIN ACCESS CONTROL HELPERS (HARDENED SECURITY DEFINER)
 -- -------------------------------------------------------------------------
 
-CREATE OR REPLACE FUNCTION public.is_super_admin()
+CREATE OR REPLACE FUNCTION public.is_admin()
 RETURNS BOOLEAN AS $$
 BEGIN
     RETURN EXISTS (
         SELECT 1 FROM public.admin_users
         WHERE user_id = auth.uid()
         AND is_active = true
-        AND role = 'SUPER_ADMIN'
-    );
-END;
-$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public, pg_catalog;
-
-CREATE OR REPLACE FUNCTION public.is_admin_or_higher()
-RETURNS BOOLEAN AS $$
-BEGIN
-    RETURN EXISTS (
-        SELECT 1 FROM public.admin_users
-        WHERE user_id = auth.uid()
-        AND is_active = true
-        AND role IN ('SUPER_ADMIN', 'ADMIN')
-    );
-END;
-$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public, pg_catalog;
-
-CREATE OR REPLACE FUNCTION public.is_editor_or_higher()
-RETURNS BOOLEAN AS $$
-BEGIN
-    RETURN EXISTS (
-        SELECT 1 FROM public.admin_users
-        WHERE user_id = auth.uid()
-        AND is_active = true
-        AND role IN ('SUPER_ADMIN', 'ADMIN', 'EDITOR')
     );
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public, pg_catalog;
@@ -293,23 +267,19 @@ CREATE POLICY "Allow public read access to published studio_gallery" ON public.s
 CREATE POLICY "Allow public write access to inquiries" ON public.inquiries FOR INSERT WITH CHECK (true);
 CREATE POLICY "Deny public read access to inquiries" ON public.inquiries FOR SELECT TO public USING (false);
 
--- 4. Administrative Policies (Scoped by Role Hierarchy)
-CREATE POLICY "Allow super_admin manage admin_users" ON public.admin_users FOR ALL USING (public.is_super_admin()) WITH CHECK (public.is_super_admin());
-CREATE POLICY "Allow admins view admin_users" ON public.admin_users FOR SELECT USING (public.is_admin_or_higher());
-
-CREATE POLICY "Allow admin manage site_settings" ON public.site_settings FOR ALL USING (public.is_admin_or_higher()) WITH CHECK (public.is_admin_or_higher());
-CREATE POLICY "Allow admin manage inquiries" ON public.inquiries FOR ALL USING (public.is_admin_or_higher()) WITH CHECK (public.is_admin_or_higher());
-
-CREATE POLICY "Allow editor manage about_content" ON public.about_content FOR ALL USING (public.is_editor_or_higher()) WITH CHECK (public.is_editor_or_higher());
-CREATE POLICY "Allow editor manage hero_content" ON public.hero_content FOR ALL USING (public.is_editor_or_higher()) WITH CHECK (public.is_editor_or_higher());
-CREATE POLICY "Allow editor manage pillars" ON public.pillars FOR ALL USING (public.is_editor_or_higher()) WITH CHECK (public.is_editor_or_higher());
-CREATE POLICY "Allow editor manage services" ON public.services FOR ALL USING (public.is_editor_or_higher()) WITH CHECK (public.is_editor_or_higher());
-CREATE POLICY "Allow editor manage service_items" ON public.service_items FOR ALL USING (public.is_editor_or_higher()) WITH CHECK (public.is_editor_or_higher());
-CREATE POLICY "Allow editor manage process_steps" ON public.process_steps FOR ALL USING (public.is_editor_or_higher()) WITH CHECK (public.is_editor_or_higher());
-CREATE POLICY "Allow editor manage projects" ON public.projects FOR ALL USING (public.is_editor_or_higher()) WITH CHECK (public.is_editor_or_higher());
-CREATE POLICY "Allow editor manage project_images" ON public.project_images FOR ALL USING (public.is_editor_or_higher()) WITH CHECK (public.is_editor_or_higher());
-CREATE POLICY "Allow editor manage materials" ON public.materials FOR ALL USING (public.is_editor_or_higher()) WITH CHECK (public.is_editor_or_higher());
-CREATE POLICY "Allow editor manage studio_gallery" ON public.studio_gallery FOR ALL USING (public.is_editor_or_higher()) WITH CHECK (public.is_editor_or_higher());
+-- 4. Administrative Policies (Unified active-admin check)
+CREATE POLICY "Allow admin manage site_settings" ON public.site_settings FOR ALL USING (public.is_admin()) WITH CHECK (public.is_admin());
+CREATE POLICY "Allow admin manage inquiries" ON public.inquiries FOR ALL USING (public.is_admin()) WITH CHECK (public.is_admin());
+CREATE POLICY "Allow admin manage about_content" ON public.about_content FOR ALL USING (public.is_admin()) WITH CHECK (public.is_admin());
+CREATE POLICY "Allow admin manage hero_content" ON public.hero_content FOR ALL USING (public.is_admin()) WITH CHECK (public.is_admin());
+CREATE POLICY "Allow admin manage pillars" ON public.pillars FOR ALL USING (public.is_admin()) WITH CHECK (public.is_admin());
+CREATE POLICY "Allow admin manage services" ON public.services FOR ALL USING (public.is_admin()) WITH CHECK (public.is_admin());
+CREATE POLICY "Allow admin manage service_items" ON public.service_items FOR ALL USING (public.is_admin()) WITH CHECK (public.is_admin());
+CREATE POLICY "Allow admin manage process_steps" ON public.process_steps FOR ALL USING (public.is_admin()) WITH CHECK (public.is_admin());
+CREATE POLICY "Allow admin manage projects" ON public.projects FOR ALL USING (public.is_admin()) WITH CHECK (public.is_admin());
+CREATE POLICY "Allow admin manage project_images" ON public.project_images FOR ALL USING (public.is_admin()) WITH CHECK (public.is_admin());
+CREATE POLICY "Allow admin manage materials" ON public.materials FOR ALL USING (public.is_admin()) WITH CHECK (public.is_admin());
+CREATE POLICY "Allow admin manage studio_gallery" ON public.studio_gallery FOR ALL USING (public.is_admin()) WITH CHECK (public.is_admin());
 
 -- -------------------------------------------------------------------------
 -- STORAGE SYSTEM BUCKET CONFIGURATION
@@ -320,9 +290,9 @@ ON CONFLICT (id) DO NOTHING;
 
 -- Storage RLS policies (separate INSERT/UPDATE/DELETE with explicit WITH CHECK)
 CREATE POLICY "Allow public read access to storage objects" ON storage.objects FOR SELECT USING (bucket_id = 'milan-assets');
-CREATE POLICY "Allow editor insert storage objects" ON storage.objects FOR INSERT WITH CHECK (bucket_id = 'milan-assets' AND public.is_editor_or_higher());
-CREATE POLICY "Allow editor update storage objects" ON storage.objects FOR UPDATE USING (bucket_id = 'milan-assets' AND public.is_editor_or_higher()) WITH CHECK (bucket_id = 'milan-assets' AND public.is_editor_or_higher());
-CREATE POLICY "Allow editor delete storage objects" ON storage.objects FOR DELETE USING (bucket_id = 'milan-assets' AND public.is_editor_or_higher());
+CREATE POLICY "Allow admin insert storage objects" ON storage.objects FOR INSERT WITH CHECK (bucket_id = 'milan-assets' AND public.is_admin());
+CREATE POLICY "Allow admin update storage objects" ON storage.objects FOR UPDATE USING (bucket_id = 'milan-assets' AND public.is_admin()) WITH CHECK (bucket_id = 'milan-assets' AND public.is_admin());
+CREATE POLICY "Allow admin delete storage objects" ON storage.objects FOR DELETE USING (bucket_id = 'milan-assets' AND public.is_admin());
 
 -- -------------------------------------------------------------------------
 -- SEED DATA (AUTHORITATIVE COMPANY CONTENT ONLY — NO INVENTED DATA)
@@ -491,8 +461,8 @@ INSERT INTO public.process_steps (step_number, title, description) VALUES
 -- 2. Copy that user's UUID from the auth.users table.
 -- 3. Run this ONE TIME in the SQL Editor (replace the placeholder):
 --
---    INSERT INTO public.admin_users (user_id, role)
---    VALUES ('<YOUR_REAL_AUTH_USER_UUID>', 'SUPER_ADMIN');
+--    INSERT INTO public.admin_users (user_id)
+--    VALUES ('<YOUR_REAL_AUTH_USER_UUID>');
 --
 -- Do NOT commit this with a hardcoded UUID. Do NOT create fake users.
 -- =========================================================================

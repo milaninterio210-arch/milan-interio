@@ -146,7 +146,8 @@ export interface Inquiry {
 export interface AdminUser {
   id: string;
   user_id: string;
-  role: "SUPER_ADMIN" | "ADMIN" | "EDITOR";
+  role?: string;
+  is_active: boolean;
   created_at: string;
   updated_at: string;
 }

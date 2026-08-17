@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import LoginForm from "./LoginForm";
 
 export const metadata: Metadata = {
   title: "Admin Login",
@@ -17,17 +18,13 @@ export default function AdminLoginPage() {
           <span className="heading-display text-sm tracking-[0.25em] text-milan-gold block mb-2">
             MILAN INTERIO
           </span>
-          <h1 className="heading-display text-xl text-milan-ivory">
+          <h1 className="heading-display text-xl text-milan-ivory font-serif">
             ADMIN CONSOLE
           </h1>
         </div>
-        {/* Placeholder form — full interactive implementation in Phase 10 */}
-        <div className="space-y-6">
-          <p className="text-xs text-milan-muted text-center italic">
-            Secure authentication forms will integrate with Supabase Auth in Phase 10.
-          </p>
-        </div>
+        <LoginForm />
       </div>
     </div>
   );
 }
+
