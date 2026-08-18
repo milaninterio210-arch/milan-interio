@@ -22,6 +22,12 @@ export default async function ServicesPage() {
     .select("service_id, title")
     .order("display_order", { ascending: true });
 
+  const { data: settings } = await supabase
+    .from("site_settings")
+    .select("services_banner_image_url")
+    .eq("singleton_key", "default")
+    .single();
+
   return (
     <div className="py-20 sm:py-24">
       {/* Header section (Overlaid banner layout like Hero) */}
@@ -29,7 +35,7 @@ export default async function ServicesPage() {
         <div className="w-full h-[300px] sm:h-[400px] md:h-[450px] bg-milan-charcoal overflow-hidden border border-milan-border/60 relative flex items-center justify-start px-6 sm:px-12 md:px-16">
           {/* Background Image */}
           <img
-            src="https://images.unsplash.com/photo-1618219908412-a29a1bb7b86e?auto=format&fit=crop&w=1600&q=80"
+            src={settings?.services_banner_image_url || "https://images.unsplash.com/photo-1618219908412-a29a1bb7b86e?auto=format&fit=crop&w=1600&q=80"}
             alt="Milan Interio interior services showcase banner"
             className="absolute inset-0 w-full h-full object-cover opacity-80"
           />

@@ -19,7 +19,7 @@ export default async function AboutPage() {
 
   const { data: about } = await supabase
     .from("about_content")
-    .select("introduction, vision, mission, design_philosophy, quality_commitment, our_promise, why_milan")
+    .select("introduction, vision, mission, design_philosophy, quality_commitment, our_promise, why_milan, banner_image_url")
     .eq("singleton_key", "default")
     .single();
 
@@ -68,7 +68,7 @@ export default async function AboutPage() {
         {/* Right Column: display image */}
         <div className="w-full lg:w-1/2 aspect-[4/3] bg-milan-charcoal overflow-hidden border border-milan-border/60 relative animate-fade-up">
           <img
-            src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=800&q=80"
+            src={about?.banner_image_url || "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=800&q=80"}
             alt="Milan Interio showroom lobby reception desk"
             className="w-full h-full object-cover opacity-90"
           />
