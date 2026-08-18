@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { Plus, Edit2, Trash2, ArrowUp, ArrowDown, ListPlus, ChevronRight, Settings } from "lucide-react";
+import CloudinaryUploadButton from "@/components/admin/CloudinaryUploadButton";
 
 interface Service {
   id: string;
@@ -30,8 +31,7 @@ export default function AdminServicesPage() {
   const [errorMsg, setErrorMsg] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
 
-  const [serviceImageFile, setServiceImageFile] = useState<File | null>(null);
-  const [uploadingServiceImage, setUploadingServiceImage] = useState(false);
+
 
   // Master Service Form State
   const [selectedService, setSelectedService] = useState<Service | null>(null);
@@ -98,7 +98,6 @@ export default function AdminServicesPage() {
     setIsServiceCreateMode(false);
     setEditingItem(null);
     setIsItemCreateMode(false);
-    setServiceImageFile(null);
     setServiceFormData({
       title: service.title,
       slug: service.slug,
@@ -113,7 +112,6 @@ export default function AdminServicesPage() {
     setIsServiceCreateMode(true);
     setSelectedService(null);
     setServiceItems([]);
-    setServiceImageFile(null);
     setServiceFormData({
       title: "",
       slug: "",
@@ -158,40 +156,13 @@ export default function AdminServicesPage() {
         throw new Error(`The slug "${slugToSave}" is already used by another service.`);
       }
 
-      let finalImageUrl = serviceFormData.image_url;
-
-      if (serviceImageFile) {
-        setUploadingServiceImage(true);
-        try {
-          const fileExt = serviceImageFile.name.split(".").pop();
-          const fileName = `${Math.random().toString(36).substring(2, 15)}.${fileExt}`;
-          const filePath = `services/${fileName}`;
-
-          const { error: uploadError } = await supabase.storage
-            .from("milan-assets")
-            .upload(filePath, serviceImageFile);
-
-          if (uploadError) throw uploadError;
-
-          const { data } = supabase.storage
-            .from("milan-assets")
-            .getPublicUrl(filePath);
-
-          finalImageUrl = data.publicUrl;
-        } finally {
-          setUploadingServiceImage(false);
-        }
-      }
-
       const payload = {
         title: serviceFormData.title.trim(),
         slug: slugToSave,
         description: serviceFormData.description.trim() || null,
         display_order: Number(serviceFormData.display_order),
-        image_url: finalImageUrl || null,
+        image_url: serviceFormData.image_url || null,
       };
-
-      const oldUrl = selectedService?.image_url;
 
       if (isServiceCreateMode) {
         const { data, error } = await supabase
@@ -213,17 +184,8 @@ export default function AdminServicesPage() {
 
         if (error) throw error;
         setSuccessMsg("Service updated successfully.");
-
-        // Clean up old storage image if replaced
-        if (serviceImageFile && oldUrl && oldUrl !== finalImageUrl) {
-          const oldPath = getStoragePathFromUrl(oldUrl);
-          if (oldPath) {
-            await supabase.storage.from("milan-assets").remove([oldPath]);
-          }
-        }
       }
 
-      setServiceImageFile(null);
       fetchServices();
     } catch (err: any) {
       setErrorMsg("Failed to save service: " + err.message);
@@ -604,48 +566,22 @@ export default function AdminServicesPage() {
                   <label className="text-[10px] tracking-wider text-milan-gold uppercase font-mono block">
                     Category Cover Image
                   </label>
-                  <div className="flex items-center space-x-4">
-                    <input
-                      type="file"
-                      accept="image/*"
-                      onChange={(e) => {
-                        if (e.target.files && e.target.files[0]) {
-                          setServiceImageFile(e.target.files[0]);
-                        }
-                      }}
-                      className="text-xs text-milan-muted font-mono"
-                    />
-                    {(serviceFormData.image_url || serviceImageFile) && (
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setServiceImageFile(null);
-                          setServiceFormData(prev => ({ ...prev, image_url: "" }));
-                        }}
-                        className="text-[9px] text-red-400 hover:text-red-300 font-mono uppercase underline"
-                      >
-                        Remove Image
-                      </button>
-                    )}
-                  </div>
-                  {(serviceFormData.image_url || serviceImageFile) && (
-                    <div className="w-20 h-16 border border-milan-border overflow-hidden relative bg-milan-charcoal mt-2">
-                      <img
-                        src={serviceImageFile ? URL.createObjectURL(serviceImageFile) : serviceFormData.image_url}
-                        alt="Category preview"
-                        className="object-cover w-full h-full"
-                      />
-                    </div>
-                  )}
+                  <CloudinaryUploadButton
+                    folder="milan-interio/services"
+                    currentImageUrl={serviceFormData.image_url}
+                    onUploadSuccess={(url) => setServiceFormData(prev => ({ ...prev, image_url: url }))}
+                    onImageRemoved={() => setServiceFormData(prev => ({ ...prev, image_url: "" }))}
+                    label="Upload Cover Image"
+                  />
                 </div>
 
                 <div className="pt-2">
                   <button
                     type="submit"
-                    disabled={saving || uploadingServiceImage}
+                    disabled={saving}
                     className="px-6 py-3 border border-milan-gold bg-milan-gold text-milan-primary hover:bg-transparent hover:text-milan-gold text-[10px] tracking-widest font-semibold uppercase transition-all duration-300 disabled:opacity-50 cursor-pointer"
                   >
-                    {saving ? "SAVING SERVICE..." : uploadingServiceImage ? "UPLOADING IMAGE..." : "SAVE SERVICE"}
+                    {saving ? "SAVING SERVICE..." : "SAVE SERVICE"}
                   </button>
                 </div>
               </form>

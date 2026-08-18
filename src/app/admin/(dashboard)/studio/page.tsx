@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { Plus, Edit2, Trash2, CheckCircle2, XCircle, ArrowUp, ArrowDown } from "lucide-react";
+import CloudinaryUploadButton from "@/components/admin/CloudinaryUploadButton";
 
 const CATEGORIES = ["Residential", "Commercial", "Hospitality", "Office", "Retail"];
 
@@ -21,14 +22,12 @@ export default function AdminStudioPage() {
   const [items, setItems] = useState<StudioItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [uploading, setUploading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
 
   // Form State
   const [editingItem, setEditingItem] = useState<StudioItem | null>(null);
   const [isCreateMode, setIsCreateMode] = useState(false);
-  const [imageFile, setImageFile] = useState<File | null>(null);
 
   const [formData, setFormData] = useState({
     title: "",
@@ -62,7 +61,6 @@ export default function AdminStudioPage() {
   function handleOpenEdit(item: StudioItem) {
     setEditingItem(item);
     setIsCreateMode(false);
-    setImageFile(null);
     setFormData({
       title: item.title,
       location: item.location || "",
@@ -77,7 +75,6 @@ export default function AdminStudioPage() {
   function handleOpenCreate() {
     setIsCreateMode(true);
     setEditingItem(null);
-    setImageFile(null);
     setFormData({
       title: "",
       location: "",
@@ -100,28 +97,22 @@ export default function AdminStudioPage() {
     return null;
   }
 
-  async function handleImageUpload(file: File): Promise<string> {
-    setUploading(true);
+  const getPublicIdFromUrl = (url: string | null) => {
+    if (!url || !url.includes("res.cloudinary.com")) return null;
     try {
-      const fileExt = file.name.split(".").pop();
-      const fileName = `${Math.random().toString(36).substring(2, 15)}.${fileExt}`;
-      const filePath = `studio/${fileName}`;
-
-      const { error: uploadError } = await supabase.storage
-        .from("milan-assets")
-        .upload(filePath, file);
-
-      if (uploadError) throw uploadError;
-
-      const { data } = supabase.storage
-        .from("milan-assets")
-        .getPublicUrl(filePath);
-
-      return data.publicUrl;
-    } finally {
-      setUploading(false);
+      const parts = url.split("/upload/");
+      if (parts.length < 2) return null;
+      const pathWithVersion = parts[1];
+      const pathParts = pathWithVersion.split("/");
+      const hasVersion = pathParts[0].startsWith("v");
+      const pathArray = hasVersion ? pathParts.slice(1) : pathParts;
+      const fullPath = pathArray.join("/");
+      const lastDotIndex = fullPath.lastIndexOf(".");
+      return lastDotIndex !== -1 ? fullPath.substring(0, lastDotIndex) : fullPath;
+    } catch (e) {
+      return null;
     }
-  }
+  };
 
   async function handleSave(e: React.FormEvent) {
     e.preventDefault();
@@ -130,11 +121,7 @@ export default function AdminStudioPage() {
     setSuccessMsg("");
 
     try {
-      let finalImageUrl = formData.image_url;
-
-      if (imageFile) {
-        finalImageUrl = await handleImageUpload(imageFile);
-      }
+      const finalImageUrl = formData.image_url;
 
       if (!finalImageUrl) {
         throw new Error("An image asset is required for studio archive items.");
@@ -148,8 +135,6 @@ export default function AdminStudioPage() {
         is_published: formData.is_published,
         display_order: Number(formData.display_order),
       };
-
-      const oldUrl = editingItem?.image_url;
 
       if (isCreateMode) {
         const { error } = await supabase
@@ -166,19 +151,10 @@ export default function AdminStudioPage() {
 
         if (error) throw error;
         setSuccessMsg("Studio item updated successfully.");
-
-        // Clean up old storage image if replaced
-        if (imageFile && oldUrl && oldUrl !== finalImageUrl) {
-          const oldPath = getStoragePathFromUrl(oldUrl);
-          if (oldPath) {
-            await supabase.storage.from("milan-assets").remove([oldPath]);
-          }
-        }
       }
 
       setIsCreateMode(false);
       setEditingItem(null);
-      setImageFile(null);
       fetchItems();
     } catch (err: any) {
       setErrorMsg("Failed to save: " + err.message);
@@ -204,10 +180,20 @@ export default function AdminStudioPage() {
       setSuccessMsg("Studio item deleted.");
       fetchItems();
 
-      // Clean up storage file
+      // Clean up storage file (Supabase)
       const path = getStoragePathFromUrl(imageUrl);
       if (path) {
         await supabase.storage.from("milan-assets").remove([path]);
+      }
+
+      // Clean up Cloudinary
+      const publicId = getPublicIdFromUrl(imageUrl);
+      if (publicId) {
+        await fetch("/api/cloudinary/delete", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ publicId }),
+        });
       }
     } catch (err: any) {
       setErrorMsg("Failed to delete item: " + err.message);
@@ -370,21 +356,18 @@ export default function AdminStudioPage() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-end">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
             {/* Image upload */}
             <div className="space-y-2">
               <label className="text-[10px] tracking-wider text-milan-muted uppercase font-mono block">
                 Studio Image Photo File *
               </label>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={(e) => {
-                  if (e.target.files && e.target.files[0]) {
-                    setImageFile(e.target.files[0]);
-                  }
-                }}
-                className="text-xs text-milan-muted font-mono mt-1 block"
+              <CloudinaryUploadButton
+                folder="milan-interio/studio"
+                currentImageUrl={formData.image_url}
+                onUploadSuccess={(url) => setFormData(prev => ({ ...prev, image_url: url }))}
+                onImageRemoved={() => setFormData(prev => ({ ...prev, image_url: "" }))}
+                label="Upload Studio Image"
               />
             </div>
 
@@ -403,19 +386,6 @@ export default function AdminStudioPage() {
             </div>
           </div>
 
-          {(formData.image_url || imageFile) && (
-            <div className="pt-2 border-t border-milan-border flex items-center space-x-4">
-              <div className="w-24 h-24 bg-milan-charcoal border border-milan-border overflow-hidden relative">
-                <img
-                  src={imageFile ? URL.createObjectURL(imageFile) : formData.image_url}
-                  alt="Preview"
-                  className="object-cover w-full h-full"
-                />
-              </div>
-              <span className="text-[10px] text-milan-gold font-mono uppercase">IMAGE SOURCE READY</span>
-            </div>
-          )}
-
           <div className="flex items-center space-x-2">
             <input
               id="is_published"
@@ -432,10 +402,10 @@ export default function AdminStudioPage() {
           <div className="pt-2">
             <button
               type="submit"
-              disabled={saving || uploading}
+              disabled={saving}
               className="px-8 py-3.5 border border-milan-gold bg-milan-gold text-milan-primary hover:bg-transparent hover:text-milan-gold text-xs tracking-widest font-semibold uppercase transition-all duration-300 disabled:opacity-50 cursor-pointer"
             >
-              {saving ? "SAVING..." : uploading ? "UPLOADING PHOTO..." : "SAVE STUDIO ITEM"}
+              {saving ? "SAVING..." : "SAVE STUDIO ITEM"}
             </button>
           </div>
         </form>

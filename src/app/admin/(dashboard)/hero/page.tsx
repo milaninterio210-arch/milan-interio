@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { Plus, Edit2, Trash2, CheckCircle2, XCircle, ArrowUp, ArrowDown } from "lucide-react";
+import CloudinaryUploadButton from "@/components/admin/CloudinaryUploadButton";
 
 interface HeroSlide {
   id: string;
@@ -29,8 +30,6 @@ export default function AdminHeroPage() {
   // Editor Form State
   const [editingSlide, setEditingSlide] = useState<HeroSlide | null>(null);
   const [isCreateMode, setIsCreateMode] = useState(false);
-  const [imageFile, setImageFile] = useState<File | null>(null);
-  const [uploadingImage, setUploadingImage] = useState(false);
 
   const [formData, setFormData] = useState({
     eyebrow: "",
@@ -68,7 +67,6 @@ export default function AdminHeroPage() {
   function handleOpenEdit(slide: HeroSlide) {
     setEditingSlide(slide);
     setIsCreateMode(false);
-    setImageFile(null);
     setFormData({
       eyebrow: slide.eyebrow || "",
       heading: slide.heading,
@@ -87,7 +85,6 @@ export default function AdminHeroPage() {
   function handleOpenCreate() {
     setIsCreateMode(true);
     setEditingSlide(null);
-    setImageFile(null);
     setFormData({
       eyebrow: "",
       heading: "",
@@ -103,29 +100,6 @@ export default function AdminHeroPage() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
-  async function handleImageUpload(file: File): Promise<string> {
-    setUploadingImage(true);
-    try {
-      const fileExt = file.name.split(".").pop();
-      const fileName = `${Math.random().toString(36).substring(2, 15)}.${fileExt}`;
-      const filePath = `hero/${fileName}`;
-
-      const { error: uploadError } = await supabase.storage
-        .from("milan-assets")
-        .upload(filePath, file);
-
-      if (uploadError) throw uploadError;
-
-      const { data } = supabase.storage
-        .from("milan-assets")
-        .getPublicUrl(filePath);
-
-      return data.publicUrl;
-    } finally {
-      setUploadingImage(false);
-    }
-  }
-
   async function handleSave(e: React.FormEvent) {
     e.preventDefault();
     setSaving(true);
@@ -133,17 +107,11 @@ export default function AdminHeroPage() {
     setSuccessMsg("");
 
     try {
-      let imageUrl = formData.background_image_url;
-
-      if (imageFile) {
-        imageUrl = await handleImageUpload(imageFile);
-      }
-
       const payload = {
         eyebrow: formData.eyebrow.trim() || null,
         heading: formData.heading.trim(),
         subheading: formData.subheading.trim() || null,
-        background_image_url: imageUrl || null,
+        background_image_url: formData.background_image_url.trim() || null,
         primary_cta_label: formData.primary_cta_label.trim() || null,
         primary_cta_url: formData.primary_cta_url.trim() || null,
         secondary_cta_label: formData.secondary_cta_label.trim() || null,
@@ -171,7 +139,6 @@ export default function AdminHeroPage() {
 
       setIsCreateMode(false);
       setEditingSlide(null);
-      setImageFile(null);
       fetchSlides();
     } catch (err: any) {
       setErrorMsg("Failed to save slide: " + err.message);
@@ -371,22 +338,14 @@ export default function AdminHeroPage() {
             <span className="text-[10px] tracking-wider text-milan-gold uppercase font-mono block">
               Background Image Configuration
             </span>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
-              <div>
-                <label className="text-[10px] tracking-wider text-milan-muted uppercase font-mono block mb-2">
-                  Upload Background file
-                </label>
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={(e) => {
-                    if (e.target.files && e.target.files[0]) {
-                      setImageFile(e.target.files[0]);
-                    }
-                  }}
-                  className="text-xs text-milan-muted font-mono"
-                />
-              </div>
+            <div className="space-y-4">
+              <CloudinaryUploadButton
+                folder="milan-interio/hero"
+                currentImageUrl={formData.background_image_url}
+                onUploadSuccess={(url) => setFormData(prev => ({ ...prev, background_image_url: url }))}
+                onImageRemoved={() => setFormData(prev => ({ ...prev, background_image_url: "" }))}
+                label="Upload Slide Background"
+              />
               <div className="space-y-2">
                 <label htmlFor="background_image_url" className="text-[10px] tracking-wider text-milan-muted uppercase font-mono block">
                   Or External Image URL
@@ -401,30 +360,6 @@ export default function AdminHeroPage() {
                 />
               </div>
             </div>
-            {(formData.background_image_url || imageFile) && (
-              <div className="pt-2 border-t border-milan-border flex items-center space-x-4">
-                <div className="w-24 h-16 bg-milan-charcoal border border-milan-border overflow-hidden relative">
-                  <img
-                    src={imageFile ? URL.createObjectURL(imageFile) : formData.background_image_url}
-                    alt="Preview"
-                    className="object-cover w-full h-full"
-                  />
-                </div>
-                <div>
-                  <span className="text-[10px] text-milan-gold font-mono block">IMAGE PREVIEW READY</span>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setImageFile(null);
-                      setFormData({ ...formData, background_image_url: "" });
-                    }}
-                    className="text-[9px] text-red-400 font-mono uppercase underline hover:text-red-300 block mt-1"
-                  >
-                    Clear Image
-                  </button>
-                </div>
-              </div>
-            )}
           </div>
 
           {/* CTA Buttons Config */}
@@ -508,10 +443,10 @@ export default function AdminHeroPage() {
           <div className="pt-2">
             <button
               type="submit"
-              disabled={saving || uploadingImage}
+              disabled={saving}
               className="px-8 py-3.5 border border-milan-gold bg-milan-gold text-milan-primary hover:bg-transparent hover:text-milan-gold text-xs tracking-widest font-semibold uppercase transition-all duration-300 disabled:opacity-50 cursor-pointer"
             >
-              {saving ? "SAVING..." : uploadingImage ? "UPLOADING IMAGE..." : "SAVE SLIDE"}
+              {saving ? "SAVING..." : "SAVE SLIDE"}
             </button>
           </div>
         </form>

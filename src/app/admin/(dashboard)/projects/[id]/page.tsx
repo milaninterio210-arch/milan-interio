@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, Plus, Trash2, Edit2, ArrowUp, ArrowDown, UploadCloud } from "lucide-react";
+import CloudinaryUploadButton from "@/components/admin/CloudinaryUploadButton";
 
 const CATEGORIES = ["Residential", "Commercial", "Hospitality", "Office", "Retail"];
 
@@ -42,8 +43,7 @@ export default function AdminEditProjectPage({ params }: AdminEditProjectPagePro
   const [galleryImages, setGalleryImages] = useState<ProjectImage[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [uploadingCover, setUploadingCover] = useState(false);
-  const [uploadingGallery, setUploadingGallery] = useState(false);
+
   const [errorMsg, setErrorMsg] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
 
@@ -119,42 +119,38 @@ export default function AdminEditProjectPage({ params }: AdminEditProjectPagePro
     return null;
   }
 
+  const getPublicIdFromUrl = (url: string | null) => {
+    if (!url || !url.includes("res.cloudinary.com")) return null;
+    try {
+      const parts = url.split("/upload/");
+      if (parts.length < 2) return null;
+      const pathWithVersion = parts[1];
+      const pathParts = pathWithVersion.split("/");
+      const hasVersion = pathParts[0].startsWith("v");
+      const pathArray = hasVersion ? pathParts.slice(1) : pathParts;
+      const fullPath = pathArray.join("/");
+      const lastDotIndex = fullPath.lastIndexOf(".");
+      return lastDotIndex !== -1 ? fullPath.substring(0, lastDotIndex) : fullPath;
+    } catch (e) {
+      return null;
+    }
+  };
+
   // Cover Image update file handler
-  async function handleCoverImageChange(e: React.ChangeEvent<HTMLInputElement>) {
-    if (!e.target.files || !e.target.files[0]) return;
-    const file = e.target.files[0];
-    
-    setUploadingCover(true);
+  async function handleCoverImageUploadSuccess(url: string) {
     setErrorMsg("");
     setSuccessMsg("");
-
     try {
-      const fileExt = file.name.split(".").pop();
-      const fileName = `${Math.random().toString(36).substring(2, 15)}.${fileExt}`;
-      const filePath = `projects/${fileName}`;
-
-      // Upload new file
-      const { error: uploadError } = await supabase.storage
-        .from("milan-assets")
-        .upload(filePath, file);
-
-      if (uploadError) throw uploadError;
-
-      const { data } = supabase.storage
-        .from("milan-assets")
-        .getPublicUrl(filePath);
-
       const oldCoverUrl = formData.cover_image_url;
 
-      // Update DB field immediately
       const { error: updateError } = await supabase
         .from("projects")
-        .update({ cover_image_url: data.publicUrl })
+        .update({ cover_image_url: url })
         .eq("id", id);
 
       if (updateError) throw updateError;
 
-      setFormData(prev => ({ ...prev, cover_image_url: data.publicUrl }));
+      setFormData(prev => ({ ...prev, cover_image_url: url }));
       setSuccessMsg("Cover image updated.");
 
       // Safely delete old storage file
@@ -162,15 +158,21 @@ export default function AdminEditProjectPage({ params }: AdminEditProjectPagePro
       if (oldPath) {
         await supabase.storage.from("milan-assets").remove([oldPath]);
       }
+
+      const publicId = getPublicIdFromUrl(oldCoverUrl);
+      if (publicId) {
+        await fetch("/api/cloudinary/delete", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ publicId }),
+        });
+      }
     } catch (err: any) {
       setErrorMsg("Cover image upload failed: " + err.message);
-    } finally {
-      setUploadingCover(false);
     }
   }
 
   async function handleRemoveCoverImage() {
-    if (!confirm("Are you sure you want to remove the cover image?")) return;
     setErrorMsg("");
     setSuccessMsg("");
 
@@ -190,6 +192,15 @@ export default function AdminEditProjectPage({ params }: AdminEditProjectPagePro
       const oldPath = getStoragePathFromUrl(oldCoverUrl);
       if (oldPath) {
         await supabase.storage.from("milan-assets").remove([oldPath]);
+      }
+
+      const publicId = getPublicIdFromUrl(oldCoverUrl);
+      if (publicId) {
+        await fetch("/api/cloudinary/delete", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ publicId }),
+        });
       }
     } catch (err: any) {
       setErrorMsg("Failed to remove cover: " + err.message);
@@ -244,69 +255,26 @@ export default function AdminEditProjectPage({ params }: AdminEditProjectPagePro
 
   // --- GALLERY IMAGES UPLOAD ---
 
-  async function handleGalleryUpload(e: React.ChangeEvent<HTMLInputElement>) {
-    if (!e.target.files || e.target.files.length === 0) return;
-    const files = Array.from(e.target.files);
-    
-    setUploadingGallery(true);
+  async function handleGalleryUploadSuccess(url: string) {
     setErrorMsg("");
     setSuccessMsg("");
-
-    let successCount = 0;
     let nextDisplayOrder = galleryImages.length > 0 ? Math.max(...galleryImages.map(img => img.display_order)) + 1 : 1;
 
     try {
-      for (const file of files) {
-        // Validate Image
-        if (!file.type.startsWith("image/")) continue;
-        if (file.size > 10 * 1024 * 1024) continue; // 10MB limit
+      const { error: dbError } = await supabase
+        .from("project_images")
+        .insert({
+          project_id: id,
+          image_url: url,
+          display_order: nextDisplayOrder,
+          caption: null,
+        });
 
-        const fileExt = file.name.split(".").pop();
-        const fileName = `${Math.random().toString(36).substring(2, 15)}.${fileExt}`;
-        const filePath = `projects/gallery/${fileName}`;
-
-        // Upload to bucket
-        const { error: uploadError } = await supabase.storage
-          .from("milan-assets")
-          .upload(filePath, file);
-
-        if (uploadError) continue;
-
-        // Get URL
-        const { data } = supabase.storage
-          .from("milan-assets")
-          .getPublicUrl(filePath);
-
-        // Insert row
-        const { error: dbError } = await supabase
-          .from("project_images")
-          .insert({
-            project_id: id,
-            image_url: data.publicUrl,
-            display_order: nextDisplayOrder,
-            caption: null,
-          });
-
-        if (dbError) {
-          // Clean up orphaned uploaded storage object
-          await supabase.storage.from("milan-assets").remove([filePath]);
-          continue;
-        }
-
-        nextDisplayOrder++;
-        successCount++;
-      }
-
-      if (successCount > 0) {
-        setSuccessMsg(`Successfully uploaded ${successCount} gallery image(s).`);
-        fetchProjectData();
-      } else {
-        setErrorMsg("Failed to upload selected gallery files. Validate sizes and image format.");
-      }
+      if (dbError) throw dbError;
+      setSuccessMsg("Gallery image uploaded successfully.");
+      fetchProjectData();
     } catch (err: any) {
-      setErrorMsg("Upload error: " + err.message);
-    } finally {
-      setUploadingGallery(false);
+      setErrorMsg("Failed to add gallery image: " + err.message);
     }
   }
 
@@ -327,10 +295,20 @@ export default function AdminEditProjectPage({ params }: AdminEditProjectPagePro
       setSuccessMsg("Gallery image removed.");
       fetchProjectData();
 
-      // 2. Clean up storage file
+      // 2. Clean up storage file (Supabase)
       const path = getStoragePathFromUrl(imageUrl);
       if (path) {
         await supabase.storage.from("milan-assets").remove([path]);
+      }
+
+      // 3. Clean up Cloudinary
+      const publicId = getPublicIdFromUrl(imageUrl);
+      if (publicId) {
+        await fetch("/api/cloudinary/delete", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ publicId }),
+        });
       }
     } catch (err: any) {
       setErrorMsg("Failed to delete gallery image: " + err.message);
@@ -575,69 +553,26 @@ export default function AdminEditProjectPage({ params }: AdminEditProjectPagePro
             <h2 className="heading-display text-xs text-milan-gold tracking-widest border-b border-milan-border/50 pb-2">
               Project Cover Image
             </h2>
-
-            {formData.cover_image_url ? (
-              <div className="space-y-4">
-                <div className="aspect-video bg-milan-charcoal border border-milan-border overflow-hidden relative">
-                  <img
-                    src={formData.cover_image_url}
-                    alt="Cover preview"
-                    className="object-cover w-full h-full"
-                  />
-                </div>
-                <div className="flex items-center justify-between text-xs font-mono">
-                  <label className="text-[10px] text-milan-gold cursor-pointer hover:underline uppercase">
-                    {uploadingCover ? "UPLOADING..." : "Change Image"}
-                    <input
-                      type="file"
-                      accept="image/*"
-                      onChange={handleCoverImageChange}
-                      disabled={uploadingCover}
-                      className="hidden"
-                    />
-                  </label>
-                  <button
-                    onClick={handleRemoveCoverImage}
-                    className="text-[10px] text-red-400 hover:text-red-300 underline uppercase cursor-pointer"
-                  >
-                    Remove Cover
-                  </button>
-                </div>
-              </div>
-            ) : (
-              <div className="border border-dashed border-milan-border p-8 text-center space-y-3">
-                <p className="text-xs text-milan-muted font-light">No cover image uploaded.</p>
-                <label className="inline-block px-4 py-2 border border-milan-gold text-milan-gold hover:bg-milan-gold hover:text-milan-primary text-[10px] uppercase font-mono tracking-widest cursor-pointer transition-colors duration-200">
-                  {uploadingCover ? "Uploading..." : "Select File"}
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleCoverImageChange}
-                    disabled={uploadingCover}
-                    className="hidden"
-                  />
-                </label>
-              </div>
-            )}
+            <CloudinaryUploadButton
+              folder="milan-interio/projects"
+              currentImageUrl={formData.cover_image_url}
+              onUploadSuccess={handleCoverImageUploadSuccess}
+              onImageRemoved={handleRemoveCoverImage}
+              label="Upload Cover Image"
+            />
           </div>
 
           {/* Gallery management */}
           <div className="bg-milan-primary border border-milan-border p-6 space-y-4">
             <h2 className="heading-display text-xs text-milan-gold tracking-widest border-b border-milan-border/50 pb-2 flex items-center justify-between">
               <span>PROJECT GALLERY ({galleryImages.length})</span>
-              <label className="flex items-center space-x-1 px-2.5 py-1.5 border border-milan-border text-milan-muted hover:text-milan-gold hover:border-milan-gold/40 text-[9px] uppercase tracking-wider font-mono cursor-pointer transition-all duration-200">
-                <UploadCloud size={12} />
-                <span>{uploadingGallery ? "Uploading..." : "Add Images"}</span>
-                <input
-                  type="file"
-                  multiple
-                  accept="image/*"
-                  onChange={handleGalleryUpload}
-                  disabled={uploadingGallery}
-                  className="hidden"
-                />
-              </label>
             </h2>
+            <CloudinaryUploadButton
+              folder="milan-interio/project-images"
+              onUploadSuccess={handleGalleryUploadSuccess}
+              label="Add Gallery Images"
+              multiple={true}
+            />
 
             {galleryImages.length === 0 ? (
               <div className="py-6 text-center text-xs text-milan-muted italic font-light">
