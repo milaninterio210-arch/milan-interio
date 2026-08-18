@@ -122,13 +122,28 @@ export default function AdminAboutPage() {
             <label htmlFor="introduction" className="text-[10px] tracking-wider text-milan-muted uppercase font-mono block">
               Introduction Text
             </label>
-            <input
+            <textarea
               id="introduction"
-              type="text"
+              rows={4}
               value={formData.introduction}
               onChange={(e) => setFormData({ ...formData, introduction: e.target.value })}
+              className="w-full bg-milan-charcoal/50 border border-milan-border p-3 text-xs text-milan-ivory focus:border-milan-gold focus:outline-none transition-colors resize-none leading-relaxed"
+              placeholder="e.g. MILAN INTERIO is a premium interior design and fit-out company..."
+            />
+          </div>
+
+          <div className="space-y-2">
+            <label htmlFor="design_philosophy" className="text-[10px] tracking-wider text-milan-muted uppercase font-mono block">
+              Design Philosophy Title *
+            </label>
+            <input
+              id="design_philosophy"
+              type="text"
+              required
+              value={formData.design_philosophy}
+              onChange={(e) => setFormData({ ...formData, design_philosophy: e.target.value })}
               className="w-full bg-milan-charcoal/50 border border-milan-border p-3 text-xs text-milan-ivory focus:border-milan-gold focus:outline-none transition-colors"
-              placeholder="e.g. Premium interior design and fit-out."
+              placeholder="e.g. Elegant. Functional. Timeless."
             />
           </div>
 
