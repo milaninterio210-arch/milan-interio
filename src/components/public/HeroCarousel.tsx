@@ -83,7 +83,7 @@ export default function HeroCarousel({ slides }: HeroCarouselProps) {
       ))}
 
       {/* Content Overlay */}
-      <div className="relative z-10 w-full max-w-6xl mx-auto text-left px-6 sm:px-12 md:px-16 py-24">
+      <div className="relative z-10 w-full max-w-7xl mx-auto text-left px-6 py-24">
         {slides.map((slide, idx) => {
           if (idx !== current) return null;
           return (
