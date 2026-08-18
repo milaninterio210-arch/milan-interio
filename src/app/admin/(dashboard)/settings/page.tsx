@@ -234,7 +234,7 @@ export default function AdminSettingsPage() {
               <div className="space-y-1">
                 <CloudinaryUploadButton
                   onUploadSuccess={(url: string) => setFormData({ ...formData, services_banner_image_url: url })}
-                  folder="settings"
+                  folder="milan-interio/settings"
                 />
                 <p className="text-[9px] text-milan-muted font-mono leading-relaxed max-w-sm">
                   Recommended: Cinematic landscape aspect ratio (e.g. 16:9 or 21:9). Direct secure upload.
