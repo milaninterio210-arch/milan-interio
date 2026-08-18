@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import Link from "next/link";
 import { ArrowRight, ChevronRight } from "lucide-react";
+import HeroCarousel from "@/components/public/HeroCarousel";
 
 export default async function HomePage() {
   const supabase = await createClient();
@@ -13,13 +14,11 @@ export default async function HomePage() {
     .single();
 
   // 2. Fetch active hero content
-  const { data: hero } = await supabase
+  const { data: heroSlides } = await supabase
     .from("hero_content")
     .select("eyebrow, heading, subheading, background_image_url, primary_cta_label, primary_cta_url, secondary_cta_label, secondary_cta_url")
     .eq("is_active", true)
-    .order("display_order", { ascending: true })
-    .limit(1)
-    .single();
+    .order("display_order", { ascending: true });
 
   // 3. Fetch pillars
   const { data: pillars } = await supabase
@@ -50,60 +49,12 @@ export default async function HomePage() {
     .order("step_number", { ascending: true })
     .limit(3);
 
-  const heroImageUrl = hero?.background_image_url;
-
   return (
     <div>
       {/* ================================================================
           SECTION 1: HERO
           ================================================================ */}
-      <section className="relative min-h-[85vh] sm:min-h-[90vh] flex items-center justify-center overflow-hidden">
-        {/* Background: image or subtle gradient fallback */}
-        {heroImageUrl ? (
-          <>
-            <img
-              src={heroImageUrl}
-              alt=""
-              aria-hidden="true"
-              className="absolute inset-0 w-full h-full object-cover"
-            />
-            <div className="absolute inset-0 bg-milan-primary/70" />
-          </>
-        ) : (
-          <div className="absolute inset-0 bg-milan-charcoal">
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(15,35,28,0.4),transparent_70%)]" />
-          </div>
-        )}
-
-        <div className="relative z-10 max-w-4xl mx-auto text-center px-6 py-24 space-y-6 sm:space-y-8 animate-fade-up">
-          <p className="text-eyebrow tracking-[0.2em] sm:tracking-[0.25em]">
-            {hero?.eyebrow || "Interior Design | Fit-Out | Custom Joinery | Furniture"}
-          </p>
-
-          <h1 className="heading-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-milan-ivory leading-[1.15]">
-            {hero?.heading || "LUXURY, DESIGNED AROUND YOU."}
-          </h1>
-
-          <p className="text-body-lg max-w-xl mx-auto">
-            {hero?.subheading || "Elevating Spaces. Defining Luxury."}
-          </p>
-
-          <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
-            <Link
-              href={hero?.primary_cta_url || "/projects"}
-              className="w-full sm:w-auto px-8 py-3.5 border border-milan-gold bg-milan-gold text-milan-primary hover:bg-transparent hover:text-milan-gold text-[11px] tracking-widest uppercase font-semibold transition-all duration-300 text-center"
-            >
-              {hero?.primary_cta_label || "EXPLORE OUR WORK"}
-            </Link>
-            <Link
-              href={hero?.secondary_cta_url || "/contact"}
-              className="w-full sm:w-auto px-8 py-3.5 border border-milan-border text-milan-ivory hover:border-milan-gold hover:text-milan-gold text-[11px] tracking-widest uppercase font-semibold transition-all duration-300 text-center"
-            >
-              {hero?.secondary_cta_label || "START A PROJECT"}
-            </Link>
-          </div>
-        </div>
-      </section>
+      <HeroCarousel slides={heroSlides || []} />
 
       {/* ================================================================
           SECTION 2: BRAND STATEMENT
