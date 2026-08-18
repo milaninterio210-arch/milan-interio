@@ -30,7 +30,7 @@ export default async function HomePage() {
   // 4. Fetch services (first 4 for homepage preview)
   const { data: services } = await supabase
     .from("services")
-    .select("slug, title, description, display_order")
+    .select("slug, title, description, image_url, display_order")
     .order("display_order", { ascending: true })
     .limit(4);
 
@@ -169,28 +169,49 @@ export default async function HomePage() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8">
-            {services?.map((service, idx) => (
-              <Link
-                key={service.slug}
-                href={`/services/${service.slug}`}
-                className="group bg-milan-charcoal/20 border border-milan-border p-6 sm:p-8 flex flex-col justify-between min-h-[200px] sm:min-h-[220px] hover:border-milan-gold/30 transition-all duration-300"
-              >
-                <div className="flex items-start justify-between">
-                  <span className="text-xs font-mono text-milan-gold">
-                    {String(idx + 1).padStart(2, "0")}
-                  </span>
-                  <ArrowRight size={14} className="text-milan-muted group-hover:text-milan-gold group-hover:translate-x-0.5 transition-all duration-200" />
-                </div>
-                <div className="space-y-2 mt-auto">
-                  <h3 className="heading-display text-base sm:text-lg text-milan-ivory group-hover:text-milan-gold transition-colors">
-                    {service.title}
-                  </h3>
-                  <p className="text-xs text-milan-muted line-clamp-2 leading-relaxed">
-                    {service.description}
-                  </p>
-                </div>
-              </Link>
-            ))}
+            {services?.map((service, idx) => {
+              const hasBg = !!service.image_url;
+              return (
+                <Link
+                  key={service.slug}
+                  href={`/services/${service.slug}`}
+                  className={`group relative border p-6 sm:p-8 flex flex-col justify-between min-h-[200px] sm:min-h-[220px] overflow-hidden transition-all duration-300 ${
+                    hasBg
+                      ? "border-milan-border/60 hover:border-milan-gold bg-milan-charcoal"
+                      : "bg-milan-charcoal/20 border-milan-border hover:border-milan-gold/30"
+                  }`}
+                >
+                  {/* Background Image block */}
+                  {hasBg && (
+                    <>
+                      <img
+                        src={service.image_url}
+                        alt={service.title}
+                        className="absolute inset-0 w-full h-full object-cover opacity-25 group-hover:scale-[1.03] transition-transform duration-700 ease-in-out"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-milan-primary/95 via-milan-primary/60 to-transparent pointer-events-none" />
+                    </>
+                  )}
+
+                  {/* Card content */}
+                  <div className="flex items-start justify-between relative z-10">
+                    <span className="text-xs font-mono text-milan-gold">
+                      {String(idx + 1).padStart(2, "0")}
+                    </span>
+                    <ArrowRight size={14} className="text-milan-muted group-hover:text-milan-gold group-hover:translate-x-0.5 transition-all duration-200" />
+                  </div>
+                  
+                  <div className="space-y-2 mt-auto relative z-10 text-left">
+                    <h3 className="heading-display text-base sm:text-lg text-milan-ivory group-hover:text-milan-gold transition-colors">
+                      {service.title}
+                    </h3>
+                    <p className="text-xs text-milan-muted line-clamp-2 leading-relaxed">
+                      {service.description}
+                    </p>
+                  </div>
+                </Link>
+              );
+            })}
           </div>
         </div>
       </section>

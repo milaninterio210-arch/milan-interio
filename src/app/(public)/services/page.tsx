@@ -37,10 +37,10 @@ export default async function ServicesPage() {
           <img
             src={settings?.services_banner_image_url || "https://images.unsplash.com/photo-1618219908412-a29a1bb7b86e?auto=format&fit=crop&w=1600&q=80"}
             alt="Milan Interio interior services showcase banner"
-            className="absolute inset-0 w-full h-full object-cover opacity-80"
+            className="absolute inset-0 w-full h-full object-cover opacity-90 sm:opacity-100"
           />
-          {/* Dark Overlay */}
-          <div className="absolute inset-0 bg-black/45" />
+          {/* Gradient Overlay for Left Side Text Legibility */}
+          <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/45 to-transparent pointer-events-none" />
 
           {/* Text Overlay Content */}
           <div className="relative z-10 space-y-4 max-w-2xl text-left">
