@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 
@@ -18,6 +18,16 @@ interface FeaturedProjectsSliderProps {
 
 export default function FeaturedProjectsSlider({ projects }: FeaturedProjectsSliderProps) {
   const [current, setCurrent] = useState(0);
+
+  useEffect(() => {
+    if (!projects || projects.length <= 1) return;
+
+    const timer = setInterval(() => {
+      setCurrent((prev) => (prev + 1) % projects.length);
+    }, 6000); // Auto slide every 6 seconds
+
+    return () => clearInterval(timer);
+  }, [current, projects.length]);
 
   if (!projects || projects.length === 0) return null;
 
@@ -57,6 +67,36 @@ export default function FeaturedProjectsSlider({ projects }: FeaturedProjectsSli
               </div>
             </div>
 
+            {/* Slider Navigation Row */}
+            {projects.length > 1 && (
+              <div className="pl-8 pt-2 flex items-center gap-6 animate-fade-up">
+                {/* Page Indicator */}
+                <div className="flex items-center gap-3 text-[10px] font-mono text-milan-muted">
+                  <span className="text-milan-gold font-semibold">{String(current + 1).padStart(2, "0")}</span>
+                  <div className="w-10 h-[1px] bg-milan-gold/30" />
+                  <span>{String(projects.length).padStart(2, "0")}</span>
+                </div>
+
+                {/* Circular actions */}
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={handlePrev}
+                    className="w-9 h-9 rounded-full border border-milan-border hover:border-milan-gold text-milan-ivory/60 hover:text-milan-gold flex items-center justify-center transition-all duration-300 bg-transparent outline-none cursor-pointer"
+                    aria-label="Previous Project"
+                  >
+                    <ChevronLeft size={14} />
+                  </button>
+                  <button
+                    onClick={handleNext}
+                    className="w-9 h-9 rounded-full border border-milan-border hover:border-milan-gold text-milan-ivory/60 hover:text-milan-gold flex items-center justify-center transition-all duration-300 bg-transparent outline-none cursor-pointer"
+                    aria-label="Next Project"
+                  >
+                    <ChevronRight size={14} />
+                  </button>
+                </div>
+              </div>
+            )}
+
             <div className="pl-8 pt-2 animate-fade-up">
               <Link
                 href={`/projects/${activeProject.slug}`}
@@ -68,7 +108,7 @@ export default function FeaturedProjectsSlider({ projects }: FeaturedProjectsSli
             </div>
           </div>
 
-          {/* Right Column: Image + Slider Controls (Span 8) */}
+          {/* Right Column: Image (Span 8) */}
           <div className="lg:col-span-8 relative aspect-[16/9] bg-milan-charcoal overflow-hidden border border-milan-border/60 animate-fade-up">
             {activeProject.cover_image_url ? (
               <img
@@ -84,26 +124,6 @@ export default function FeaturedProjectsSlider({ projects }: FeaturedProjectsSli
             
             {/* Dark Overlay */}
             <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent pointer-events-none" />
-
-            {/* Next/Prev buttons at bottom-right corner */}
-            {projects.length > 1 && (
-              <div className="absolute bottom-0 right-0 flex border-t border-l border-milan-border bg-milan-primary z-10">
-                <button
-                  onClick={handlePrev}
-                  className="p-4 hover:text-milan-gold text-milan-ivory/60 transition-colors border-r border-milan-border bg-transparent outline-none cursor-pointer border-0"
-                  aria-label="Previous Project"
-                >
-                  <ChevronLeft size={16} />
-                </button>
-                <button
-                  onClick={handleNext}
-                  className="p-4 hover:text-milan-gold text-milan-ivory/60 transition-colors bg-transparent outline-none cursor-pointer border-0"
-                  aria-label="Next Project"
-                >
-                  <ChevronRight size={16} />
-                </button>
-              </div>
-            )}
           </div>
         </div>
       </div>
