@@ -17,6 +17,8 @@ import {
   LogOut,
   Menu,
   X,
+  Sliders,
+  Award,
 } from "lucide-react";
 
 interface AdminSidebarProps {
@@ -31,13 +33,15 @@ export default function AdminSidebar({ userEmail }: AdminSidebarProps) {
 
   const navItems = [
     { label: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard },
-    { label: "Projects", href: "/admin/projects", icon: Briefcase },
-    { label: "Studio", href: "/admin/studio", icon: Image },
+    { label: "Site Settings", href: "/admin/settings", icon: Settings },
+    { label: "Hero Banner", href: "/admin/hero", icon: Sliders },
+    { label: "About Studio", href: "/admin/about", icon: Info },
+    { label: "Brand Pillars", href: "/admin/pillars", icon: Award },
     { label: "Services", href: "/admin/services", icon: Wrench },
-    { label: "Process", href: "/admin/process", icon: Milestone },
+    { label: "Process Steps", href: "/admin/process", icon: Milestone },
+    { label: "Projects", href: "/admin/projects", icon: Briefcase },
+    { label: "Studio Gallery", href: "/admin/studio", icon: Image },
     { label: "Materials", href: "/admin/materials", icon: Layers },
-    { label: "About", href: "/admin/about", icon: Info },
-    { label: "Settings", href: "/admin/settings", icon: Settings },
     { label: "Inquiries", href: "/admin/inquiries", icon: Mail },
   ];
 
