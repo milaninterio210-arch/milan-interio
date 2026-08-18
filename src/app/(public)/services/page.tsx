@@ -14,7 +14,7 @@ export default async function ServicesPage() {
 
   const { data: services } = await supabase
     .from("services")
-    .select("id, slug, title, description, display_order")
+    .select("id, slug, title, description, image_url, display_order")
     .order("display_order", { ascending: true });
 
   const { data: serviceItems } = await supabase
@@ -24,58 +24,101 @@ export default async function ServicesPage() {
 
   return (
     <div className="py-20 sm:py-24">
-      {/* Header */}
-      <section className="px-6 text-center space-y-5 mb-16 sm:mb-24 animate-fade-up">
-        <p className="text-eyebrow">WHAT WE DO</p>
-        <h1 className="heading-display text-3xl sm:text-4xl md:text-5xl text-milan-ivory max-w-3xl mx-auto">
-          OUR SERVICES
-        </h1>
-        <p className="text-body max-w-xl mx-auto text-sm sm:text-base">
-          Custom spatial solutions combining structural discipline, material harmony, and functional longevity.
-        </p>
+      {/* Header section (Overlaid banner layout like Hero) */}
+      <section className="max-w-7xl mx-auto px-6 mb-16 sm:mb-24 animate-fade-up">
+        <div className="w-full h-[300px] sm:h-[400px] md:h-[450px] bg-milan-charcoal overflow-hidden border border-milan-border/60 relative flex items-center justify-start px-6 sm:px-12 md:px-16">
+          {/* Background Image */}
+          <img
+            src="https://images.unsplash.com/photo-1618219908412-a29a1bb7b86e?auto=format&fit=crop&w=1600&q=80"
+            alt="Milan Interio interior services showcase banner"
+            className="absolute inset-0 w-full h-full object-cover opacity-80"
+          />
+          {/* Dark Overlay */}
+          <div className="absolute inset-0 bg-black/45" />
+
+          {/* Text Overlay Content */}
+          <div className="relative z-10 space-y-4 max-w-2xl text-left">
+            <p className="text-eyebrow tracking-widest text-milan-gold">OUR SERVICES</p>
+            <h1 className="heading-display text-4xl sm:text-5xl md:text-6xl text-milan-ivory leading-tight font-serif uppercase">
+              OUR SERVICES
+            </h1>
+            <p className="text-body text-xs sm:text-sm text-milan-muted leading-relaxed font-light max-w-lg">
+              Complete interior solutions tailored to the architecture, lifestyle, and requirements of each project.
+            </p>
+          </div>
+        </div>
       </section>
 
-      {/* Services List */}
-      <section className="px-6 mb-16 sm:mb-24">
-        <div className="max-w-5xl mx-auto divide-y divide-milan-border">
+      {/* Services list section */}
+      <section className="max-w-7xl mx-auto px-6 mb-16 sm:mb-24">
+        <div className="border border-milan-border p-6 sm:p-10 divide-y divide-milan-border/60">
           {services?.map((service, index) => {
             const items = serviceItems?.filter((item) => item.service_id === service.id) || [];
+            
+            // Split items into 2 lists for two columns
+            const mid = Math.ceil(items.length / 2);
+            const col1 = items.slice(0, mid);
+            const col2 = items.slice(mid);
 
             return (
-              <div key={service.slug} className="py-8 sm:py-10 group">
+              <div key={service.slug} className="py-8 sm:py-12 group first:pt-0 last:pb-0">
                 <Link href={`/services/${service.slug}`} className="block">
-                  <div className="flex items-start justify-between gap-4 mb-4">
-                    <div className="flex items-baseline gap-4 sm:gap-6">
-                      <span className="text-xs font-mono text-milan-gold shrink-0">
+                  <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8 lg:gap-12">
+                    {/* Row Left: Number + Title + Sub-specialties list */}
+                    <div className="flex-1 flex flex-col md:flex-row md:items-start gap-6 md:gap-10">
+                      {/* Gold Number */}
+                      <span className="heading-display text-4xl sm:text-5xl text-milan-gold font-mono tracking-widest leading-none">
                         {String(index + 1).padStart(2, "0")}
                       </span>
-                      <h2 className="heading-display text-lg sm:text-xl md:text-2xl text-milan-ivory group-hover:text-milan-gold transition-colors">
-                        {service.title}
-                      </h2>
-                    </div>
-                    <ArrowUpRight
-                      size={16}
-                      className="text-milan-muted group-hover:text-milan-gold shrink-0 mt-1 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-200"
-                    />
-                  </div>
 
-                  <div className="pl-8 sm:pl-12 space-y-4">
-                    <p className="text-sm text-milan-muted leading-relaxed font-light max-w-2xl">
-                      {service.description}
-                    </p>
+                      {/* Content block: Title + Columns */}
+                      <div className="space-y-4 flex-1">
+                        <h2 className="heading-display text-lg sm:text-xl md:text-2xl text-milan-ivory group-hover:text-milan-gold transition-colors font-mono tracking-wide uppercase">
+                          {service.title}
+                        </h2>
 
-                    {items.length > 0 && (
-                      <div className="flex flex-wrap gap-1.5 sm:gap-2">
-                        {items.map((item, idx) => (
-                          <span
-                            key={idx}
-                            className="border border-milan-border text-milan-muted text-[10px] px-2 py-0.5 tracking-wide"
-                          >
-                            {item.title}
-                          </span>
-                        ))}
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-2">
+                          <ul className="space-y-1.5">
+                            {col1.map((item, idx) => (
+                              <li key={idx} className="text-xs text-milan-muted flex items-center gap-2 font-mono">
+                                <span className="w-1.5 h-1.5 bg-milan-gold/60 rounded-full shrink-0" />
+                                {item.title}
+                              </li>
+                            ))}
+                          </ul>
+                          <ul className="space-y-1.5">
+                            {col2.map((item, idx) => (
+                              <li key={idx} className="text-xs text-milan-muted flex items-center gap-2 font-mono">
+                                <span className="w-1.5 h-1.5 bg-milan-gold/60 rounded-full shrink-0" />
+                                {item.title}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
                       </div>
-                    )}
+                    </div>
+
+                    {/* Row Right: Service Category Image + Plus sign */}
+                    <div className="flex items-center gap-6 sm:gap-8 shrink-0 justify-between sm:justify-end">
+                      {service.image_url ? (
+                        <div className="w-48 sm:w-56 aspect-[16/10] bg-milan-charcoal overflow-hidden border border-milan-border group-hover:border-milan-gold/40 transition-colors duration-300">
+                          <img
+                            src={service.image_url}
+                            alt={service.title}
+                            className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-500"
+                          />
+                        </div>
+                      ) : (
+                        <div className="w-48 sm:w-56 aspect-[16/10] bg-milan-charcoal border border-milan-border flex items-center justify-center text-[10px] text-milan-muted font-mono tracking-widest uppercase">
+                          No Image
+                        </div>
+                      )}
+                      
+                      {/* Gold Plus Icon */}
+                      <span className="text-milan-gold text-2xl font-light font-mono leading-none group-hover:scale-115 transition-transform duration-300">
+                        +
+                      </span>
+                    </div>
                   </div>
                 </Link>
               </div>
