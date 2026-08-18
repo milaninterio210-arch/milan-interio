@@ -258,7 +258,7 @@ export default function AdminAboutPage() {
               <div className="space-y-1">
                 <CloudinaryUploadButton
                   onUploadSuccess={(url: string) => setFormData({ ...formData, banner_image_url: url })}
-                  folder="about"
+                  folder="milan-interio/about"
                 />
                 <p className="text-[9px] text-milan-muted font-mono leading-relaxed max-w-sm">
                   Recommended: Widescreen ratio (e.g. 4:3 or 16:10). Direct browser upload to Cloudinary.
