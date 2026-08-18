@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { Plus, Edit2, Trash2, ArrowUp, ArrowDown } from "lucide-react";
+import CloudinaryUploadButton from "@/components/admin/CloudinaryUploadButton";
 
 const CATEGORIES = ["Marble", "Wood", "Brass", "Stone", "Textiles", "Glass"];
 
@@ -20,14 +21,12 @@ export default function AdminMaterialsPage() {
   const [materials, setMaterials] = useState<Material[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [uploading, setUploading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
 
   // Editor Form State
   const [editingMaterial, setEditingMaterial] = useState<Material | null>(null);
   const [isCreateMode, setIsCreateMode] = useState(false);
-  const [imageFile, setImageFile] = useState<File | null>(null);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -60,7 +59,6 @@ export default function AdminMaterialsPage() {
   function handleOpenEdit(material: Material) {
     setEditingMaterial(material);
     setIsCreateMode(false);
-    setImageFile(null);
     setFormData({
       name: material.name,
       category: material.category,
@@ -74,7 +72,6 @@ export default function AdminMaterialsPage() {
   function handleOpenCreate() {
     setIsCreateMode(true);
     setEditingMaterial(null);
-    setImageFile(null);
     setFormData({
       name: "",
       category: "Marble",
@@ -96,28 +93,22 @@ export default function AdminMaterialsPage() {
     return null;
   }
 
-  async function handleImageUpload(file: File): Promise<string> {
-    setUploading(true);
+  const getPublicIdFromUrl = (url: string | null) => {
+    if (!url || !url.includes("res.cloudinary.com")) return null;
     try {
-      const fileExt = file.name.split(".").pop();
-      const fileName = `${Math.random().toString(36).substring(2, 15)}.${fileExt}`;
-      const filePath = `materials/${fileName}`;
-
-      const { error: uploadError } = await supabase.storage
-        .from("milan-assets")
-        .upload(filePath, file);
-
-      if (uploadError) throw uploadError;
-
-      const { data } = supabase.storage
-        .from("milan-assets")
-        .getPublicUrl(filePath);
-
-      return data.publicUrl;
-    } finally {
-      setUploading(false);
+      const parts = url.split("/upload/");
+      if (parts.length < 2) return null;
+      const pathWithVersion = parts[1];
+      const pathParts = pathWithVersion.split("/");
+      const hasVersion = pathParts[0].startsWith("v");
+      const pathArray = hasVersion ? pathParts.slice(1) : pathParts;
+      const fullPath = pathArray.join("/");
+      const lastDotIndex = fullPath.lastIndexOf(".");
+      return lastDotIndex !== -1 ? fullPath.substring(0, lastDotIndex) : fullPath;
+    } catch (e) {
+      return null;
     }
-  }
+  };
 
   async function handleSave(e: React.FormEvent) {
     e.preventDefault();
@@ -126,11 +117,7 @@ export default function AdminMaterialsPage() {
     setSuccessMsg("");
 
     try {
-      let finalImageUrl = formData.image_url;
-
-      if (imageFile) {
-        finalImageUrl = await handleImageUpload(imageFile);
-      }
+      const finalImageUrl = formData.image_url;
 
       const payload = {
         name: formData.name.trim(),
@@ -139,8 +126,6 @@ export default function AdminMaterialsPage() {
         image_url: finalImageUrl || null,
         display_order: Number(formData.display_order),
       };
-
-      const oldUrl = editingMaterial?.image_url;
 
       if (isCreateMode) {
         const { error } = await supabase
@@ -157,19 +142,10 @@ export default function AdminMaterialsPage() {
 
         if (error) throw error;
         setSuccessMsg("Material item updated successfully.");
-
-        // Clean up old storage image if replaced
-        if (imageFile && oldUrl && oldUrl !== finalImageUrl) {
-          const oldPath = getStoragePathFromUrl(oldUrl);
-          if (oldPath) {
-            await supabase.storage.from("milan-assets").remove([oldPath]);
-          }
-        }
       }
 
       setIsCreateMode(false);
       setEditingMaterial(null);
-      setImageFile(null);
       fetchMaterials();
     } catch (err: any) {
       setErrorMsg("Failed to save: " + err.message);
@@ -195,10 +171,20 @@ export default function AdminMaterialsPage() {
       setSuccessMsg("Material deleted.");
       fetchMaterials();
 
-      // Clean up storage file
+      // Clean up storage file (Supabase)
       const path = getStoragePathFromUrl(imageUrl);
       if (path) {
         await supabase.storage.from("milan-assets").remove([path]);
+      }
+
+      // Clean up Cloudinary
+      const publicId = getPublicIdFromUrl(imageUrl);
+      if (publicId) {
+        await fetch("/api/cloudinary/delete", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ publicId }),
+        });
       }
     } catch (err: any) {
       setErrorMsg("Failed to delete material: " + err.message);
@@ -345,36 +331,20 @@ export default function AdminMaterialsPage() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-end">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
             {/* Image upload */}
             <div className="space-y-2">
               <label className="text-[10px] tracking-wider text-milan-muted uppercase font-mono block">
                 Material Texture Image File
               </label>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={(e) => {
-                  if (e.target.files && e.target.files[0]) {
-                    setImageFile(e.target.files[0]);
-                  }
-                }}
-                className="text-xs text-milan-muted font-mono mt-1 block"
+              <CloudinaryUploadButton
+                folder="milan-interio/materials"
+                currentImageUrl={formData.image_url}
+                onUploadSuccess={(url) => setFormData(prev => ({ ...prev, image_url: url }))}
+                onImageRemoved={() => setFormData(prev => ({ ...prev, image_url: "" }))}
+                label="Upload Material Image"
               />
             </div>
-
-            {(formData.image_url || imageFile) && (
-              <div className="border border-milan-border flex items-center space-x-4 p-2 bg-milan-charcoal/20">
-                <div className="w-16 h-16 bg-milan-charcoal border border-milan-border overflow-hidden relative shrink-0">
-                  <img
-                    src={imageFile ? URL.createObjectURL(imageFile) : formData.image_url}
-                    alt="Preview"
-                    className="object-cover w-full h-full"
-                  />
-                </div>
-                <span className="text-[10px] text-milan-gold font-mono uppercase">IMAGE SOURCE READY</span>
-              </div>
-            )}
           </div>
 
           <div className="space-y-2">
@@ -394,10 +364,10 @@ export default function AdminMaterialsPage() {
           <div className="pt-2">
             <button
               type="submit"
-              disabled={saving || uploading}
+              disabled={saving}
               className="px-8 py-3.5 border border-milan-gold bg-milan-gold text-milan-primary hover:bg-transparent hover:text-milan-gold text-xs tracking-widest font-semibold uppercase transition-all duration-300 disabled:opacity-50 cursor-pointer"
             >
-              {saving ? "SAVING..." : uploading ? "UPLOADING IMAGE..." : "SAVE MATERIAL"}
+              {saving ? "SAVING..." : "SAVE MATERIAL"}
             </button>
           </div>
         </form>

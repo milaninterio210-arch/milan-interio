@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import CloudinaryUploadButton from "@/components/admin/CloudinaryUploadButton";
 
 const CATEGORIES = ["Residential", "Commercial", "Hospitality", "Office", "Retail"];
 
@@ -16,8 +17,6 @@ export default function AdminNewProjectPage() {
   const [errorMsg, setErrorMsg] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
 
-  const [imageFile, setImageFile] = useState<File | null>(null);
-
   const [formData, setFormData] = useState({
     title: "",
     slug: "",
@@ -27,6 +26,7 @@ export default function AdminNewProjectPage() {
     is_featured: false,
     is_published: false,
     display_order: 1,
+    cover_image_url: "",
   });
 
   useEffect(() => {
@@ -61,29 +61,6 @@ export default function AdminNewProjectPage() {
     }));
   }
 
-  async function handleImageUpload(file: File): Promise<string> {
-    setUploading(true);
-    try {
-      const fileExt = file.name.split(".").pop();
-      const fileName = `${Math.random().toString(36).substring(2, 15)}.${fileExt}`;
-      const filePath = `projects/${fileName}`;
-
-      const { error: uploadError } = await supabase.storage
-        .from("milan-assets")
-        .upload(filePath, file);
-
-      if (uploadError) throw uploadError;
-
-      const { data } = supabase.storage
-        .from("milan-assets")
-        .getPublicUrl(filePath);
-
-      return data.publicUrl;
-    } finally {
-      setUploading(false);
-    }
-  }
-
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setSaving(true);
@@ -104,11 +81,7 @@ export default function AdminNewProjectPage() {
         throw new Error(`The URL slug "${slugToSave}" is already used by another project. Slugs must be unique.`);
       }
 
-      let coverImageUrl: string | null = null;
-      if (imageFile) {
-        coverImageUrl = await handleImageUpload(imageFile);
-      }
-
+      // Insert record
       const { data: newProject, error } = await supabase
         .from("projects")
         .insert({
@@ -117,10 +90,10 @@ export default function AdminNewProjectPage() {
           category: formData.category,
           location: formData.location.trim() || null,
           description: formData.description.trim(),
-          cover_image_url: coverImageUrl,
           is_featured: formData.is_featured,
           is_published: formData.is_published,
           display_order: Number(formData.display_order),
+          cover_image_url: formData.cover_image_url || null,
         })
         .select()
         .single();
@@ -254,15 +227,12 @@ export default function AdminNewProjectPage() {
               <label className="text-[10px] tracking-wider text-milan-muted uppercase font-mono block">
                 Cover Image
               </label>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={(e) => {
-                  if (e.target.files && e.target.files[0]) {
-                    setImageFile(e.target.files[0]);
-                  }
-                }}
-                className="text-xs text-milan-muted font-mono mt-1 block"
+              <CloudinaryUploadButton
+                folder="milan-interio/projects"
+                currentImageUrl={formData.cover_image_url}
+                onUploadSuccess={(url) => setFormData(prev => ({ ...prev, cover_image_url: url }))}
+                onImageRemoved={() => setFormData(prev => ({ ...prev, cover_image_url: "" }))}
+                label="Upload Cover Image"
               />
             </div>
           </div>
