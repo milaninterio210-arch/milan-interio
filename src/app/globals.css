@@ -25,8 +25,8 @@
   --border-strong: rgba(197, 160, 89, 0.35);
 
   /* Typography */
-  --font-heading: var(--font-cormorant);
-  --font-body: var(--font-inter);
+  --font-heading: var(--font-anek);
+  --font-body: var(--font-montserrat);
 
   /* Transitions */
   --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
@@ -54,8 +54,8 @@
   --color-milan-border: var(--border);
   --color-milan-border-strong: var(--border-strong);
 
-  --font-sans: var(--font-inter);
-  --font-serif: var(--font-cormorant);
+  --font-sans: var(--font-montserrat);
+  --font-serif: var(--font-anek);
 }
 
 /* -------------------------------------------------------------------------
@@ -97,18 +97,22 @@ body {
    Typography Utilities
    ------------------------------------------------------------------------- */
 .heading-display {
-  font-family: var(--font-heading), serif;
+  font-family: var(--font-heading), sans-serif;
   font-weight: 300;
   letter-spacing: 0.04em;
   line-height: 1.1;
   text-transform: uppercase;
+  font-stretch: 125%;
+  font-variation-settings: "wdth" 125;
 }
 
 .heading-editorial {
-  font-family: var(--font-heading), serif;
+  font-family: var(--font-heading), sans-serif;
   font-weight: 400;
   letter-spacing: 0.02em;
   line-height: 1.2;
+  font-stretch: 125%;
+  font-variation-settings: "wdth" 125;
 }
 
 .text-eyebrow {
