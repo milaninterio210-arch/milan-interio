@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
+import CloudinaryUploadButton from "@/components/admin/CloudinaryUploadButton";
 
 export default function AdminAboutPage() {
   const supabase = createClient();
@@ -18,6 +19,7 @@ export default function AdminAboutPage() {
     why_milan: "",
     quality_commitment: "",
     our_promise: "",
+    banner_image_url: "",
   });
 
   useEffect(() => {
@@ -39,6 +41,7 @@ export default function AdminAboutPage() {
             why_milan: data.why_milan || "",
             quality_commitment: data.quality_commitment || "",
             our_promise: data.our_promise || "",
+            banner_image_url: data.banner_image_url || "",
           });
         }
       } catch (err: any) {
@@ -67,6 +70,7 @@ export default function AdminAboutPage() {
           why_milan: formData.why_milan.trim() || null,
           quality_commitment: formData.quality_commitment.trim(),
           our_promise: formData.our_promise.trim(),
+          banner_image_url: formData.banner_image_url.trim() || null,
         })
         .eq("singleton_key", "default");
 
@@ -222,6 +226,44 @@ export default function AdminAboutPage() {
                 onChange={(e) => setFormData({ ...formData, our_promise: e.target.value })}
                 className="w-full bg-milan-charcoal/50 border border-milan-border p-3 text-xs text-milan-ivory focus:border-milan-gold focus:outline-none transition-colors resize-none leading-relaxed"
               />
+            </div>
+          </div>
+
+          {/* Banner Image Uploader */}
+          <div className="space-y-2 pt-4 border-t border-milan-border/40">
+            <label className="text-[10px] tracking-wider text-milan-muted uppercase font-mono block">
+              About Showcase Banner Image
+            </label>
+            <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+              {formData.banner_image_url ? (
+                <div className="w-32 aspect-[4/3] bg-milan-charcoal border border-milan-border overflow-hidden relative shrink-0">
+                  <img
+                    src={formData.banner_image_url}
+                    alt="About Showcase Banner"
+                    className="w-full h-full object-cover"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setFormData({ ...formData, banner_image_url: "" })}
+                    className="absolute top-1 right-1 p-1 bg-black/75 hover:bg-black text-[9px] text-red-400 font-mono border-0 cursor-pointer"
+                  >
+                    REMOVE
+                  </button>
+                </div>
+              ) : (
+                <div className="w-32 aspect-[4/3] bg-milan-charcoal border border-milan-border/60 flex items-center justify-center text-[10px] text-milan-muted font-mono tracking-wider uppercase shrink-0">
+                  No Image
+                </div>
+              )}
+              <div className="space-y-1">
+                <CloudinaryUploadButton
+                  onUploadSuccess={(url: string) => setFormData({ ...formData, banner_image_url: url })}
+                  folder="about"
+                />
+                <p className="text-[9px] text-milan-muted font-mono leading-relaxed max-w-sm">
+                  Recommended: Widescreen ratio (e.g. 4:3 or 16:10). Direct browser upload to Cloudinary.
+                </p>
+              </div>
             </div>
           </div>
         </div>

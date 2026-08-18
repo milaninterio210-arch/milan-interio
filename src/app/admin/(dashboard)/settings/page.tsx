@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
+import CloudinaryUploadButton from "@/components/admin/CloudinaryUploadButton";
 
 export default function AdminSettingsPage() {
   const supabase = createClient();
@@ -21,6 +22,7 @@ export default function AdminSettingsPage() {
     office_address: "",
     instagram_url: "",
     linkedin_url: "",
+    services_banner_image_url: "",
   });
 
   useEffect(() => {
@@ -45,6 +47,7 @@ export default function AdminSettingsPage() {
             office_address: data.office_address || "",
             instagram_url: data.instagram_url || "",
             linkedin_url: data.linkedin_url || "",
+            services_banner_image_url: data.services_banner_image_url || "",
           });
         }
       } catch (err: any) {
@@ -76,6 +79,7 @@ export default function AdminSettingsPage() {
           office_address: formData.office_address.trim() || null,
           instagram_url: formData.instagram_url.trim() || null,
           linkedin_url: formData.linkedin_url.trim() || null,
+          services_banner_image_url: formData.services_banner_image_url.trim() || null,
         })
         .eq("singleton_key", "default");
 
@@ -199,6 +203,44 @@ export default function AdminSettingsPage() {
               onChange={(e) => setFormData({ ...formData, design_philosophy_explanation: e.target.value })}
               className="w-full bg-milan-charcoal/50 border border-milan-border p-3 text-xs text-milan-ivory focus:border-milan-gold focus:outline-none transition-colors resize-none leading-relaxed"
             />
+          </div>
+
+          {/* Services Banner Image Uploader */}
+          <div className="space-y-2 pt-4 border-t border-milan-border/40">
+            <label className="text-[10px] tracking-wider text-milan-muted uppercase font-mono block">
+              Services Showcase Banner Image
+            </label>
+            <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+              {formData.services_banner_image_url ? (
+                <div className="w-32 aspect-[16/9] bg-milan-charcoal border border-milan-border overflow-hidden relative shrink-0">
+                  <img
+                    src={formData.services_banner_image_url}
+                    alt="Services Banner"
+                    className="w-full h-full object-cover"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setFormData({ ...formData, services_banner_image_url: "" })}
+                    className="absolute top-1 right-1 p-1 bg-black/75 hover:bg-black text-[9px] text-red-400 font-mono border-0 cursor-pointer"
+                  >
+                    REMOVE
+                  </button>
+                </div>
+              ) : (
+                <div className="w-32 aspect-[16/9] bg-milan-charcoal border border-milan-border/60 flex items-center justify-center text-[10px] text-milan-muted font-mono tracking-wider uppercase shrink-0">
+                  No Image
+                </div>
+              )}
+              <div className="space-y-1">
+                <CloudinaryUploadButton
+                  onUploadSuccess={(url: string) => setFormData({ ...formData, services_banner_image_url: url })}
+                  folder="settings"
+                />
+                <p className="text-[9px] text-milan-muted font-mono leading-relaxed max-w-sm">
+                  Recommended: Cinematic landscape aspect ratio (e.g. 16:9 or 21:9). Direct secure upload.
+                </p>
+              </div>
+            </div>
           </div>
         </div>
 

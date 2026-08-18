@@ -1,7 +1,8 @@
 import { createClient } from "@/lib/supabase/server";
 import Link from "next/link";
-import { ArrowRight, ChevronRight } from "lucide-react";
+import { ArrowRight, ChevronRight, Scale, Gem, Hammer, Sparkles } from "lucide-react";
 import HeroCarousel from "@/components/public/HeroCarousel";
+import FeaturedProjectsSlider from "@/components/public/FeaturedProjectsSlider";
 
 export default async function HomePage() {
   const supabase = await createClient();
@@ -57,125 +58,99 @@ export default async function HomePage() {
       <HeroCarousel slides={heroSlides || []} />
 
       {/* ================================================================
-          SECTION 2: BRAND STATEMENT
-          ================================================================ */}
-      <section className="py-20 sm:py-28 px-6">
-        <div className="max-w-3xl mx-auto text-center space-y-5">
-          <span className="text-eyebrow">The Milan Standard</span>
-          <h2 className="heading-editorial text-xl sm:text-2xl md:text-3xl text-milan-ivory leading-snug">
-            Luxury is not defined by excess.
-            <br className="hidden sm:inline" />
-            {" "}It is defined by precision.
-          </h2>
-          <p className="text-body max-w-2xl mx-auto text-sm sm:text-base leading-relaxed">
-            {settings?.design_philosophy_explanation || "We believe luxury is not simply about expensive materials. True luxury comes from proportion, craftsmanship, material harmony, lighting, functionality, and attention to detail."}
-          </p>
-        </div>
-      </section>
-
       {/* ================================================================
-          SECTION 3: BRAND PILLARS
+          SECTION 2: BRAND STATEMENT & OUR PILLARS (Merged Grid Layout)
           ================================================================ */}
-      <section className="py-16 sm:py-20 px-6">
-        <div className="max-w-6xl mx-auto">
-          <div className="border-b border-milan-border pb-4 mb-10 sm:mb-12">
-            <span className="text-eyebrow">Our Pillars</span>
-          </div>
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-10">
-            {pillars && pillars.length > 0 ? (
-              pillars.map((pillar) => (
-                <div
-                  key={pillar.pillar_number}
-                  className="space-y-3 border-l border-milan-border pl-5 sm:pl-6 hover:border-milan-gold transition-colors duration-300"
-                >
-                  <span className="text-xs font-mono text-milan-gold block">
-                    {pillar.pillar_number}
-                  </span>
-                  <h3 className="heading-display text-sm sm:text-base text-milan-ivory tracking-wider">
-                    {pillar.title}
-                  </h3>
-                  {pillar.description && (
-                    <p className="text-xs text-milan-muted leading-relaxed hidden sm:block">
-                      {pillar.description}
-                    </p>
-                  )}
-                </div>
-              ))
-            ) : (
-              ["PROPORTION", "MATERIAL", "CRAFT", "DETAIL"].map((title, i) => (
-                <div key={title} className="space-y-3 border-l border-milan-border pl-5 sm:pl-6">
-                  <span className="text-xs font-mono text-milan-gold block">{String(i + 1).padStart(2, "0")}</span>
-                  <h3 className="heading-display text-sm sm:text-base text-milan-ivory tracking-wider">{title}</h3>
-                </div>
-              ))
-            )}
-          </div>
-        </div>
-      </section>
-
-      {/* ================================================================
-          SECTION 4: SELECTED PROJECTS
-          ================================================================ */}
-      <section className="py-16 sm:py-24 px-6">
-        <div className="max-w-6xl mx-auto">
-          <div className="border-b border-milan-border pb-4 mb-10 sm:mb-12 flex items-end justify-between">
-            <span className="text-eyebrow">Selected Work</span>
-            <Link
-              href="/projects"
-              className="text-[10px] tracking-widest text-milan-muted hover:text-milan-gold uppercase flex items-center gap-1 transition-colors"
-            >
-              <span>View All</span>
-              <ChevronRight size={12} />
-            </Link>
-          </div>
-
-          {featuredProjects && featuredProjects.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-10">
-              {featuredProjects.map((project) => (
-                <Link
-                  key={project.slug}
-                  href={`/projects/${project.slug}`}
-                  className="group block space-y-4"
-                >
-                  <div className="aspect-[4/3] bg-milan-charcoal border border-milan-border overflow-hidden">
-                    {project.cover_image_url ? (
-                      <img
-                        src={project.cover_image_url}
-                        alt={project.title}
-                        className="object-cover w-full h-full group-hover:scale-[1.03] transition-transform duration-700"
-                      />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center text-[10px] text-milan-muted uppercase tracking-wider">
-                        Image Pending
-                      </div>
-                    )}
-                  </div>
-                  <div className="space-y-1">
-                    <span className="text-[10px] tracking-wider text-milan-gold uppercase font-mono">
-                      {project.category}{project.location ? ` · ${project.location}` : ""}
-                    </span>
-                    <h3 className="heading-display text-sm sm:text-base text-milan-ivory group-hover:text-milan-gold transition-colors">
-                      {project.title}
-                    </h3>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          ) : (
-            <div className="border border-milan-border p-10 sm:p-14 text-center max-w-lg mx-auto space-y-4">
-              <p className="text-sm text-milan-muted font-light leading-relaxed">
-                Our portfolio is currently being curated.
+      <section className="py-20 sm:py-28 px-6 border-t border-milan-border/60">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
+            
+            {/* Left Column: Brand Statement (Span 4) */}
+            <div className="lg:col-span-4 space-y-6 text-left animate-fade-up">
+              <span className="text-[10px] tracking-widest text-milan-gold uppercase font-mono block">
+                THE MILAN STANDARD
+              </span>
+              <h2 className="heading-editorial text-2xl sm:text-3xl text-milan-ivory leading-tight font-serif">
+                Luxury is not
+                <br />
+                defined by excess.
+                <br />
+                It is defined by
+                <br />
+                precision.
+              </h2>
+              <p className="text-body text-xs sm:text-sm text-milan-muted leading-relaxed font-light">
+                {settings?.design_philosophy_explanation || "From proportion and material harmony to lighting, craftsmanship and detailing, every element is considered to create spaces that feel effortless, refined and timeless."}
               </p>
-              <Link
-                href="/contact"
-                className="inline-block border border-milan-gold px-6 py-3 text-[10px] tracking-widest text-milan-gold hover:bg-milan-gold hover:text-milan-primary font-semibold uppercase transition-colors"
-              >
-                Discuss Your Project
-              </Link>
+              <div className="pt-2">
+                <Link
+                  href="/about"
+                  className="inline-flex items-center gap-2 text-milan-gold hover:text-milan-ivory text-[10px] tracking-widest font-semibold uppercase transition-colors group"
+                >
+                  <span>DISCOVER OUR PHILOSOPHY</span>
+                  <ArrowRight size={12} className="group-hover:translate-x-1 transition-transform" />
+                </Link>
+              </div>
             </div>
-          )}
+
+            {/* Right Column: 4 Pillars Grid (Span 8) */}
+            <div className="lg:col-span-8 animate-fade-up">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-0 divide-y md:divide-y-0 md:divide-x divide-milan-border/60">
+                {Array.from({ length: 4 }).map((_, idx) => {
+                  const defaultTitles = ["PROPORTION", "MATERIAL", "CRAFT", "DETAIL"];
+                  const defaultDescs = [
+                    "Balanced spaces crafted with purpose and intention.",
+                    "The finest materials, selected with care.",
+                    "Expert craftsmanship in every detail.",
+                    "Finishing touches that complete the experience."
+                  ];
+                  const icons = [
+                    <Scale key="s" size={24} strokeWidth={1.5} className="text-milan-gold/80" />,
+                    <Gem key="g" size={24} strokeWidth={1.5} className="text-milan-gold/80" />,
+                    <Hammer key="h" size={24} strokeWidth={1.5} className="text-milan-gold/80" />,
+                    <Sparkles key="sp" size={24} strokeWidth={1.5} className="text-milan-gold/80" />
+                  ];
+
+                  const pillar = pillars?.[idx];
+                  const title = pillar?.title || defaultTitles[idx];
+                  const desc = pillar?.description || defaultDescs[idx];
+                  const num = pillar?.pillar_number || String(idx + 1).padStart(2, "0");
+
+                  return (
+                    <div
+                      key={idx}
+                      className="space-y-4 pt-6 md:pt-0 md:px-6 first:pl-0 last:pr-0"
+                    >
+                      {/* Pillar Icon */}
+                      <div className="p-2 border border-milan-gold/10 bg-milan-charcoal/10 inline-block">
+                        {icons[idx]}
+                      </div>
+
+                      <div className="space-y-2">
+                        <span className="text-base sm:text-lg font-mono text-milan-gold block leading-none">
+                          {num}
+                        </span>
+                        <h3 className="heading-display text-[11px] sm:text-xs text-milan-ivory tracking-widest uppercase">
+                          {title}
+                        </h3>
+                        <p className="text-body text-[11px] text-milan-muted leading-relaxed font-light">
+                          {desc}
+                        </p>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+          </div>
         </div>
       </section>
+
+      {/* ================================================================
+          SECTION 4: SELECTED PROJECTS (Slider Layout)
+          ================================================================ */}
+      <FeaturedProjectsSlider projects={featuredProjects || []} />
 
       {/* ================================================================
           SECTION 5: SERVICES OVERVIEW
