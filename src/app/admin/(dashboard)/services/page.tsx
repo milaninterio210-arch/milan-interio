@@ -205,11 +205,30 @@ export default function AdminServicesPage() {
     return null;
   }
 
+  const getPublicIdFromUrl = (url: string | null) => {
+    if (!url || !url.includes("res.cloudinary.com")) return null;
+    try {
+      const parts = url.split("/upload/");
+      if (parts.length < 2) return null;
+      const pathWithVersion = parts[1];
+      const pathParts = pathWithVersion.split("/");
+      const hasVersion = pathParts[0].startsWith("v");
+      const pathArray = hasVersion ? pathParts.slice(1) : pathParts;
+      const fullPath = pathArray.join("/");
+      const lastDotIndex = fullPath.lastIndexOf(".");
+      return lastDotIndex !== -1 ? fullPath.substring(0, lastDotIndex) : fullPath;
+    } catch (e) {
+      return null;
+    }
+  };
+
   async function handleDeleteService(id: string, title: string) {
     if (!confirm(`Are you sure you want to delete the service: "${title}"?\nAll associated scope items will be deleted permanently.`)) return;
 
     setErrorMsg("");
     setSuccessMsg("");
+
+    const oldImageUrl = selectedService?.image_url ?? null;
 
     try {
       const { error } = await supabase
@@ -221,6 +240,22 @@ export default function AdminServicesPage() {
       setSuccessMsg("Service deleted.");
       setSelectedService(null);
       fetchServices();
+
+      // Clean up Supabase Storage if it was an old storage URL
+      const path = getStoragePathFromUrl(oldImageUrl);
+      if (path) {
+        await supabase.storage.from("milan-assets").remove([path]);
+      }
+
+      // Clean up Cloudinary
+      const publicId = getPublicIdFromUrl(oldImageUrl);
+      if (publicId) {
+        await fetch("/api/cloudinary/delete", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ publicId }),
+        });
+      }
     } catch (err: any) {
       setErrorMsg("Failed to delete service: " + err.message);
     }
