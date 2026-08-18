@@ -72,7 +72,7 @@ export default function HeroCarousel({ slides }: HeroCarouselProps) {
                 aria-hidden="true"
                 className="absolute inset-0 w-full h-full object-cover animate-fade-in"
               />
-              <div className="absolute inset-0 bg-milan-primary/70" />
+              <div className="absolute inset-0 bg-black/30" />
             </>
           ) : (
             <div className="absolute inset-0 bg-milan-charcoal">
