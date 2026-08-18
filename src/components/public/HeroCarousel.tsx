@@ -83,13 +83,13 @@ export default function HeroCarousel({ slides }: HeroCarouselProps) {
       ))}
 
       {/* Content Overlay */}
-      <div className="relative z-10 max-w-4xl mx-auto text-center px-6 py-24">
+      <div className="relative z-10 w-full max-w-7xl mx-auto text-left px-6 py-24">
         {slides.map((slide, idx) => {
           if (idx !== current) return null;
           return (
             <div
               key={idx}
-              className="space-y-6 sm:space-y-8 animate-fade-up duration-700"
+              className="space-y-6 sm:space-y-8 animate-fade-up duration-700 max-w-3xl"
             >
               <p className="text-eyebrow tracking-[0.2em] sm:tracking-[0.25em]">
                 {slide.eyebrow || "Interior Design | Fit-Out | Custom Joinery | Furniture"}
@@ -99,11 +99,11 @@ export default function HeroCarousel({ slides }: HeroCarouselProps) {
                 {slide.heading}
               </h1>
 
-              <p className="text-body-lg max-w-xl mx-auto">
+              <p className="text-body-lg max-w-xl">
                 {slide.subheading}
               </p>
 
-              <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
+              <div className="pt-4 flex flex-col sm:flex-row items-start sm:items-center justify-start gap-3 sm:gap-4">
                 {slide.primary_cta_label && (
                   <Link
                     href={slide.primary_cta_url || "/projects"}
