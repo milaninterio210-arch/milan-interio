@@ -24,24 +24,28 @@ export default async function ServicesPage() {
 
   return (
     <div className="py-20 sm:py-24">
-      {/* Header section (2-column layout on md/lg screens) */}
-      <section className="max-w-7xl mx-auto px-6 mb-16 sm:mb-24 flex flex-col md:flex-row items-center justify-between gap-12 sm:gap-16">
-        <div className="w-full md:w-1/2 space-y-6 text-left animate-fade-up">
-          <p className="text-eyebrow tracking-widest text-milan-gold">OUR SERVICES</p>
-          <h1 className="heading-display text-4xl sm:text-5xl md:text-6xl text-milan-ivory leading-tight font-serif uppercase">
-            OUR<br />SERVICES
-          </h1>
-          <p className="text-body max-w-lg text-sm sm:text-base text-milan-muted leading-relaxed font-light">
-            Complete interior solutions tailored to the architecture, lifestyle, and requirements of each project.
-          </p>
-        </div>
-        <div className="w-full md:w-1/2 aspect-[16/10] bg-milan-charcoal overflow-hidden border border-milan-border/60 relative animate-fade-up">
+      {/* Header section (Overlaid banner layout like Hero) */}
+      <section className="max-w-7xl mx-auto px-6 mb-16 sm:mb-24 animate-fade-up">
+        <div className="w-full h-[300px] sm:h-[400px] md:h-[450px] bg-milan-charcoal overflow-hidden border border-milan-border/60 relative flex items-center justify-start px-6 sm:px-12 md:px-16">
+          {/* Background Image */}
           <img
-            src="https://images.unsplash.com/photo-1618219908412-a29a1bb7b86e?auto=format&fit=crop&w=1200&q=80"
-            alt="Milan Interio interior services showcase"
-            className="w-full h-full object-cover opacity-85"
+            src="https://images.unsplash.com/photo-1618219908412-a29a1bb7b86e?auto=format&fit=crop&w=1600&q=80"
+            alt="Milan Interio interior services showcase banner"
+            className="absolute inset-0 w-full h-full object-cover opacity-80"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-milan-primary/30 to-transparent pointer-events-none" />
+          {/* Dark Overlay */}
+          <div className="absolute inset-0 bg-black/45" />
+
+          {/* Text Overlay Content */}
+          <div className="relative z-10 space-y-4 max-w-2xl text-left">
+            <p className="text-eyebrow tracking-widest text-milan-gold">OUR SERVICES</p>
+            <h1 className="heading-display text-4xl sm:text-5xl md:text-6xl text-milan-ivory leading-tight font-serif uppercase">
+              OUR SERVICES
+            </h1>
+            <p className="text-body text-xs sm:text-sm text-milan-muted leading-relaxed font-light max-w-lg">
+              Complete interior solutions tailored to the architecture, lifestyle, and requirements of each project.
+            </p>
+          </div>
         </div>
       </section>
 
