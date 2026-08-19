@@ -189,7 +189,7 @@ export default async function HomePage() {
                         alt={service.title}
                         className="absolute inset-0 w-full h-full object-cover opacity-25 group-hover:scale-[1.03] transition-transform duration-700 ease-in-out"
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-milan-primary/95 via-milan-primary/60 to-transparent pointer-events-none" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-milan-primary/75 via-milan-primary/35 to-transparent pointer-events-none" />
                     </>
                   )}
 
@@ -264,9 +264,9 @@ export default async function HomePage() {
             <img
               src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=1600&q=80"
               alt=""
-              className="w-full h-full object-cover opacity-15"
+              className="w-full h-full object-cover opacity-25"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-milan-primary via-transparent to-milan-primary pointer-events-none" />
+            <div className="absolute inset-0 bg-gradient-to-t from-milan-primary/80 via-transparent to-milan-primary/85 pointer-events-none" />
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom,rgba(197,160,89,0.06),transparent_60%)] pointer-events-none" />
           </div>
           <span className="text-eyebrow relative z-10">Start Your Journey</span>

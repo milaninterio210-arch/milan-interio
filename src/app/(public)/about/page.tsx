@@ -72,7 +72,7 @@ export default async function AboutPage() {
             alt="Milan Interio showroom lobby reception desk"
             className="w-full h-full object-cover opacity-90"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-milan-primary/30 to-transparent pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-t from-milan-primary/10 to-transparent pointer-events-none" />
         </div>
       </section>
 
