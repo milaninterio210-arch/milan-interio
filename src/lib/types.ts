@@ -168,5 +168,5 @@ export const PUBLIC_NAV_LINKS: NavLink[] = [
   { label: "PROJECTS", href: "/projects" },
   { label: "PROCESS", href: "/process" },
   { label: "STUDIO", href: "/studio" },
-  { label: "CONTACT", href: "/contact" },
+  
 ];
