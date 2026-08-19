@@ -21,67 +21,82 @@ export default async function ContactPage() {
     settings?.contact_email || settings?.contact_phone || settings?.office_address;
 
   return (
-    <div className="py-20 sm:py-24">
-      {/* Header */}
-      <section className="px-6 text-center space-y-5 mb-16 sm:mb-20 animate-fade-up">
-        <p className="text-eyebrow">INQUIRE</p>
-        <h1 className="heading-display text-3xl sm:text-4xl md:text-5xl text-milan-ivory max-w-3xl mx-auto">
-          START A PROJECT
-        </h1>
-        <p className="text-body max-w-xl mx-auto text-sm sm:text-base">
-          Share your vision, spatial requirements, and project timeline. Our design team will coordinate a consultation.
-        </p>
-      </section>
-
-      {/* Form + Contact Details */}
-      <section className="px-6">
-        <div className={`max-w-4xl mx-auto grid grid-cols-1 ${hasContactInfo ? "lg:grid-cols-3" : ""} gap-12 sm:gap-16`}>
-          <div className={hasContactInfo ? "lg:col-span-2" : ""}>
-            <ContactForm />
+    <div className="py-16 sm:py-24 lg:py-28 px-6 sm:px-12 md:px-16 lg:px-20 max-w-7xl mx-auto">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-stretch animate-fade-up">
+        
+        {/* Left Column (Span 4) */}
+        <div className="lg:col-span-4 flex flex-col justify-between space-y-12 sm:space-y-16">
+          
+          {/* Top text */}
+          <div className="space-y-4 text-left">
+            <h1 className="heading-display text-4xl sm:text-5xl lg:text-[40px] text-milan-ivory leading-[1.1] font-serif uppercase tracking-normal">
+              LET'S CREATE
+              <br />
+              SOMETHING
+              <br />
+              DISTINCTIVE.
+            </h1>
+            <p className="text-body text-xs sm:text-sm text-milan-muted leading-relaxed font-light mt-4">
+              Have a project in mind?
+              <br />
+              We would love to hear
+              <br />
+              about it.
+            </p>
           </div>
 
-          {hasContactInfo && (
-            <div className="border-t lg:border-t-0 lg:border-l border-milan-border pt-8 lg:pt-0 lg:pl-8 space-y-6">
-              <span className="text-[10px] tracking-widest text-milan-gold uppercase font-mono block">
-                DIRECT CONTACT
+          {/* Contact Details */}
+          <div className="space-y-6 text-left">
+            <div>
+              <span className="text-[10px] tracking-widest text-milan-gold uppercase font-mono block font-semibold mb-1">
+                PHONE
               </span>
-
-              {settings?.contact_email && (
-                <div className="space-y-1">
-                  <span className="text-[9px] tracking-widest text-milan-muted uppercase font-mono block">EMAIL</span>
-                  <a
-                    href={`mailto:${settings.contact_email}`}
-                    className="text-sm text-milan-ivory hover:text-milan-gold transition-colors font-light"
-                  >
-                    {settings.contact_email}
-                  </a>
-                </div>
-              )}
-
-              {settings?.contact_phone && (
-                <div className="space-y-1">
-                  <span className="text-[9px] tracking-widest text-milan-muted uppercase font-mono block">PHONE</span>
-                  <a
-                    href={`tel:${settings.contact_phone}`}
-                    className="text-sm text-milan-ivory hover:text-milan-gold transition-colors font-light"
-                  >
-                    {settings.contact_phone}
-                  </a>
-                </div>
-              )}
-
-              {settings?.office_address && (
-                <div className="space-y-1">
-                  <span className="text-[9px] tracking-widest text-milan-muted uppercase font-mono block">STUDIO</span>
-                  <p className="text-sm text-milan-ivory font-light whitespace-pre-line">
-                    {settings.office_address}
-                  </p>
-                </div>
-              )}
+              <a
+                href={`tel:${settings?.contact_phone || "+91 00000 00000"}`}
+                className="text-xs sm:text-sm text-milan-ivory hover:text-milan-gold transition-colors font-light"
+              >
+                {settings?.contact_phone || "+91 00000 00000"}
+              </a>
             </div>
-          )}
+
+            <div>
+              <span className="text-[10px] tracking-widest text-milan-gold uppercase font-mono block font-semibold mb-1">
+                EMAIL
+              </span>
+              <a
+                href={`mailto:${settings?.contact_email || "hello@milaninterio.com"}`}
+                className="text-xs sm:text-sm text-milan-ivory hover:text-milan-gold transition-colors font-light"
+              >
+                {settings?.contact_email || "hello@milaninterio.com"}
+              </a>
+            </div>
+
+            <div>
+              <span className="text-[10px] tracking-widest text-milan-gold uppercase font-mono block font-semibold mb-1">
+                LOCATION
+              </span>
+              <p className="text-xs sm:text-sm text-milan-ivory font-light whitespace-pre-line leading-relaxed">
+                {settings?.office_address || "Malappuram, Kerala, India"}
+              </p>
+            </div>
+          </div>
         </div>
-      </section>
+
+        {/* Middle Column (Span 4) */}
+        <div className="lg:col-span-4 border border-milan-border/60 p-6 sm:p-8 md:p-10 bg-milan-charcoal/20 relative flex flex-col justify-center">
+          <ContactForm />
+        </div>
+
+        {/* Right Column (Span 4) */}
+        <div className="lg:col-span-4 min-h-[350px] lg:min-h-full relative border border-milan-border/60 overflow-hidden bg-milan-charcoal">
+          <img
+            src="/contact_map.jpg"
+            alt="Milan Interio studio location map Malappuram Kerala"
+            className="absolute inset-0 w-full h-full object-cover opacity-85 transition-opacity duration-300 hover:opacity-100"
+          />
+        </div>
+
+      </div>
     </div>
   );
 }
