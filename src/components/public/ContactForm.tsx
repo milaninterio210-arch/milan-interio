@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { createBrowserClient } from "@supabase/ssr";
 import { ArrowRight, ChevronDown } from "lucide-react";
 
@@ -24,10 +24,26 @@ export function ContactForm() {
   const [errorMessage, setErrorMessage] = useState("");
   const submittingRef = useRef(false);
 
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
   const supabase = createBrowserClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
   );
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsDropdownOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -136,27 +152,58 @@ export function ContactForm() {
       </div>
 
       {/* Project Type */}
-      <div className="space-y-1.5 text-left">
-        <label htmlFor="project_type" className="text-[10px] tracking-widest text-milan-gold uppercase font-mono block font-semibold">
+      <div className="space-y-1.5 text-left relative" ref={dropdownRef}>
+        <label className="text-[10px] tracking-widest text-milan-gold uppercase font-mono block font-semibold">
           PROJECT TYPE
         </label>
         <div className="relative">
-          <select
-            id="project_type"
-            value={formData.project_type}
-            onChange={(e) => setFormData({ ...formData, project_type: e.target.value })}
-            className="w-full bg-milan-primary/30 border border-milan-border/60 hover:border-milan-gold/40 focus:border-milan-gold focus:outline-none px-4 py-3 text-sm text-milan-ivory transition-all duration-300 cursor-pointer appearance-none font-sans"
+          <button
+            type="button"
+            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+            className="w-full bg-milan-primary/30 border border-milan-border/60 hover:border-milan-gold/40 focus:border-milan-gold focus:outline-none px-4 py-3 text-sm text-milan-ivory transition-all duration-300 cursor-pointer flex items-center justify-between text-left font-sans"
           >
-            <option value="">Select project type</option>
-            {PROJECT_TYPES.map((type) => (
-              <option key={type} value={type} className="bg-milan-charcoal text-milan-ivory">
-                {type}
-              </option>
-            ))}
-          </select>
-          <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-milan-gold">
-            <ChevronDown size={15} />
-          </div>
+            <span>
+              {formData.project_type || "Select project type"}
+            </span>
+            <ChevronDown
+              size={15}
+              className={`text-milan-gold transition-transform duration-300 ${
+                isDropdownOpen ? "rotate-180" : ""
+              }`}
+            />
+          </button>
+
+          {isDropdownOpen && (
+            <div className="absolute left-0 right-0 mt-1.5 bg-milan-charcoal border border-milan-border/80 z-50 animate-fade-in shadow-2xl divide-y divide-milan-border/20">
+              <button
+                type="button"
+                onClick={() => {
+                  setFormData({ ...formData, project_type: "" });
+                  setIsDropdownOpen(false);
+                }}
+                className="w-full px-4 py-3.5 text-left text-xs text-milan-muted hover:text-milan-gold hover:bg-milan-emerald/20 transition-colors font-sans cursor-pointer"
+              >
+                Select project type
+              </button>
+              {PROJECT_TYPES.map((type) => (
+                <button
+                  key={type}
+                  type="button"
+                  onClick={() => {
+                    setFormData({ ...formData, project_type: type });
+                    setIsDropdownOpen(false);
+                  }}
+                  className={`w-full px-4 py-3 text-left text-sm transition-colors font-sans cursor-pointer ${
+                    formData.project_type === type
+                      ? "text-milan-gold bg-milan-emerald/30 font-semibold"
+                      : "text-milan-ivory hover:text-milan-gold hover:bg-milan-emerald/20"
+                  }`}
+                >
+                  {type}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
       </div>
 
