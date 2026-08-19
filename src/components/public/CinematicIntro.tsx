@@ -101,18 +101,6 @@ export function CinematicIntro() {
           />
         </div>
       </div>
-
-      {/* Minimal Skip Button */}
-      <button
-        onClick={(e) => {
-          e.stopPropagation();
-          handleDismiss();
-        }}
-        className="absolute bottom-5 right-5 sm:bottom-6 sm:right-8 z-20 px-3 py-1.5 bg-milan-charcoal/90 hover:bg-milan-emerald border border-milan-gold/30 hover:border-milan-gold text-[9px] sm:text-[10px] tracking-[0.2em] uppercase font-mono text-milan-gold transition-colors duration-200 cursor-pointer"
-        aria-label="Skip intro"
-      >
-        SKIP &rarr;
-      </button>
     </div>
   );
 }
