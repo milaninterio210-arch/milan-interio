@@ -2,6 +2,7 @@
 
 import { useState, useRef } from "react";
 import { createBrowserClient } from "@supabase/ssr";
+import { ArrowRight, ChevronDown } from "lucide-react";
 
 const PROJECT_TYPES = [
   "Residential",
@@ -81,99 +82,104 @@ export function ContactForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6 sm:space-y-8" noValidate={false}>
-      {/* Name & Email */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8">
-        <div className="space-y-2">
-          <label htmlFor="full_name" className="text-[10px] tracking-widest text-milan-gold uppercase font-mono block">
-            Full Name <span aria-hidden="true">*</span>
-          </label>
-          <input
-            id="full_name"
-            type="text"
-            required
-            aria-required="true"
-            autoComplete="name"
-            value={formData.full_name}
-            onChange={(e) => setFormData({ ...formData, full_name: e.target.value })}
-            className="w-full bg-transparent border-b border-milan-border py-3 text-sm text-milan-ivory placeholder:text-milan-muted/40 focus:border-milan-gold focus:outline-none transition-colors"
-            placeholder="Your full name"
-          />
-        </div>
-        <div className="space-y-2">
-          <label htmlFor="email" className="text-[10px] tracking-widest text-milan-gold uppercase font-mono block">
-            Email Address <span aria-hidden="true">*</span>
-          </label>
-          <input
-            id="email"
-            type="email"
-            required
-            aria-required="true"
-            autoComplete="email"
-            value={formData.email}
-            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-            className="w-full bg-transparent border-b border-milan-border py-3 text-sm text-milan-ivory placeholder:text-milan-muted/40 focus:border-milan-gold focus:outline-none transition-colors"
-            placeholder="your@email.com"
-          />
-        </div>
+    <form onSubmit={handleSubmit} className="space-y-5" noValidate={false}>
+      {/* Name */}
+      <div className="space-y-1.5 text-left">
+        <label htmlFor="full_name" className="text-[10px] tracking-widest text-milan-gold uppercase font-mono block font-semibold">
+          YOUR NAME
+        </label>
+        <input
+          id="full_name"
+          type="text"
+          required
+          aria-required="true"
+          autoComplete="name"
+          value={formData.full_name}
+          onChange={(e) => setFormData({ ...formData, full_name: e.target.value })}
+          className="w-full bg-milan-primary/30 border border-milan-border/60 hover:border-milan-gold/40 focus:border-milan-gold focus:outline-none px-4 py-3 text-sm text-milan-ivory placeholder:text-milan-muted/30 transition-all duration-300 font-sans"
+          placeholder="Enter your name"
+        />
       </div>
 
-      {/* Phone & Project Type */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8">
-        <div className="space-y-2">
-          <label htmlFor="phone" className="text-[10px] tracking-widest text-milan-gold uppercase font-mono block">
-            Phone Number
-          </label>
-          <input
-            id="phone"
-            type="tel"
-            autoComplete="tel"
-            value={formData.phone}
-            onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-            className="w-full bg-transparent border-b border-milan-border py-3 text-sm text-milan-ivory placeholder:text-milan-muted/40 focus:border-milan-gold focus:outline-none transition-colors"
-            placeholder="Optional"
-          />
-        </div>
-        <div className="space-y-2">
-          <label htmlFor="project_type" className="text-[10px] tracking-widest text-milan-gold uppercase font-mono block">
-            Project Type
-          </label>
+      {/* Email Address */}
+      <div className="space-y-1.5 text-left">
+        <label htmlFor="email" className="text-[10px] tracking-widest text-milan-gold uppercase font-mono block font-semibold">
+          EMAIL ADDRESS
+        </label>
+        <input
+          id="email"
+          type="email"
+          required
+          aria-required="true"
+          autoComplete="email"
+          value={formData.email}
+          onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+          className="w-full bg-milan-primary/30 border border-milan-border/60 hover:border-milan-gold/40 focus:border-milan-gold focus:outline-none px-4 py-3 text-sm text-milan-ivory placeholder:text-milan-muted/30 transition-all duration-300 font-sans"
+          placeholder="Enter your email"
+        />
+      </div>
+
+      {/* Phone Number */}
+      <div className="space-y-1.5 text-left">
+        <label htmlFor="phone" className="text-[10px] tracking-widest text-milan-gold uppercase font-mono block font-semibold">
+          PHONE NUMBER
+        </label>
+        <input
+          id="phone"
+          type="tel"
+          autoComplete="tel"
+          value={formData.phone}
+          onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+          className="w-full bg-milan-primary/30 border border-milan-border/60 hover:border-milan-gold/40 focus:border-milan-gold focus:outline-none px-4 py-3 text-sm text-milan-ivory placeholder:text-milan-muted/30 transition-all duration-300 font-sans"
+          placeholder="Enter your phone number"
+        />
+      </div>
+
+      {/* Project Type */}
+      <div className="space-y-1.5 text-left">
+        <label htmlFor="project_type" className="text-[10px] tracking-widest text-milan-gold uppercase font-mono block font-semibold">
+          PROJECT TYPE
+        </label>
+        <div className="relative">
           <select
             id="project_type"
             value={formData.project_type}
             onChange={(e) => setFormData({ ...formData, project_type: e.target.value })}
-            className="w-full bg-milan-primary border-b border-milan-border py-3 text-sm text-milan-ivory focus:border-milan-gold focus:outline-none transition-colors cursor-pointer"
+            className="w-full bg-milan-primary/30 border border-milan-border/60 hover:border-milan-gold/40 focus:border-milan-gold focus:outline-none px-4 py-3 text-sm text-milan-ivory transition-all duration-300 cursor-pointer appearance-none font-sans"
           >
-            <option value="">Select type (optional)</option>
+            <option value="">Select project type</option>
             {PROJECT_TYPES.map((type) => (
-              <option key={type} value={type}>
+              <option key={type} value={type} className="bg-milan-charcoal text-milan-ivory">
                 {type}
               </option>
             ))}
           </select>
+          <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-milan-gold">
+            <ChevronDown size={15} />
+          </div>
         </div>
       </div>
 
       {/* Message */}
-      <div className="space-y-2">
-        <label htmlFor="message" className="text-[10px] tracking-widest text-milan-gold uppercase font-mono block">
-          Project Details <span aria-hidden="true">*</span>
+      <div className="space-y-1.5 text-left">
+        <label htmlFor="message" className="text-[10px] tracking-widest text-milan-gold uppercase font-mono block font-semibold">
+          YOUR MESSAGE
         </label>
         <textarea
           id="message"
           required
           aria-required="true"
-          rows={5}
+          rows={4}
           value={formData.message}
           onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-          className="w-full bg-transparent border-b border-milan-border py-3 text-sm text-milan-ivory placeholder:text-milan-muted/40 focus:border-milan-gold focus:outline-none transition-colors resize-none"
-          placeholder="Describe your project requirements, preferred style, approximate budget, and timelines..."
+          className="w-full bg-milan-primary/30 border border-milan-border/60 hover:border-milan-gold/40 focus:border-milan-gold focus:outline-none px-4 py-3 text-sm text-milan-ivory placeholder:text-milan-muted/30 transition-all duration-300 resize-none font-sans"
+          placeholder="Tell us about your project..."
         />
       </div>
 
       {/* Error */}
       {status === "error" && (
-        <p className="text-xs text-red-400" role="alert">{errorMessage}</p>
+        <p className="text-xs text-red-400 text-left mt-2" role="alert">{errorMessage}</p>
       )}
 
       {/* Submit */}
@@ -181,9 +187,10 @@ export function ContactForm() {
         <button
           type="submit"
           disabled={status === "submitting"}
-          className="w-full sm:w-auto border border-milan-gold bg-milan-gold text-milan-primary hover:bg-transparent hover:text-milan-gold px-10 py-3.5 text-[11px] tracking-widest font-semibold uppercase transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full bg-milan-gold text-milan-primary hover:bg-transparent hover:text-milan-gold border border-milan-gold px-6 py-3.5 text-[11px] tracking-widest font-semibold uppercase transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 cursor-pointer font-sans"
         >
-          {status === "submitting" ? "SUBMITTING..." : "SUBMIT INQUIRY"}
+          {status === "submitting" ? "SENDING..." : "SEND MESSAGE"}
+          <ArrowRight size={14} />
         </button>
       </div>
     </form>
