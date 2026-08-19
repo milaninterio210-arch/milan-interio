@@ -54,11 +54,8 @@ export default function ProjectsGallery({ initialProjects }: ProjectsGalleryProp
 
   const getImageAspect = (index: number) => {
     const rem = index % 5;
-    if (rem === 0 || rem === 1) {
+    if (rem === 0 || rem === 1 || rem === 2) {
       return "aspect-[16/10]";
-    }
-    if (rem === 2) {
-      return "aspect-[4/5]";
     }
     return "aspect-[16/9]";
   };
@@ -99,7 +96,7 @@ export default function ProjectsGallery({ initialProjects }: ProjectsGalleryProp
             {filteredProjects.map((project, index) => {
               const span = getGridSpan(index);
               const aspect = getImageAspect(index);
-              const showOverlay = index % 5 !== 2; // In mockup, index 2 (Card 3) does not have info overlay box
+              const showOverlay = true;
 
               return (
                 <Link

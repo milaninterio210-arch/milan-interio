@@ -512,31 +512,47 @@ export default function AdminEditProjectPage({ params }: AdminEditProjectPagePro
               />
             </div>
 
-            <div className="flex space-x-6 items-center border-t border-milan-border/50 pt-4">
-              <div className="flex items-center space-x-2">
-                <input
-                  id="is_featured"
-                  type="checkbox"
-                  checked={formData.is_featured}
-                  onChange={(e) => setFormData({ ...formData, is_featured: e.target.checked })}
-                  className="w-4 h-4 accent-milan-gold cursor-pointer"
-                />
-                <label htmlFor="is_featured" className="text-xs text-milan-ivory font-mono cursor-pointer select-none">
-                  Featured
-                </label>
-              </div>
+            <div className="border-t border-milan-border/50 pt-4 space-y-4">
+              <h3 className="text-[10px] tracking-wider text-milan-gold uppercase font-mono">
+                Publication &amp; Home Placement
+              </h3>
 
-              <div className="flex items-center space-x-2">
-                <input
-                  id="is_published"
-                  type="checkbox"
-                  checked={formData.is_published}
-                  onChange={(e) => setFormData({ ...formData, is_published: e.target.checked })}
-                  className="w-4 h-4 accent-milan-gold cursor-pointer"
-                />
-                <label htmlFor="is_published" className="text-xs text-milan-ivory font-mono cursor-pointer select-none">
-                  Published Live
-                </label>
+              <div className="space-y-3">
+                <div className="flex items-start space-x-2">
+                  <input
+                    id="is_published"
+                    type="checkbox"
+                    checked={formData.is_published}
+                    onChange={(e) => setFormData({ ...formData, is_published: e.target.checked })}
+                    className="w-4 h-4 accent-milan-gold cursor-pointer mt-0.5"
+                  />
+                  <div>
+                    <label htmlFor="is_published" className="text-xs text-milan-ivory font-mono cursor-pointer select-none block">
+                      Published Live
+                    </label>
+                    <span className="text-[10px] text-milan-muted/70 block mt-0.5">
+                      Make this project visible on the public website.
+                    </span>
+                  </div>
+                </div>
+
+                <div className="flex items-start space-x-2">
+                  <input
+                    id="is_featured"
+                    type="checkbox"
+                    checked={formData.is_featured}
+                    onChange={(e) => setFormData({ ...formData, is_featured: e.target.checked })}
+                    className="w-4 h-4 accent-milan-gold cursor-pointer mt-0.5"
+                  />
+                  <div>
+                    <label htmlFor="is_featured" className="text-xs text-milan-ivory font-mono cursor-pointer select-none block">
+                      Featured
+                    </label>
+                    <span className="text-[10px] text-milan-muted/70 block mt-0.5">
+                      Show this project in the Home page Featured Projects slider. Up to 3 featured + published projects are displayed.
+                    </span>
+                  </div>
+                </div>
               </div>
             </div>
 
