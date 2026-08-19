@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 import { PUBLIC_NAV_LINKS } from "@/lib/types";
@@ -40,10 +41,15 @@ export function Header() {
     >
       <div className="max-w-7xl mx-auto px-6 h-16 sm:h-20 flex items-center justify-between">
         {/* Brand */}
-        <Link href="/" className="group focus:outline-none" aria-label="MILAN INTERIO Home">
-          <span className="heading-display text-base sm:text-lg tracking-[0.2em] sm:tracking-[0.25em] text-milan-ivory group-hover:text-milan-gold transition-colors">
-            MILAN INTERIO
-          </span>
+        <Link href="/" className="group flex items-center focus:outline-none py-1" aria-label="MILAN INTERIO Home">
+          <Image
+            src="/Logo/Logo-no-bg.png"
+            alt="MILAN INTERIO"
+            width={180}
+            height={101}
+            priority
+            className="h-10 sm:h-12 md:h-14 w-auto object-contain transition-all duration-300 group-hover:brightness-110 group-hover:scale-[1.02]"
+          />
         </Link>
 
         {/* Desktop Navigation */}

@@ -1,17 +1,22 @@
 import Link from "next/link";
+import Image from "next/image";
 import { PUBLIC_NAV_LINKS } from "@/lib/types";
 
 export function Footer() {
   return (
     <footer className="bg-milan-charcoal border-t border-milan-border">
       <div className="max-w-7xl mx-auto px-6 py-12 sm:py-16">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 sm:gap-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 sm:gap-12 items-start">
           {/* Brand */}
           <div className="space-y-4">
-            <Link href="/" aria-label="MILAN INTERIO Home">
-              <span className="heading-display text-base sm:text-lg tracking-[0.25em] text-milan-ivory">
-                MILAN INTERIO
-              </span>
+            <Link href="/" className="inline-block group focus:outline-none" aria-label="MILAN INTERIO Home">
+              <Image
+                src="/Logo/Logo-no-bg.png"
+                alt="MILAN INTERIO"
+                width={200}
+                height={113}
+                className="h-14 sm:h-16 w-auto object-contain transition-all duration-300 group-hover:brightness-110 group-hover:scale-[1.02]"
+              />
             </Link>
             <p className="text-xs text-milan-muted leading-relaxed max-w-xs">
               Elevating Spaces. Defining Luxury.
@@ -49,12 +54,23 @@ export function Footer() {
 
       {/* Bottom bar */}
       <div className="border-t border-milan-border">
-        <div className="max-w-7xl mx-auto px-6 py-6 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <p className="text-[10px] tracking-wider text-milan-muted">
+        <div className="max-w-7xl mx-auto px-6 py-6 flex flex-col md:flex-row items-center justify-between gap-3 sm:gap-4 text-[10px] tracking-wider text-milan-muted">
+          <p>
             &copy; {new Date().getFullYear()} MILAN INTERIO. ALL RIGHTS RESERVED.
           </p>
-          <p className="text-[10px] tracking-wider text-milan-muted uppercase">
+          <p className="uppercase hidden md:block">
             ELEGANT &bull; FUNCTIONAL &bull; TIMELESS
+          </p>
+          <p>
+            Crafted with precision by{" "}
+            <a
+              href="https://ekodrix.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-milan-gold hover:text-milan-gold-light transition-colors font-medium tracking-widest hover:underline"
+            >
+              EKODRIX
+            </a>
           </p>
         </div>
       </div>

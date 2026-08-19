@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { Anek_Malayalam, Montserrat } from "next/font/google";
 import "./globals.css";
 
@@ -54,8 +55,25 @@ export default function RootLayout({
     <html
       lang="en"
       className={`${anek.variable} ${montserrat.variable}`}
+      data-scroll-behavior="smooth"
+      suppressHydrationWarning
     >
-      <body className="min-h-screen flex flex-col antialiased">
+      <body className="min-h-screen flex flex-col antialiased" suppressHydrationWarning>
+        <Script
+          id="milan-intro-init"
+          strategy="beforeInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              try {
+                if (sessionStorage.getItem('milan_intro_seen')) {
+                  document.documentElement.classList.add('milan-intro-seen');
+                } else {
+                  document.documentElement.classList.add('milan-intro-active');
+                }
+              } catch(e) {}
+            `,
+          }}
+        />
         {children}
       </body>
     </html>

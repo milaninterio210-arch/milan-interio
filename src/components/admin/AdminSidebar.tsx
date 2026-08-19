@@ -2,12 +2,13 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import {
   LayoutDashboard,
   Briefcase,
-  Image,
+  Image as ImageIcon,
   Wrench,
   Milestone,
   Layers,
@@ -58,7 +59,7 @@ export default function AdminSidebar({ userEmail }: AdminSidebarProps) {
         { label: "Services", href: "/admin/services", icon: Wrench },
         { label: "Projects", href: "/admin/projects", icon: Briefcase },
         { label: "Process", href: "/admin/process", icon: Milestone },
-        { label: "Studio", href: "/admin/studio", icon: Image },
+        { label: "Studio", href: "/admin/studio", icon: ImageIcon },
         { label: "Hero Banner", href: "/admin/hero", icon: Sliders },
         { label: "Inquiries", href: "/admin/inquiries", icon: Mail },
       ],
@@ -89,10 +90,16 @@ export default function AdminSidebar({ userEmail }: AdminSidebarProps) {
   return (
     <>
       {/* Mobile Top Bar */}
-      <header className="md:hidden w-full bg-milan-primary border-b border-milan-border px-6 py-4 flex items-center justify-between z-40 sticky top-0">
-        <span className="heading-display text-sm tracking-[0.2em] text-milan-gold font-serif">
-          MILAN ADMIN
-        </span>
+      <header className="md:hidden w-full bg-milan-primary border-b border-milan-border px-6 py-3 flex items-center justify-between z-40 sticky top-0">
+        <Link href="/admin/dashboard" className="flex items-center">
+          <Image
+            src="/Logo/Logo-no-bg.png"
+            alt="MILAN INTERIO"
+            width={120}
+            height={68}
+            className="h-8 w-auto object-contain"
+          />
+        </Link>
         <button
           onClick={toggleSidebar}
           className="text-milan-ivory hover:text-milan-gold focus:outline-none cursor-pointer"
@@ -117,11 +124,17 @@ export default function AdminSidebar({ userEmail }: AdminSidebarProps) {
       >
         <div className="flex flex-col flex-1 min-h-0 overflow-hidden">
           {/* Logo - Desktop only */}
-          <div className="hidden md:block pb-6 border-b border-milan-border mb-6">
-            <span className="heading-display text-base tracking-[0.25em] text-milan-gold block font-serif">
-              MILAN INTERIO
-            </span>
-            <span className="text-[9px] tracking-widest text-milan-muted uppercase font-mono block mt-1">
+          <div className="hidden md:block pb-5 border-b border-milan-border mb-6">
+            <Link href="/" className="inline-block group focus:outline-none mb-2">
+              <Image
+                src="/Logo/Logo-no-bg.png"
+                alt="MILAN INTERIO"
+                width={160}
+                height={90}
+                className="h-10 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
+              />
+            </Link>
+            <span className="text-[9px] tracking-widest text-milan-muted uppercase font-mono block">
               Admin Console
             </span>
           </div>
