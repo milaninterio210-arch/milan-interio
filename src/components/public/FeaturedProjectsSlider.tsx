@@ -123,7 +123,7 @@ export default function FeaturedProjectsSlider({ projects }: FeaturedProjectsSli
             )}
             
             {/* Dark Overlay */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent pointer-events-none" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent pointer-events-none" />
           </div>
         </div>
       </div>

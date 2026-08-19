@@ -40,7 +40,7 @@ export default async function ServicesPage() {
             className="absolute inset-0 w-full h-full object-cover opacity-90 sm:opacity-100"
           />
           {/* Gradient Overlay for Left Side Text Legibility */}
-          <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/45 to-transparent pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-r from-black/55 via-black/25 to-transparent pointer-events-none" />
 
           {/* Text Overlay Content */}
           <div className="relative z-10 space-y-4 max-w-2xl text-left">
