@@ -189,7 +189,7 @@ export default async function HomePage() {
                         alt={service.title}
                         className="absolute inset-0 w-full h-full object-cover opacity-25 group-hover:scale-[1.03] transition-transform duration-700 ease-in-out"
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-milan-primary/95 via-milan-primary/60 to-transparent pointer-events-none" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-milan-primary/75 via-milan-primary/35 to-transparent pointer-events-none" />
                     </>
                   )}
 
@@ -259,7 +259,16 @@ export default async function HomePage() {
           ================================================================ */}
       <section className="py-16 sm:py-24 px-6">
         <div className="max-w-4xl mx-auto border border-milan-border p-10 sm:p-16 text-center space-y-6 relative overflow-hidden">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom,rgba(197,160,89,0.04),transparent_60%)] pointer-events-none" />
+          {/* Background image overlay */}
+          <div className="absolute inset-0 z-0">
+            <img
+              src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=1600&q=80"
+              alt=""
+              className="w-full h-full object-cover opacity-25"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-milan-primary/80 via-transparent to-milan-primary/85 pointer-events-none" />
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom,rgba(197,160,89,0.06),transparent_60%)] pointer-events-none" />
+          </div>
           <span className="text-eyebrow relative z-10">Start Your Journey</span>
           <h2 className="heading-editorial text-xl sm:text-2xl md:text-3xl text-milan-ivory max-w-lg mx-auto leading-snug relative z-10">
             Ready to design your space?

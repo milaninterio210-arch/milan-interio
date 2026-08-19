@@ -122,7 +122,7 @@ export default function ProjectsGallery({ initialProjects }: ProjectsGalleryProp
                     )}
                     
                     {/* Dark gradient shadow */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent pointer-events-none" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent pointer-events-none" />
                   </div>
 
                   {/* Lower detail box */}
