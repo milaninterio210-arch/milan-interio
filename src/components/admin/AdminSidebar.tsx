@@ -19,10 +19,22 @@ import {
   X,
   Sliders,
   Award,
+  Home,
 } from "lucide-react";
 
 interface AdminSidebarProps {
   userEmail?: string;
+}
+
+interface NavItem {
+  label: string;
+  href: string;
+  icon: React.ComponentType<{ size?: number }>;
+}
+
+interface NavGroup {
+  groupLabel: string;
+  items: NavItem[];
 }
 
 export default function AdminSidebar({ userEmail }: AdminSidebarProps) {
@@ -31,18 +43,39 @@ export default function AdminSidebar({ userEmail }: AdminSidebarProps) {
   const router = useRouter();
   const supabase = createClient();
 
-  const navItems = [
-    { label: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard },
-    { label: "Site Settings", href: "/admin/settings", icon: Settings },
-    { label: "Hero Banner", href: "/admin/hero", icon: Sliders },
-    { label: "About Studio", href: "/admin/about", icon: Info },
-    { label: "Brand Pillars", href: "/admin/pillars", icon: Award },
-    { label: "Services", href: "/admin/services", icon: Wrench },
-    { label: "Process Steps", href: "/admin/process", icon: Milestone },
-    { label: "Projects", href: "/admin/projects", icon: Briefcase },
-    { label: "Studio Gallery", href: "/admin/studio", icon: Image },
-    { label: "Materials", href: "/admin/materials", icon: Layers },
-    { label: "Inquiries", href: "/admin/inquiries", icon: Mail },
+  const navGroups: NavGroup[] = [
+    {
+      groupLabel: "Overview",
+      items: [
+        { label: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard },
+      ],
+    },
+    {
+      groupLabel: "Pages",
+      items: [
+        { label: "Home", href: "/admin/home", icon: Home },
+        { label: "About Studio", href: "/admin/about", icon: Info },
+        { label: "Services", href: "/admin/services", icon: Wrench },
+        { label: "Projects", href: "/admin/projects", icon: Briefcase },
+        { label: "Process", href: "/admin/process", icon: Milestone },
+        { label: "Studio", href: "/admin/studio", icon: Image },
+        { label: "Hero Banner", href: "/admin/hero", icon: Sliders },
+        { label: "Inquiries", href: "/admin/inquiries", icon: Mail },
+      ],
+    },
+    {
+      groupLabel: "Content",
+      items: [
+        { label: "Brand Pillars", href: "/admin/pillars", icon: Award },
+        { label: "Materials", href: "/admin/materials", icon: Layers },
+      ],
+    },
+    {
+      groupLabel: "Global",
+      items: [
+        { label: "Site Settings", href: "/admin/settings", icon: Settings },
+      ],
+    },
   ];
 
   const handleLogout = async () => {
@@ -82,7 +115,7 @@ export default function AdminSidebar({ userEmail }: AdminSidebarProps) {
           isOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
-        <div className="flex flex-col flex-1">
+        <div className="flex flex-col flex-1 min-h-0 overflow-hidden">
           {/* Logo - Desktop only */}
           <div className="hidden md:block pb-6 border-b border-milan-border mb-6">
             <span className="heading-display text-base tracking-[0.25em] text-milan-gold block font-serif">
@@ -93,27 +126,34 @@ export default function AdminSidebar({ userEmail }: AdminSidebarProps) {
             </span>
           </div>
 
-          {/* Navigation Links */}
+          {/* Navigation Links — Grouped */}
           <nav className="space-y-1 flex-1 overflow-y-auto pr-2">
-            {navItems.map((item) => {
-              const Icon = item.icon;
-              const isActive = pathname.startsWith(item.href);
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  onClick={() => setIsOpen(false)}
-                  className={`flex items-center space-x-3 px-4 py-3 text-xs tracking-wider uppercase transition-colors duration-200 ${
-                    isActive
-                      ? "bg-milan-emerald border border-milan-gold/30 text-milan-gold font-semibold"
-                      : "text-milan-muted hover:text-milan-ivory hover:bg-milan-charcoal/50"
-                  }`}
-                >
-                  <Icon size={16} />
-                  <span>{item.label}</span>
-                </Link>
-              );
-            })}
+            {navGroups.map((group, groupIdx) => (
+              <div key={group.groupLabel} className={groupIdx > 0 ? "pt-4" : ""}>
+                <span className="text-[9px] tracking-[0.15em] text-milan-gold/60 uppercase font-mono block px-4 pb-2">
+                  {group.groupLabel}
+                </span>
+                {group.items.map((item) => {
+                  const Icon = item.icon;
+                  const isActive = pathname === item.href || (item.href !== "/admin/home" && pathname.startsWith(item.href + "/")) || pathname === item.href;
+                  return (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      onClick={() => setIsOpen(false)}
+                      className={`flex items-center space-x-3 px-4 py-3 text-xs tracking-wider uppercase transition-colors duration-200 ${
+                        isActive
+                          ? "bg-milan-emerald border border-milan-gold/30 text-milan-gold font-semibold"
+                          : "text-milan-muted hover:text-milan-ivory hover:bg-milan-charcoal/50"
+                      }`}
+                    >
+                      <Icon size={16} />
+                      <span>{item.label}</span>
+                    </Link>
+                  );
+                })}
+              </div>
+            ))}
           </nav>
         </div>
 
