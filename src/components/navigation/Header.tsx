@@ -33,7 +33,11 @@ export function Header() {
   }
 
   return (
-    <header className="sticky top-0 z-50 w-full bg-milan-primary/90 backdrop-blur-md border-b border-milan-border">
+    <header
+      className={`sticky top-0 z-50 w-full border-b border-milan-border transition-colors duration-300 ${
+        isOpen ? "bg-milan-primary" : "bg-milan-primary/90 backdrop-blur-md"
+      }`}
+    >
       <div className="max-w-7xl mx-auto px-6 h-16 sm:h-20 flex items-center justify-between">
         {/* Brand */}
         <Link href="/" className="group focus:outline-none" aria-label="MILAN INTERIO Home">
