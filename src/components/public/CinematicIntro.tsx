@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
+import { motion } from "framer-motion";
 
 export function CinematicIntro() {
   const [isClosing, setIsClosing] = useState(false);
@@ -15,7 +16,7 @@ export function CinematicIntro() {
       sessionStorage.setItem("milan_intro_seen", "true");
     } catch (_) {}
 
-    // Smooth luxury fade out transition
+    // Smooth luxury fade-out transition
     setTimeout(() => {
       document.documentElement.classList.add("milan-intro-seen");
       document.documentElement.classList.remove("milan-intro-active");
@@ -24,7 +25,7 @@ export function CinematicIntro() {
   }, [isClosing, isDestroyed]);
 
   useEffect(() => {
-    // If already seen, destroy immediately
+    // If already seen in this session, destroy immediately
     try {
       if (sessionStorage.getItem("milan_intro_seen")) {
         setIsDestroyed(true);
@@ -32,10 +33,10 @@ export function CinematicIntro() {
       }
     } catch (_) {}
 
-    // Auto-advance after 2.0s
+    // Auto-advance after 2.4s
     const timer = setTimeout(() => {
       handleDismiss();
-    }, 2100);
+    }, 2400);
 
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape" || e.key === " " || e.key === "Enter") {
@@ -57,50 +58,62 @@ export function CinematicIntro() {
     <div
       id="milan-intro-overlay"
       onClick={handleDismiss}
-      className={`fixed inset-0 z-[999999] flex items-center justify-center bg-milan-primary cursor-pointer select-none ${
+      className={`fixed inset-0 z-[999999] flex items-center justify-center bg-milan-primary cursor-pointer select-none transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${
         isClosing
-          ? "opacity-0 scale-[1.02] pointer-events-none"
+          ? "opacity-0 scale-[1.03] pointer-events-none"
           : "opacity-100 scale-100"
       }`}
       aria-label="Welcome to Milan Interio"
     >
-      {/* Ambient Gold Radial Glow (Hardware-accelerated, Zero Lag) */}
-      <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_50%_50%,rgba(196,149,46,0.14)_0%,rgba(8,20,19,0.85)_50%,#081413_100%)]" />
+      {/* Ambient Deep Gold Radial Glow */}
+      <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_50%_50%,rgba(196,149,46,0.18)_0%,rgba(19,47,44,0.35)_40%,rgba(8,20,19,0.92)_70%,#081413_100%)]" />
 
-      {/* Luxury Corner Focus Marks */}
-      <div className="absolute inset-6 sm:inset-10 md:inset-14 pointer-events-none">
-        <div className="absolute top-0 left-0 w-3 h-3 border-t border-l border-milan-gold/30" />
-        <div className="absolute top-0 right-0 w-3 h-3 border-t border-r border-milan-gold/30" />
-        <div className="absolute bottom-0 left-0 w-3 h-3 border-b border-l border-milan-gold/30" />
-        <div className="absolute bottom-0 right-0 w-3 h-3 border-b border-r border-milan-gold/30" />
+      {/* Central Logo & Brand Stage */}
+      <div className="relative z-10 flex flex-col items-center justify-center px-6 text-center max-w-xl mx-auto">
+        {/* Soft Warm Gold Bloom behind Logo */}
+        <div className="absolute w-44 h-44 sm:w-60 sm:h-60 rounded-full bg-milan-gold/15 blur-3xl pointer-events-none" />
+
+        {/* Master Logo Container with Framer Motion Entrance */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.92, y: 14 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+          className="relative flex flex-col items-center justify-center p-2 group"
+        >
+          <div className="relative p-2">
+            <Image
+              src="/Logo/Logo.png"
+              alt="MILAN INTERIO"
+              width={360}
+              height={270}
+              priority
+              className="h-20 sm:h-26 md:h-30 w-auto object-contain drop-shadow-[0_10px_25px_rgba(0,0,0,0.7)]"
+            />
+          </div>
+
+          {/* Luxury Brand Tagline */}
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.45, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            className="mt-4 sm:mt-5 text-center"
+          >
+            <p className="text-[9px] sm:text-[10px] tracking-[0.22em] sm:tracking-[0.35em] text-milan-gold/80 uppercase font-mono font-medium">
+              ELEVATING SPACES · DEFINING LUXURY
+            </p>
+          </motion.div>
+        </motion.div>
       </div>
 
-      {/* Central Logo Stage */}
-      <div className="relative z-10 flex flex-col items-center justify-center px-6 text-center max-w-lg mx-auto">
-        {/* Soft Gold Glow behind Logo */}
-        <div className="absolute w-44 h-44 sm:w-64 sm:h-64 rounded-full bg-milan-gold/15 blur-2xl pointer-events-none" />
-
-        {/* Master Logo Container with Metallic Shimmer */}
-        <div className="relative overflow-hidden p-2 group">
-          <Image
-            src="/Logo/Logo-no-bg.png"
-            alt="MILAN INTERIO"
-            width={380}
-            height={214}
-            priority
-            className="h-20 sm:h-28 md:h-36 w-auto object-contain transition-transform duration-700 ease-out drop-shadow-[0_10px_25px_rgba(0,0,0,0.6)]"
-          />
-
-          {/* Light Glint Sweep (Fast, Smooth, Pure CSS GPU) */}
-          <div
-            className="absolute inset-0 pointer-events-none animate-[cinema-sweep_1.5s_cubic-bezier(0.2,1,0.3,1)_forwards]"
-            style={{
-              background:
-                "linear-gradient(110deg, transparent 25%, rgba(255,245,210,0.35) 48%, rgba(255,255,255,0.7) 50%, rgba(255,245,210,0.35) 52%, transparent 75%)",
-            }}
-          />
-        </div>
-      </div>
+      {/* Subtle Bottom Interaction Cue */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.8, duration: 0.6 }}
+        className="absolute bottom-6 sm:bottom-8 text-[9px] tracking-[0.28em] text-milan-muted/40 uppercase font-mono"
+      >
+        Click to enter
+      </motion.div>
     </div>
   );
 }
