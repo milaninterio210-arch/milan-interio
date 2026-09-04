@@ -57,7 +57,7 @@ export function CinematicIntro() {
     <div
       id="milan-intro-overlay"
       onClick={handleDismiss}
-      className={`fixed inset-0 z-[999999] flex items-center justify-center bg-[#07110D] cursor-pointer select-none ${
+      className={`fixed inset-0 z-[999999] flex items-center justify-center bg-milan-primary cursor-pointer select-none ${
         isClosing
           ? "opacity-0 scale-[1.02] pointer-events-none"
           : "opacity-100 scale-100"
@@ -65,7 +65,7 @@ export function CinematicIntro() {
       aria-label="Welcome to Milan Interio"
     >
       {/* Ambient Gold Radial Glow (Hardware-accelerated, Zero Lag) */}
-      <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_50%_50%,rgba(197,160,89,0.14)_0%,rgba(7,17,13,0.85)_50%,#07110D_100%)]" />
+      <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_50%_50%,rgba(196,149,46,0.14)_0%,rgba(8,20,19,0.85)_50%,#081413_100%)]" />
 
       {/* Luxury Corner Focus Marks */}
       <div className="absolute inset-6 sm:inset-10 md:inset-14 pointer-events-none">

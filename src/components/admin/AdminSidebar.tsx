@@ -118,32 +118,29 @@ export default function AdminSidebar({ userEmail }: AdminSidebarProps) {
 
       {/* Sidebar Container */}
       <aside
-        className={`fixed md:sticky top-[61px] md:top-0 left-0 h-[calc(100vh-61px)] md:h-screen w-64 bg-milan-primary border-r border-milan-border flex flex-col justify-between p-6 z-30 transition-transform duration-300 md:translate-x-0 ${
+        className={`fixed md:sticky top-[61px] md:top-0 left-0 h-[calc(100vh-61px)] md:h-screen w-64 bg-milan-primary border-r border-milan-border flex flex-col justify-between py-3 z-30 transition-transform duration-300 md:translate-x-0 ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
-        <div className="flex flex-col flex-1 min-h-0 overflow-hidden">
+        <div className="flex flex-col w-full flex-1 min-h-0 overflow-hidden">
           {/* Logo - Desktop only */}
-          <div className="hidden md:block pb-5 border-b border-milan-border mb-6">
-            <Link href="/" className="inline-block group focus:outline-none mb-2">
+          <div className="hidden md:flex justify-center pb-3 border-b border-milan-border mb-3 w-full">
+            <Link href="/" className="inline-block group focus:outline-none">
               <Image
-                src="/Logo/Logo-no-bg.png"
+                src="/Logo/Logo.png"
                 alt="MILAN INTERIO"
-                width={160}
-                height={90}
-                className="h-10 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
+                width={140}
+                height={78}
+                className="h-8 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
               />
             </Link>
-            <span className="text-[9px] tracking-widest text-milan-muted uppercase font-mono block">
-              Admin Console
-            </span>
           </div>
 
           {/* Navigation Links — Grouped */}
-          <nav className="space-y-1 flex-1 overflow-y-auto pr-2">
+          <nav className="space-y-0.5 flex-1 overflow-y-auto w-full px-2.5">
             {navGroups.map((group, groupIdx) => (
-              <div key={group.groupLabel} className={groupIdx > 0 ? "pt-4" : ""}>
-                <span className="text-[9px] tracking-[0.15em] text-milan-gold/60 uppercase font-mono block px-4 pb-2">
+              <div key={group.groupLabel} className={groupIdx > 0 ? "pt-2.5" : ""}>
+                <span className="text-[9px] tracking-[0.15em] text-milan-gold/60 uppercase font-mono block px-3 pb-1">
                   {group.groupLabel}
                 </span>
                 {group.items.map((item) => {
@@ -154,13 +151,13 @@ export default function AdminSidebar({ userEmail }: AdminSidebarProps) {
                       key={item.href}
                       href={item.href}
                       onClick={() => setIsOpen(false)}
-                      className={`flex items-center space-x-3 px-4 py-3 text-xs tracking-wider uppercase transition-colors duration-200 ${
+                      className={`flex items-center space-x-2.5 px-3 py-2 text-[11px] tracking-wider uppercase transition-colors duration-200 ${
                         isActive
                           ? "bg-milan-emerald border border-milan-gold/30 text-milan-gold font-semibold"
                           : "text-milan-muted hover:text-milan-ivory hover:bg-milan-charcoal/50"
                       }`}
                     >
-                      <Icon size={16} />
+                      <Icon size={15} />
                       <span>{item.label}</span>
                     </Link>
                   );
@@ -171,13 +168,13 @@ export default function AdminSidebar({ userEmail }: AdminSidebarProps) {
         </div>
 
         {/* Footer info & Logout */}
-        <div className="pt-6 border-t border-milan-border mt-auto space-y-4">
+        <div className="pt-3 border-t border-milan-border mt-auto space-y-2 px-2.5">
           {userEmail && (
-            <div className="px-4">
-              <span className="text-[9px] tracking-wider text-milan-muted uppercase font-mono block">
+            <div className="px-3 py-1">
+              <span className="text-[8px] tracking-wider text-milan-muted uppercase font-mono block">
                 Logged in as:
               </span>
-              <span className="text-xs text-milan-ivory font-mono truncate block mt-0.5" title={userEmail}>
+              <span className="text-[11px] text-milan-ivory font-mono truncate block mt-0.5" title={userEmail}>
                 {userEmail}
               </span>
             </div>
@@ -185,9 +182,9 @@ export default function AdminSidebar({ userEmail }: AdminSidebarProps) {
 
           <button
             onClick={handleLogout}
-            className="w-full flex items-center space-x-3 px-4 py-3 text-xs tracking-wider uppercase text-red-400 hover:text-red-300 hover:bg-red-950/20 transition-colors duration-200 cursor-pointer"
+            className="w-full flex items-center space-x-2.5 px-3 py-2 text-[11px] tracking-wider uppercase text-red-400 hover:text-red-300 hover:bg-red-950/20 transition-colors duration-200 cursor-pointer"
           >
-            <LogOut size={16} />
+            <LogOut size={15} />
             <span>Sign Out</span>
           </button>
         </div>

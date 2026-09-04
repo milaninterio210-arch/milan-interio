@@ -7,13 +7,15 @@
    ========================================================================= */
 
 :root {
-  /* Brand Colors */
-  --bg-primary: #07110D;
-  --bg-charcoal: #0B0F0E;
-  --bg-emerald: #0F231C;
-  --bg-emerald-light: #132A22;
-  --color-gold: #C5A059;
-  --color-gold-light: #D4AF37;
+  /* Brand Colors — Lacquer Green (#132F2C) + Metallic Gold Theme */
+  --bg-primary: #081413;
+  --bg-charcoal: #0D1E1C;
+  --bg-emerald: #132F2C;
+  --bg-emerald-light: #1C423E;
+  --color-gold: #C4952E;
+  --color-gold-light: #F5DC7C;
+  --color-gold-deep: #B07E2C;
+  --color-gold-highlight: #FDF1A3;
   --color-ivory: #F5F2EA;
   --color-muted: #B8B5AC;
 
@@ -21,12 +23,14 @@
   --background: var(--bg-primary);
   --foreground: var(--color-ivory);
   --accent: var(--color-gold);
-  --border: rgba(197, 160, 89, 0.15);
-  --border-strong: rgba(197, 160, 89, 0.35);
+  --border: rgba(196, 149, 46, 0.15);
+  --border-strong: rgba(196, 149, 46, 0.35);
 
-  /* Typography */
-  --font-heading: var(--font-anek);
-  --font-body: var(--font-montserrat);
+  /* Typography — Alga (Headings) + Aspekta (Body/Content) */
+  --font-heading: var(--font-alga);
+  --font-body: var(--font-aspekta);
+  --font-anek: var(--font-alga);
+  --font-montserrat: var(--font-aspekta);
 
   /* Transitions */
   --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
@@ -49,13 +53,15 @@
   --color-milan-emerald-light: var(--bg-emerald-light);
   --color-milan-gold: var(--color-gold);
   --color-milan-gold-light: var(--color-gold-light);
+  --color-milan-gold-deep: var(--color-gold-deep);
+  --color-milan-gold-highlight: var(--color-gold-highlight);
   --color-milan-ivory: var(--color-ivory);
   --color-milan-muted: var(--color-muted);
   --color-milan-border: var(--border);
   --color-milan-border-strong: var(--border-strong);
 
-  --font-sans: var(--font-montserrat);
-  --font-serif: var(--font-anek);
+  --font-sans: var(--font-aspekta);
+  --font-serif: var(--font-alga);
 }
 
 /* -------------------------------------------------------------------------
@@ -89,7 +95,7 @@ body {
 }
 
 ::selection {
-  background-color: rgba(197, 160, 89, 0.3);
+  background-color: rgba(196, 149, 46, 0.3);
   color: var(--color-ivory);
 }
 
@@ -97,22 +103,18 @@ body {
    Typography Utilities
    ------------------------------------------------------------------------- */
 .heading-display {
-  font-family: var(--font-heading), sans-serif;
+  font-family: var(--font-heading), serif;
   font-weight: 300;
   letter-spacing: 0.04em;
   line-height: 1.1;
   text-transform: uppercase;
-  font-stretch: 125%;
-  font-variation-settings: "wdth" 125;
 }
 
 .heading-editorial {
-  font-family: var(--font-heading), sans-serif;
+  font-family: var(--font-heading), serif;
   font-weight: 400;
   letter-spacing: 0.02em;
   line-height: 1.2;
-  font-stretch: 125%;
-  font-variation-settings: "wdth" 125;
 }
 
 .text-eyebrow {
@@ -244,12 +246,12 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(197, 160, 89, 0.25);
+  background: rgba(196, 149, 46, 0.25);
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(197, 160, 89, 0.45);
+  background: rgba(196, 149, 46, 0.45);
 }
 
 /* -------------------------------------------------------------------------

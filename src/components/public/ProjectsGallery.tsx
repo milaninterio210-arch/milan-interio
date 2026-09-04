@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, SlidersHorizontal, ChevronDown } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface Project {
   slug: string;
@@ -18,6 +19,18 @@ interface ProjectsGalleryProps {
 
 export default function ProjectsGallery({ initialProjects }: ProjectsGalleryProps) {
   const [activeFilter, setActiveFilter] = useState("ALL");
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const filterRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (filterRef.current && !filterRef.current.contains(event.target as Node)) {
+        setIsFilterOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   const filters = ["ALL", "RESIDENTIAL", "COMMERCIAL", "HOSPITALITY", "OFFICE", "RETAIL"];
 
@@ -63,13 +76,69 @@ export default function ProjectsGallery({ initialProjects }: ProjectsGalleryProp
   return (
     <div className="space-y-12 sm:space-y-16">
       {/* Header section with Filter controls */}
-      <section className="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-6 border-b border-milan-border/60">
-        <h1 className="heading-display text-2xl sm:text-3xl text-milan-ivory uppercase tracking-wider font-serif">
-          OUR PROJECTS
-        </h1>
+      <section className="flex flex-col md:flex-row md:items-center justify-between gap-6 sm:pb-6 pb-3">
+        {/* Title row with Filter button on the right side for mobile */}
+        <div className="flex items-center justify-between w-full md:w-auto">
+          <h1 className="heading-display text-2xl sm:text-3xl text-milan-ivory uppercase tracking-wider font-serif">
+            OUR PROJECTS
+          </h1>
 
-        {/* Filters Grid */}
-        <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+          {/* Mobile Filter Button (Top right side) */}
+          <div className="relative md:hidden" ref={filterRef}>
+            <button
+              type="button"
+              onClick={() => setIsFilterOpen(!isFilterOpen)}
+              className="flex items-center gap-2 px-3.5 py-2 bg-milan-charcoal radius-sm text-milan-gold text-[10px] tracking-widest uppercase font-mono transition-colors active:scale-95 cursor-pointer"
+              aria-label="Filter Projects"
+              aria-expanded={isFilterOpen}
+            >
+              <SlidersHorizontal size={12} />
+              <span>{activeFilter === "ALL" ? "FILTER" : activeFilter}</span>
+              <ChevronDown
+                size={12}
+                className={`transition-transform duration-300 ${isFilterOpen ? "rotate-180" : ""}`}
+              />
+            </button>
+
+            {/* Mobile Dropdown Panel */}
+            <AnimatePresence>
+              {isFilterOpen && (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.94, y: -6 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.94, y: -6 }}
+                  transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
+                  className="absolute right-0 mt-2 w-48 bg-milan-charcoal shadow-2xl z-40 py-1 origin-top-right"
+                >
+                  {filters.map((filter) => {
+                    const isActive = activeFilter === filter;
+                    return (
+                      <button
+                        key={filter}
+                        type="button"
+                        onClick={() => {
+                          setActiveFilter(filter);
+                          setIsFilterOpen(false);
+                        }}
+                        className={`w-full px-4 py-2.5 text-left text-[11px] font-mono tracking-wider uppercase transition-colors flex items-center justify-between cursor-pointer ${
+                          isActive
+                            ? "text-milan-gold bg-milan-emerald/30 font-semibold"
+                            : "text-milan-ivory hover:text-milan-gold hover:bg-milan-emerald/20"
+                        }`}
+                      >
+                        <span>{filter}</span>
+                        {isActive && <span className="text-milan-gold text-xs">✓</span>}
+                      </button>
+                    );
+                  })}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+        </div>
+
+        {/* Desktop Filters Grid (Hidden on Mobile) */}
+        <div className="hidden md:flex flex-wrap items-center gap-2 sm:gap-3">
           {filters.map((filter) => {
             const isActive = activeFilter === filter;
             return (
@@ -78,8 +147,8 @@ export default function ProjectsGallery({ initialProjects }: ProjectsGalleryProp
                 onClick={() => setActiveFilter(filter)}
                 className={`px-4 py-2 text-[10px] tracking-widest font-mono uppercase font-semibold transition-all duration-300 cursor-pointer ${
                   isActive
-                    ? "border border-milan-gold bg-transparent text-milan-gold"
-                    : "border border-transparent text-milan-muted hover:text-milan-gold"
+                    ? "bg-transparent text-milan-gold"
+                    : "text-milan-muted hover:text-milan-gold"
                 }`}
               >
                 {filter}
@@ -102,7 +171,7 @@ export default function ProjectsGallery({ initialProjects }: ProjectsGalleryProp
                 <Link
                   key={project.slug}
                   href={`/projects/${project.slug}`}
-                  className={`${span} group flex flex-col border border-milan-border/60 hover:border-milan-gold transition-colors duration-300 bg-milan-primary overflow-hidden`}
+                  className={`${span} group flex flex-col hover:border-milan-gold transition-colors duration-300 bg-milan-primary overflow-hidden`}
                 >
                   {/* Upper image block */}
                   <div className={`w-full relative ${aspect} bg-milan-charcoal overflow-hidden border-b border-milan-border/60 group-hover:border-milan-gold/40 transition-colors`}>

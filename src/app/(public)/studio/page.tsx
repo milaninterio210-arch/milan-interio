@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
 import Link from "next/link";
+import ConsultationCTA from "@/components/public/ConsultationCTA";
 
 export const metadata: Metadata = {
   title: "Studio Archive",
@@ -18,9 +19,9 @@ export default async function StudioPage() {
     .order("display_order", { ascending: true });
 
   return (
-    <div className="py-20 sm:py-24">
+    <div className="py-10 sm:py-14">
       {/* Header */}
-      <section className="px-6 text-center space-y-5 mb-16 sm:mb-24 animate-fade-up">
+      <section className="px-4 text-center space-y-5 mb-16 sm:mb-24 animate-fade-up">
         <p className="text-eyebrow">ARCHIVE</p>
         <h1 className="heading-display text-3xl sm:text-4xl md:text-5xl text-milan-ivory max-w-3xl mx-auto">
           THE STUDIO
@@ -31,16 +32,16 @@ export default async function StudioPage() {
       </section>
 
       {/* Gallery or Empty State */}
-      <section className="px-6">
+      <section className="px-4 sm:mb-10">
         <div className="max-w-6xl mx-auto">
           {gallery && gallery.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
               {gallery.map((item, idx) => (
                 <div
                   key={idx}
-                  className="group border border-milan-border hover:border-milan-gold/20 transition-colors duration-300 overflow-hidden"
+                  className="group hover:border-milan-gold/20 transition-colors duration-300 overflow-hidden"
                 >
-                  <div className="aspect-[3/4] bg-milan-charcoal overflow-hidden">
+                  <div className="aspect-[4/3] sm:aspect-[3/4] bg-milan-charcoal overflow-hidden">
                     <img
                       src={item.image_url}
                       alt={item.title}
@@ -59,7 +60,7 @@ export default async function StudioPage() {
                       )}
                     </div>
                     {item.category && (
-                      <span className="text-milan-gold text-[9px] tracking-widest uppercase border border-milan-gold/20 px-2 py-0.5 shrink-0">
+                      <span className="text-milan-gold text-[9px] tracking-widest uppercase px-2 py-0.5 shrink-0">
                         {item.category}
                       </span>
                     )}
@@ -85,6 +86,9 @@ export default async function StudioPage() {
           )}
         </div>
       </section>
+
+      {/* CTA */}
+      <ConsultationCTA />
     </div>
   );
 }
