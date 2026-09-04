@@ -4,14 +4,14 @@ import { PUBLIC_NAV_LINKS } from "@/lib/types";
 
 export function Footer() {
   return (
-    <footer className="bg-milan-charcoal border-t border-milan-border">
-      <div className="max-w-7xl mx-auto px-6 py-12 sm:py-16">
+    <footer className="bg-milan-charcoal">
+      <div className="max-w-7xl mx-auto px-4 py-12 sm:py-16">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 sm:gap-12 items-start">
           {/* Brand */}
           <div className="space-y-4">
             <Link href="/" className="inline-block group focus:outline-none" aria-label="MILAN INTERIO Home">
               <Image
-                src="/Logo/Logo-no-bg.png"
+                src="/Logo/Logo.png"
                 alt="MILAN INTERIO"
                 width={200}
                 height={113}
@@ -26,20 +26,58 @@ export function Footer() {
           </div>
 
           {/* Links */}
-          <div>
-            <span className="text-eyebrow block mb-4 sm:mb-6">Explore</span>
-            <ul className="grid grid-cols-2 gap-x-6 gap-y-3">
-              {PUBLIC_NAV_LINKS.filter(link => link.href !== "/").map((link) => (
-                <li key={link.href}>
+          <div className="grid grid-cols-2 gap-x-6 sm:gap-x-8">
+            <div>
+              <span className="text-eyebrow block mb-4 sm:mb-6">Explore</span>
+              <ul className="space-y-3">
+                <li>
                   <Link
-                    href={link.href}
-                    className="text-xs text-milan-muted hover:text-milan-ivory transition-colors tracking-wider"
+                    href="/about"
+                    className="text-xs text-milan-muted hover:text-milan-ivory transition-colors tracking-wider block"
                   >
-                    {link.label}
+                    ABOUT
                   </Link>
                 </li>
-              ))}
-            </ul>
+                <li>
+                  <Link
+                    href="/projects"
+                    className="text-xs text-milan-muted hover:text-milan-ivory transition-colors tracking-wider block"
+                  >
+                    PROJECTS
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/studio"
+                    className="text-xs text-milan-muted hover:text-milan-ivory transition-colors tracking-wider block"
+                  >
+                    STUDIO
+                  </Link>
+                </li>
+              </ul>
+            </div>
+
+            <div>
+              <span className="text-eyebrow block mb-4 sm:mb-6">Services</span>
+              <ul className="space-y-3">
+                <li>
+                  <Link
+                    href="/services"
+                    className="text-xs text-milan-muted hover:text-milan-ivory transition-colors tracking-wider block"
+                  >
+                    SERVICES
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/process"
+                    className="text-xs text-milan-muted hover:text-milan-ivory transition-colors tracking-wider block"
+                  >
+                    PROCESS
+                  </Link>
+                </li>
+              </ul>
+            </div>
           </div>
 
           {/* Brand Statement */}

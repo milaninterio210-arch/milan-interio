@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
 import ProjectsGallery from "@/components/public/ProjectsGallery";
+import ConsultationCTA from "@/components/public/ConsultationCTA";
 
 export const metadata: Metadata = {
   title: "Projects",
@@ -18,12 +19,15 @@ export default async function ProjectsPage() {
     .order("display_order", { ascending: true });
 
   return (
-    <div className="py-20 sm:py-28">
-      <section className="px-6">
+    <div className="py-10 sm:py-14 space-y-16 sm:space-y-24">
+      <section className="px-4 sm:px-6">
         <div className="max-w-7xl mx-auto">
           <ProjectsGallery initialProjects={projects || []} />
         </div>
       </section>
+
+      {/* CTA */}
+      <ConsultationCTA />
     </div>
   );
 }

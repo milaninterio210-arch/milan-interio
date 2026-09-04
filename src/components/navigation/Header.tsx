@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import { PUBLIC_NAV_LINKS } from "@/lib/types";
 
 export function Header() {
@@ -35,15 +36,15 @@ export function Header() {
 
   return (
     <header
-      className={`sticky top-0 z-50 w-full border-b border-milan-border transition-colors duration-300 ${
-        isOpen ? "bg-milan-primary" : "bg-milan-primary/90 backdrop-blur-md"
+      className={`sticky top-0 z-50 w-full transition-colors duration-300 ${
+        isOpen ? "bg-milan-charcoal" : "bg-milan-charcoal/90 backdrop-blur-md"
       }`}
     >
       <div className="max-w-7xl mx-auto px-6 h-16 sm:h-20 flex items-center justify-between">
         {/* Brand */}
         <Link href="/" className="group flex items-center focus:outline-none py-1" aria-label="MILAN INTERIO Home">
           <Image
-            src="/Logo/Logo-no-bg.png"
+            src="/Logo/Logo.png"
             alt="MILAN INTERIO"
             width={180}
             height={101}
@@ -54,7 +55,7 @@ export function Header() {
 
         {/* Desktop Navigation */}
         <nav className="hidden lg:flex items-center gap-6 xl:gap-8" aria-label="Main navigation">
-          {PUBLIC_NAV_LINKS.filter(link => link.href !== "/").map((link) => (
+          {PUBLIC_NAV_LINKS.map((link) => (
             <Link
               key={link.href}
               href={link.href}
@@ -69,7 +70,7 @@ export function Header() {
           ))}
           <Link
             href="/contact"
-            className="px-5 py-2 text-[10px] tracking-widest text-milan-primary bg-milan-gold hover:bg-milan-gold-light transition-colors font-semibold uppercase"
+            className="px-5 py-2.5 text-[10px] tracking-widest text-milan-primary bg-milan-gold hover:bg-milan-gold-light transition-colors font-semibold uppercase"
           >
             START A PROJECT
           </Link>
@@ -87,37 +88,62 @@ export function Header() {
       </div>
 
       {/* Mobile Navigation Overlay */}
-      {isOpen && (
-        <div
-          className="lg:hidden fixed inset-0 top-16 sm:top-20 z-40 bg-milan-primary flex flex-col justify-between animate-fade-in"
-          role="dialog"
-          aria-label="Mobile navigation"
-        >
-          <nav className="flex flex-col p-8 gap-5" aria-label="Mobile navigation links">
-            {PUBLIC_NAV_LINKS.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={`heading-display text-xl tracking-wider transition-colors py-1 ${
-                  isActive(link.href)
-                    ? "text-milan-gold"
-                    : "text-milan-ivory hover:text-milan-gold"
-                }`}
-              >
-                {link.label}
-              </Link>
-            ))}
-          </nav>
-          <div className="p-8 border-t border-milan-border">
-            <Link
-              href="/contact"
-              className="block w-full py-4 text-center text-[11px] tracking-widest text-milan-primary bg-milan-gold hover:bg-milan-gold-light transition-colors font-semibold uppercase"
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.25 }}
+            className="lg:hidden fixed inset-x-0 bottom-0 top-16 sm:top-20 z-40 bg-milan-charcoal flex flex-col justify-between"
+            role="dialog"
+            aria-label="Mobile navigation"
+          >
+            <nav className="flex-1 flex flex-col items-center justify-center p-6 gap-6 sm:gap-7 text-center" aria-label="Mobile navigation links">
+              {PUBLIC_NAV_LINKS.map((link, idx) => (
+                <motion.div
+                  key={link.href}
+                  initial={{ opacity: 0, x: -40 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{
+                    duration: 0.45,
+                    delay: idx * 0.07 + 0.1,
+                    ease: [0.16, 1, 0.3, 1],
+                  }}
+                >
+                  <Link
+                    href={link.href}
+                    className={`heading-display text-2xl tracking-widest transition-colors py-1 ${
+                      isActive(link.href)
+                        ? "text-milan-gold"
+                        : "text-milan-ivory hover:text-milan-gold"
+                    }`}
+                  >
+                    {link.label}
+                  </Link>
+                </motion.div>
+              ))}
+            </nav>
+            <motion.div
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{
+                duration: 0.4,
+                delay: PUBLIC_NAV_LINKS.length * 0.07 + 0.15,
+                ease: [0.16, 1, 0.3, 1],
+              }}
+              className="p-6 border-t border-milan-border/40 flex justify-center"
             >
-              START A PROJECT
-            </Link>
-          </div>
-        </div>
-      )}
+              <Link
+                href="/contact"
+                className="block w-full max-w-xs py-3.5 text-center text-[11px] tracking-widest text-milan-primary bg-milan-gold hover:bg-milan-gold-light transition-colors font-semibold uppercase"
+              >
+                START A PROJECT
+              </Link>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </header>
   );
 }

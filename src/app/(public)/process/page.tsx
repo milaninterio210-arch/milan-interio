@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
-import Link from "next/link";
+import ConsultationCTA from "@/components/public/ConsultationCTA";
 
 export const metadata: Metadata = {
   title: "Our Process",
@@ -17,9 +17,9 @@ export default async function ProcessPage() {
     .order("step_number", { ascending: true });
 
   return (
-    <div className="py-20 sm:py-24">
+    <div className="py-10 sm:py-14">
       {/* Header */}
-      <section className="px-6 text-center space-y-5 mb-16 sm:mb-24 animate-fade-up">
+      <section className="px-4 text-center space-y-5 mb-16 sm:mb-24 animate-fade-up">
         <p className="text-eyebrow">METHODOLOGY</p>
         <h1 className="heading-display text-3xl sm:text-4xl md:text-5xl text-milan-ivory max-w-3xl mx-auto">
           THE PROCESS
@@ -29,34 +29,32 @@ export default async function ProcessPage() {
         </p>
       </section>
 
-      {/* Timeline */}
-      <section className="px-6 mb-16 sm:mb-24">
-        <div className="max-w-4xl mx-auto">
+      {/* Methodology Phases Grid — Borderless Luxury Design */}
+      <section className="px-4 mb-16 sm:mb-10">
+        <div className="max-w-7xl mx-auto">
           {steps && steps.length > 0 ? (
-            <div className="relative">
-              {/* Vertical connector line — visible on sm+ */}
-              <div className="hidden sm:block absolute left-[31px] top-4 bottom-4 w-px bg-milan-border" />
-
-              <div className="space-y-6 sm:space-y-10">
-                {steps.map((step) => (
-                  <div key={step.step_number} className="flex gap-5 sm:gap-8">
-                    {/* Step badge */}
-                    <div className="relative z-10 w-16 h-16 shrink-0 flex items-center justify-center border border-milan-gold bg-milan-primary text-milan-gold font-mono text-sm">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+              {steps.map((step) => (
+                <div
+                  key={step.step_number}
+                  className="group p-4 sm:p-10 bg-milan-charcoal/25 hover:bg-milan-charcoal/50 transition-all duration-300 space-y-4"
+                >
+                  <div className="flex items-center justify-between pb-2">
+                    <span className="text-2xl sm:text-3xl font-mono text-milan-gold font-light">
                       {step.step_number}
-                    </div>
-
-                    {/* Content */}
-                    <div className="border border-milan-border p-5 sm:p-8 flex-1 hover:border-milan-gold/20 transition-colors duration-300 space-y-3">
-                      <h2 className="heading-display text-base sm:text-xl text-milan-ivory">
-                        {step.title}
-                      </h2>
-                      <p className="text-xs sm:text-sm text-milan-muted leading-relaxed font-light">
-                        {step.description}
-                      </p>
-                    </div>
+                    </span>
+                    <span className="text-[10px] font-mono tracking-[0.2em] uppercase text-milan-gold/60">
+                      PHASE
+                    </span>
                   </div>
-                ))}
-              </div>
+                  <h2 className="heading-display text-lg sm:text-xl text-milan-ivory uppercase tracking-wider group-hover:text-milan-gold transition-colors font-semibold">
+                    {step.title}
+                  </h2>
+                  <p className="text-xs sm:text-sm text-milan-muted leading-relaxed font-light group-hover:text-milan-ivory/80 transition-colors">
+                    {step.description}
+                  </p>
+                </div>
+              ))}
             </div>
           ) : (
             <div className="text-center py-12">
@@ -69,26 +67,7 @@ export default async function ProcessPage() {
       </section>
 
       {/* CTA */}
-      <section className="px-6">
-        <div className="max-w-4xl mx-auto border border-milan-border p-10 sm:p-16 text-center space-y-5 relative overflow-hidden">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom,rgba(197,160,89,0.04),transparent_60%)] pointer-events-none" />
-          <span className="text-eyebrow relative z-10">BEGIN THE JOURNEY</span>
-          <h2 className="heading-editorial text-xl sm:text-2xl text-milan-ivory max-w-lg mx-auto leading-snug relative z-10">
-            Start with a conversation.
-          </h2>
-          <p className="text-body max-w-md mx-auto text-sm relative z-10">
-            Every exceptional interior begins with understanding your vision, lifestyle, and spatial requirements.
-          </p>
-          <div className="pt-2 relative z-10">
-            <Link
-              href="/contact"
-              className="inline-block border border-milan-gold bg-milan-gold text-milan-primary hover:bg-transparent hover:text-milan-gold px-8 py-3.5 text-[11px] tracking-widest font-semibold uppercase transition-all duration-300"
-            >
-              Request Consultation
-            </Link>
-          </div>
-        </div>
-      </section>
+      <ConsultationCTA />
     </div>
   );
 }

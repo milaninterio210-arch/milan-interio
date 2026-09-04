@@ -112,7 +112,7 @@ export function ContactForm() {
           autoComplete="name"
           value={formData.full_name}
           onChange={(e) => setFormData({ ...formData, full_name: e.target.value })}
-          className="w-full bg-milan-primary/30 border border-milan-border/60 hover:border-milan-gold/40 focus:border-milan-gold focus:outline-none px-4 py-3 text-sm text-milan-ivory placeholder:text-milan-muted/30 transition-all duration-300 font-sans"
+          className="w-full bg-white/[0.06] hover:bg-white/[0.09] focus:bg-white/[0.1] focus:outline-none px-4 py-3.5 text-sm text-milan-ivory placeholder:text-milan-muted/40 rounded-sm transition-all duration-300 font-sans border-none"
           placeholder="Enter your name"
         />
       </div>
@@ -130,7 +130,7 @@ export function ContactForm() {
           autoComplete="email"
           value={formData.email}
           onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-          className="w-full bg-milan-primary/30 border border-milan-border/60 hover:border-milan-gold/40 focus:border-milan-gold focus:outline-none px-4 py-3 text-sm text-milan-ivory placeholder:text-milan-muted/30 transition-all duration-300 font-sans"
+          className="w-full bg-white/[0.06] hover:bg-white/[0.09] focus:bg-white/[0.1] focus:outline-none px-4 py-3.5 text-sm text-milan-ivory placeholder:text-milan-muted/40 transition-all duration-300 font-sans border-none rounded-sm"
           placeholder="Enter your email"
         />
       </div>
@@ -146,7 +146,7 @@ export function ContactForm() {
           autoComplete="tel"
           value={formData.phone}
           onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-          className="w-full bg-milan-primary/30 border border-milan-border/60 hover:border-milan-gold/40 focus:border-milan-gold focus:outline-none px-4 py-3 text-sm text-milan-ivory placeholder:text-milan-muted/30 transition-all duration-300 font-sans"
+          className="w-full bg-white/[0.06] hover:bg-white/[0.09] focus:bg-white/[0.1] focus:outline-none px-4 py-3.5 text-sm text-milan-ivory placeholder:text-milan-muted/40 transition-all duration-300 font-sans border-none rounded-sm"
           placeholder="Enter your phone number"
         />
       </div>
@@ -160,7 +160,7 @@ export function ContactForm() {
           <button
             type="button"
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-            className="w-full bg-milan-primary/30 border border-milan-border/60 hover:border-milan-gold/40 focus:border-milan-gold focus:outline-none px-4 py-3 text-sm text-milan-ivory transition-all duration-300 cursor-pointer flex items-center justify-between text-left font-sans"
+            className="w-full bg-white/[0.06] hover:bg-white/[0.09] focus:bg-white/[0.1] focus:outline-none px-4 py-3.5 text-sm text-milan-ivory transition-all duration-300 cursor-pointer flex items-center justify-between text-left font-sans border-none rounded-sm"
           >
             <span>
               {formData.project_type || "Select project type"}
@@ -174,14 +174,14 @@ export function ContactForm() {
           </button>
 
           {isDropdownOpen && (
-            <div className="absolute left-0 right-0 mt-1.5 bg-milan-charcoal border border-milan-border/80 z-50 animate-fade-in shadow-2xl divide-y divide-milan-border/20">
+            <div className="absolute left-0 right-0 mt-1.5 bg-milan-charcoal z-50 animate-fade-in shadow-2xl divide-y divide-white/5 border-none">
               <button
                 type="button"
                 onClick={() => {
                   setFormData({ ...formData, project_type: "" });
                   setIsDropdownOpen(false);
                 }}
-                className="w-full px-4 py-3.5 text-left text-xs text-milan-muted hover:text-milan-gold hover:bg-milan-emerald/20 transition-colors font-sans cursor-pointer"
+                className="w-full px-4 py-3.5 text-left text-xs text-milan-muted hover:text-milan-gold hover:bg-white/[0.05] transition-colors font-sans cursor-pointer rounded-sm"
               >
                 Select project type
               </button>
@@ -195,8 +195,8 @@ export function ContactForm() {
                   }}
                   className={`w-full px-4 py-3 text-left text-sm transition-colors font-sans cursor-pointer ${
                     formData.project_type === type
-                      ? "text-milan-gold bg-milan-emerald/30 font-semibold"
-                      : "text-milan-ivory hover:text-milan-gold hover:bg-milan-emerald/20"
+                      ? "text-milan-gold bg-white/[0.08] font-semibold"
+                      : "text-milan-ivory hover:text-milan-gold hover:bg-white/[0.05] rounded-sm"
                   }`}
                 >
                   {type}
@@ -219,7 +219,7 @@ export function ContactForm() {
           rows={4}
           value={formData.message}
           onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-          className="w-full bg-milan-primary/30 border border-milan-border/60 hover:border-milan-gold/40 focus:border-milan-gold focus:outline-none px-4 py-3 text-sm text-milan-ivory placeholder:text-milan-muted/30 transition-all duration-300 resize-none font-sans"
+          className="w-full bg-white/[0.06] hover:bg-white/[0.09] focus:bg-white/[0.1] focus:outline-none px-4 py-3.5 text-sm text-milan-ivory placeholder:text-milan-muted/40 transition-all duration-300 resize-none font-sans border-none rounded-sm"
           placeholder="Tell us about your project..."
         />
       </div>

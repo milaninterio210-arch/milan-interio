@@ -84,7 +84,7 @@ export default function HeroCarousel({ slides }: HeroCarouselProps) {
       onTouchStart={onTouchStart}
       onTouchMove={onTouchMove}
       onTouchEnd={onTouchEnd}
-      className="relative min-h-[85vh] sm:min-h-[90vh] flex items-center justify-center overflow-hidden"
+      className="relative min-h-[85vh] sm:min-h-[90vh] flex items-end sm:items-center justify-start sm:justify-center overflow-hidden"
     >
       {/* Background Slides */}
       {slides.map((slide, idx) => (
@@ -102,7 +102,7 @@ export default function HeroCarousel({ slides }: HeroCarouselProps) {
                 aria-hidden="true"
                 className="absolute inset-0 w-full h-full object-cover animate-fade-in"
               />
-              <div className="absolute inset-0 bg-black/15" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-black/10 sm:bg-black/15" />
             </>
           ) : (
             <div className="absolute inset-0 bg-milan-charcoal">
@@ -113,19 +113,19 @@ export default function HeroCarousel({ slides }: HeroCarouselProps) {
       ))}
 
       {/* Content Overlay */}
-      <div className="relative z-10 w-full max-w-7xl mx-auto text-left px-6 py-24">
+      <div className="relative z-10 w-full max-w-7xl mx-auto text-left px-4 pb-12 pt-16 sm:py-24">
         {slides.map((slide, idx) => {
           if (idx !== current) return null;
           return (
             <div
               key={idx}
-              className="space-y-6 sm:space-y-8 animate-fade-up duration-700 max-w-3xl"
+              className="space-y-2.5 sm:space-y-8 animate-fade-up duration-700 max-w-3xl"
             >
               <p className="text-eyebrow tracking-[0.2em] sm:tracking-[0.25em]">
                 {slide.eyebrow || "Interior Design | Fit-Out | Custom Joinery | Furniture"}
               </p>
 
-              <h1 className="heading-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-milan-ivory leading-[1.15] font-serif">
+              <h1 className="heading-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-milan-ivory leading-[1.15] font-serif ">
                 {slide.heading}
               </h1>
 
@@ -133,11 +133,11 @@ export default function HeroCarousel({ slides }: HeroCarouselProps) {
                 {slide.subheading}
               </p>
 
-              <div className="pt-4 flex flex-col sm:flex-row items-start sm:items-center justify-start gap-3 sm:gap-4">
+              <div className="pt-2 sm:pt-4 flex flex-col sm:flex-row items-start sm:items-center justify-start gap-2 sm:gap-4">
                 {slide.primary_cta_label && (
                   <Link
                     href={slide.primary_cta_url || "/projects"}
-                    className="w-full sm:w-auto px-8 py-3.5 border border-milan-gold bg-milan-gold text-milan-primary hover:bg-transparent hover:text-milan-gold text-[11px] tracking-widest uppercase font-semibold transition-all duration-300 text-center"
+                    className="w-fit sm:w-auto px-7 sm:px-8 py-3.5 border border-milan-gold bg-milan-gold text-milan-primary hover:bg-transparent hover:text-milan-gold text-[11px] tracking-widest uppercase font-semibold transition-all duration-300 text-center"
                   >
                     {slide.primary_cta_label}
                   </Link>
@@ -145,7 +145,7 @@ export default function HeroCarousel({ slides }: HeroCarouselProps) {
                 {slide.secondary_cta_label && (
                   <Link
                     href={slide.secondary_cta_url || "/contact"}
-                    className="w-full sm:w-auto px-8 py-3.5 border border-milan-border text-milan-ivory hover:border-milan-gold hover:text-milan-gold text-[11px] tracking-widest uppercase font-semibold transition-all duration-300 text-center"
+                    className="w-fit sm:w-auto px-0 sm:px-8 py-2 sm:py-3.5 text-milan-ivory hover:border-milan-gold hover:text-milan-gold text-[11px] tracking-widest uppercase font-semibold transition-all duration-300 text-left sm:text-center"
                   >
                     {slide.secondary_cta_label}
                   </Link>
@@ -178,7 +178,7 @@ export default function HeroCarousel({ slides }: HeroCarouselProps) {
           </button>
 
           {/* Indicators / Dots */}
-          <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex space-x-2.5">
+          <div className="absolute bottom-4 sm:bottom-8 left-1/2 -translate-x-1/2 z-20 flex space-x-2.5">
             {slides.map((_, idx) => (
               <button
                 key={idx}

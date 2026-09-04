@@ -163,6 +163,7 @@ export interface NavLink {
 
 export const PUBLIC_NAV_LINKS: NavLink[] = [
   { label: "HOME", href: "/" },
+
   { label: "ABOUT", href: "/about" },
   { label: "SERVICES", href: "/services" },
   { label: "PROJECTS", href: "/projects" },

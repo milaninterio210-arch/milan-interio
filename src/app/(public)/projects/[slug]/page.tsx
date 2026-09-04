@@ -55,7 +55,7 @@ export default async function ProjectDetailPage({
     .order("display_order", { ascending: true });
 
   return (
-    <div className="py-20 sm:py-24">
+    <div className="py-14 sm:py-14">
       {/* Header */}
       <section className="px-6 mb-8 sm:mb-10">
         <div className="max-w-5xl mx-auto">
@@ -70,7 +70,7 @@ export default async function ProjectDetailPage({
       </section>
 
       {/* Cover Image — consistent aspect ratio container regardless of source dimensions */}
-      <section className="px-6 mb-10 sm:mb-14">
+      <section className="sm:px-6 px-4 mb-10 sm:mb-14">
         <div className="max-w-5xl mx-auto">
           <div className="aspect-[16/9] sm:aspect-[2/1] bg-milan-charcoal border border-milan-border overflow-hidden">
             {project.cover_image_url ? (
@@ -89,7 +89,7 @@ export default async function ProjectDetailPage({
       </section>
 
       {/* Project Info */}
-      <section className="px-6 mb-12 sm:mb-16">
+      <section className="px-4 mb-12 sm:mb-16">
         <div className="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-10 sm:gap-12">
           {/* Main content */}
           <div className="lg:col-span-2 space-y-5">
@@ -127,7 +127,7 @@ export default async function ProjectDetailPage({
 
       {/* Gallery */}
       {images && images.length > 0 && (
-        <section className="px-6 mb-12 sm:mb-16">
+        <section className="px-4 mb-12 sm:mb-16">
           <div className="max-w-5xl mx-auto border-t border-milan-border pt-10 sm:pt-14">
             <span className="text-eyebrow block mb-8">Gallery</span>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8">
@@ -154,7 +154,7 @@ export default async function ProjectDetailPage({
 
       {/* CTA */}
       <section className="px-6">
-        <div className="max-w-5xl mx-auto border border-milan-border p-8 sm:p-10 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+        <div className="max-w-5xl mx-auto bg-milan-charcoal sm:p-8 p-4 sm:p-10 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
           <div className="space-y-2">
             <span className="text-eyebrow block">Similar Concepts</span>
             <p className="text-xs sm:text-sm text-milan-muted max-w-md">
@@ -163,7 +163,7 @@ export default async function ProjectDetailPage({
           </div>
           <Link
             href="/contact"
-            className="inline-flex items-center gap-2 border border-milan-gold bg-milan-gold text-milan-primary hover:bg-transparent hover:text-milan-gold px-6 py-3 text-[11px] tracking-widest font-semibold uppercase transition-all duration-300 shrink-0"
+            className="w-full sm:w-auto flex sm:inline-flex items-center justify-center gap-2 border border-milan-gold bg-milan-gold text-milan-primary hover:bg-transparent hover:text-milan-gold px-6 py-3 text-[11px] tracking-widest font-semibold uppercase transition-all duration-300 shrink-0"
           >
             <span>Consultation</span>
             <ArrowRight size={12} />
