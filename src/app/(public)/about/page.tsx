@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
 import { Compass, Target } from "lucide-react";
+import ConsultationCTA from "@/components/public/ConsultationCTA";
 
 export const metadata: Metadata = {
   title: "About",
@@ -49,9 +50,9 @@ export default async function AboutPage() {
   ];
 
   return (
-    <div className="py-20 sm:py-28 space-y-24 sm:space-y-32">
+    <div className="py-10 sm:py-14 space-y-24 sm:space-y-10">
       {/* SECTION 1: HERO (2-Column about details) */}
-      <section className="max-w-7xl mx-auto px-6 flex flex-col lg:flex-row items-stretch justify-between gap-12 lg:gap-16">
+      <section className="max-w-7xl mx-auto px-4 flex flex-col lg:flex-row items-stretch justify-between gap-12 lg:gap-16">
         {/* Left Column: text description */}
         <div className="w-full lg:w-1/2 space-y-6 text-left animate-fade-up">
           <p className="text-eyebrow tracking-widest text-milan-gold">ABOUT</p>
@@ -70,40 +71,40 @@ export default async function AboutPage() {
           <img
             src={about?.banner_image_url || "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=800&q=80"}
             alt="Milan Interio showroom lobby reception desk"
-            className="w-full h-full object-cover opacity-90"
+            className="w-full h-full object-cover"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-milan-primary/10 to-transparent pointer-events-none" />
         </div>
       </section>
 
       {/* SECTION 2: VISION & MISSION */}
-      <section className="max-w-7xl mx-auto px-6 animate-fade-up">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-10 sm:gap-16 border-t border-b border-milan-border/60 py-16 sm:py-20">
-          {/* Vision */}
-          <div className="flex items-start gap-4">
-            <div className="p-3 border border-milan-gold/20 bg-milan-charcoal/20 shrink-0 text-milan-gold">
-              <Compass size={24} strokeWidth={1.5} />
+      <section className="max-w-7xl mx-auto px-4 animate-fade-up">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
+          {/* Vision Card */}
+          <div className="group border border-milan-border/60 hover:border-milan-gold/60 bg-milan-charcoal/30 hover:bg-milan-charcoal/50 p-4 sm:p-10 transition-all duration-300 flex flex-col sm:flex-row items-start gap-6">
+            <div className="w-12 h-12 shrink-0 bg-milan-emerald/40 text-milan-gold flex items-center justify-center group-hover:border-milan-gold transition-colors duration-300">
+              <Compass size={22} strokeWidth={1.5} />
             </div>
-            <div className="space-y-2">
-              <h3 className="text-xs font-mono tracking-wider text-milan-gold uppercase">
+            <div className="space-y-3 flex-1">
+              <h3 className="heading-display text-xs sm:text-sm text-milan-gold tracking-[0.2em] uppercase font-semibold">
                 OUR VISION
               </h3>
-              <p className="text-xs sm:text-sm text-milan-muted leading-relaxed font-light">
+              <p className="text-xs sm:text-sm text-milan-muted leading-relaxed font-light group-hover:text-milan-ivory/90 transition-colors duration-300">
                 {about?.vision || "To become a trusted premium interior design and fit-out brand recognized for distinctive design, superior craftsmanship, and exceptional client experiences."}
               </p>
             </div>
           </div>
 
-          {/* Mission */}
-          <div className="flex items-start gap-4">
-            <div className="p-3 border border-milan-gold/20 bg-milan-charcoal/20 shrink-0 text-milan-gold">
-              <Target size={24} strokeWidth={1.5} />
+          {/* Mission Card */}
+          <div className="group border border-milan-border/60 hover:border-milan-gold/60 bg-milan-charcoal/30 hover:bg-milan-charcoal/50 p-4 sm:p-10 transition-all duration-300 flex flex-col sm:flex-row items-start gap-6">
+            <div className="w-12 h-12 shrink-0 bg-milan-emerald/40 text-milan-gold flex items-center justify-center group-hover:border-milan-gold transition-colors duration-300">
+              <Target size={22} strokeWidth={1.5} />
             </div>
-            <div className="space-y-2">
-              <h3 className="text-xs font-mono tracking-wider text-milan-gold uppercase">
+            <div className="space-y-3 flex-1">
+              <h3 className="heading-display text-xs sm:text-sm text-milan-gold tracking-[0.2em] uppercase font-semibold">
                 OUR MISSION
               </h3>
-              <p className="text-xs sm:text-sm text-milan-muted leading-relaxed font-light">
+              <p className="text-xs sm:text-sm text-milan-muted leading-relaxed font-light group-hover:text-milan-ivory/90 transition-colors duration-300">
                 {about?.mission || "To create elegant and functional interiors that reflect individuality, enhance everyday experiences, and deliver lasting value."}
               </p>
             </div>
@@ -112,7 +113,7 @@ export default async function AboutPage() {
       </section>
 
       {/* SECTION 3: DESIGN PHILOSOPHY */}
-      <section className="max-w-7xl mx-auto px-6 text-center space-y-12 sm:space-y-16 animate-fade-up">
+      <section className="max-w-7xl mx-auto px-4 text-center space-y-12 sm:space-y-16 animate-fade-up">
         <div className="space-y-3">
           <p className="text-eyebrow tracking-widest text-milan-gold">OUR DESIGN PHILOSOPHY</p>
           <h2 className="heading-editorial text-2xl sm:text-3xl md:text-4xl text-milan-ivory font-serif">
@@ -123,7 +124,7 @@ export default async function AboutPage() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12">
           {/* Column 1 */}
           <div className="space-y-4 text-left">
-            <div className="aspect-[16/10] bg-milan-charcoal border border-milan-border overflow-hidden">
+            <div className="aspect-[16/10] bg-milan-charcoal overflow-hidden">
               <img
                 src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=600&q=80"
                 alt="Marble details"
@@ -137,7 +138,7 @@ export default async function AboutPage() {
 
           {/* Column 2 */}
           <div className="space-y-4 text-left">
-            <div className="aspect-[16/10] bg-milan-charcoal border border-milan-border overflow-hidden">
+            <div className="aspect-[16/10] bg-milan-charcoal overflow-hidden">
               <img
                 src="https://images.unsplash.com/photo-1592078615290-033ee584e267?auto=format&fit=crop&w=600&q=80"
                 alt="Luxury chair proportion"
@@ -151,7 +152,7 @@ export default async function AboutPage() {
 
           {/* Column 3 */}
           <div className="space-y-4 text-left">
-            <div className="aspect-[16/10] bg-milan-charcoal border border-milan-border overflow-hidden">
+            <div className="aspect-[16/10] bg-milan-charcoal overflow-hidden">
               <img
                 src="https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?auto=format&fit=crop&w=600&q=80"
                 alt="Precision execution close-up leaf"

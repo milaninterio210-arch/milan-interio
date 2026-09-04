@@ -53,10 +53,10 @@ export default async function ServiceDetailPage({
     .order("display_order", { ascending: true });
 
   return (
-    <div className="py-20 sm:py-24">
+    <div className="py-10 sm:py-14">
       {/* Header */}
-      <section className="px-6 mb-12 sm:mb-16">
-        <div className="max-w-4xl mx-auto space-y-6">
+      <section className="px-4 mb-12 sm:mb-16">
+        <div className="max-w-5xl mx-auto space-y-6">
           <Link
             href="/services"
             className="inline-flex items-center gap-2 text-[10px] tracking-widest text-milan-muted hover:text-milan-gold transition-colors uppercase font-mono"
@@ -79,15 +79,15 @@ export default async function ServiceDetailPage({
 
       {/* Scope Items */}
       {items && items.length > 0 && (
-        <section className="px-6 mb-12 sm:mb-16">
-          <div className="max-w-4xl mx-auto border-t border-milan-border pt-10">
+        <section className="px-4 mb-12 sm:mb-16">
+          <div className="max-w-4xl mx-auto pt-6">
             <span className="text-eyebrow block mb-8">Scope &amp; Capabilities</span>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               {items.map((item, index) => (
                 <div
                   key={item.id}
-                  className="border border-milan-border p-5 sm:p-6 hover:border-milan-gold/20 transition-colors duration-300 flex items-start gap-4"
+                  className="bg-milan-charcoal p-5 sm:p-6 transition-colors duration-300 flex items-start gap-4"
                 >
                   <span className="text-[10px] font-mono text-milan-gold pt-0.5 shrink-0">
                     {String(index + 1).padStart(2, "0")}
@@ -110,8 +110,8 @@ export default async function ServiceDetailPage({
       )}
 
       {/* CTA */}
-      <section className="px-6">
-        <div className="max-w-4xl mx-auto border border-milan-border p-8 sm:p-10 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+      <section className="sm:px-6 px-4">
+        <div className="max-w-4xl mx-auto bg-milan-charcoal p-4 sm:p-10 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
           <div className="space-y-2">
             <span className="text-eyebrow block">Interested?</span>
             <p className="text-xs sm:text-sm text-milan-muted max-w-md">
@@ -120,7 +120,7 @@ export default async function ServiceDetailPage({
           </div>
           <Link
             href="/contact"
-            className="inline-flex items-center gap-2 border border-milan-gold bg-milan-gold text-milan-primary hover:bg-transparent hover:text-milan-gold px-6 py-3 text-[11px] tracking-widest font-semibold uppercase transition-all duration-300 shrink-0"
+            className="w-full sm:w-auto flex sm:inline-flex items-center justify-center gap-2 border border-milan-gold bg-milan-gold text-milan-primary hover:bg-transparent hover:text-milan-gold px-6 py-3 text-[11px] tracking-widest font-semibold uppercase transition-all duration-300 shrink-0"
           >
             <span>Consultation</span>
             <ArrowRight size={12} />
