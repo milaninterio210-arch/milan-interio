@@ -47,12 +47,14 @@ export default async function ServicesPage() {
 
           {/* Text Overlay Content: Bottom Center on mobile, Left on desktop */}
           <div className="relative z-10 space-y-1.5 sm:space-y-4 max-w-xl text-center sm:text-left">
-            <p className="text-eyebrow tracking-widest text-milan-gold text-[10px] sm:text-xs">OUR SERVICES</p>
+            <p className="text-eyebrow tracking-widest text-milan-gold text-[10px] sm:text-xs">
+              INTERIOR &bull; EXTERIOR &bull; LANDSCAPE
+            </p>
             <h1 className="heading-display text-2xl sm:text-5xl md:text-6xl text-milan-ivory leading-tight font-serif uppercase drop-shadow-[0_2px_6px_rgba(0,0,0,0.85)]">
               OUR SERVICES
             </h1>
             <p className="text-body text-xs sm:text-sm text-milan-ivory/90 leading-relaxed font-light max-w-md mx-auto sm:mx-0 drop-shadow-[0_1px_4px_rgba(0,0,0,0.8)]">
-              Complete interior solutions tailored to the architecture, lifestyle, and requirements of each project.
+              Comprehensive interior, exterior, and landscape design solutions tailored to the architecture, lifestyle, and distinctive requirements of each project.
             </p>
           </div>
         </div>

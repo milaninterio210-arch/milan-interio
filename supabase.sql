@@ -368,82 +368,111 @@ INSERT INTO public.pillars (pillar_number, title, description) VALUES
 ('03', 'CRAFT', NULL),
 ('04', 'DETAIL', NULL);
 
--- 5. Services (with exact supplied descriptions)
+-- 5. Services (Official Client Services: Interior, Exterior, Landscape)
 INSERT INTO public.services (slug, title, description, display_order, image_url) VALUES
-('interior-design-space-planning', 'Interior Design & Space Planning', 'Complete interior design solutions tailored to the architecture, lifestyle, and requirements of each project.', 1, NULL),
-('luxury-residential-interiors', 'Luxury Residential Interiors', 'We create refined residential environments designed around the client''s lifestyle.', 2, NULL),
-('commercial-office-interiors', 'Commercial & Office Interiors', 'Professional environments that combine functionality, corporate identity, comfort, and contemporary design.', 3, NULL),
-('turnkey-interior-fit-out', 'Turnkey Interior Fit-Out', 'Complete execution from approved design through final handover.', 4, NULL),
-('custom-furniture-joinery', 'Custom Furniture & Joinery', 'Bespoke furniture and architectural joinery designed specifically for each space.', 5, NULL),
-('kitchen-wardrobe-design', 'Kitchen & Wardrobe Design', 'Functional storage solutions combining aesthetics, ergonomics, and premium materials.', 6, NULL),
-('3d-visualization', '3D Visualization', 'High-quality 3D visualization enables clients to understand the proposed space before execution.', 7, NULL);
+('interior-design-space-planning', 'Interior Design & Space Planning', 'Milan Interio provides comprehensive interior design and space planning services focused on creating elegant, functional, and well-balanced environments. Our approach combines creative design, practical space utilization, premium materials, and attention to detail to develop interiors that reflect the client''s vision, lifestyle, and functional requirements.', 1, 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=1200&q=80'),
+('residential-interiors', 'Residential Interiors', 'Milan Interio delivers bespoke residential interior solutions designed to create sophisticated, comfortable, and highly functional living spaces. We transform villas, apartments, and homes through a carefully coordinated approach that combines contemporary design, premium materials, personalized detailing, and practical space utilization.', 2, 'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1200&q=80'),
+('commercial-office-interiors', 'Commercial & Office Interiors', 'Milan Interio provides innovative and professional interior design solutions for commercial and corporate environments, creating spaces that combine functionality, efficiency, brand identity, and contemporary aesthetics.', 3, 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80'),
+('interior-fit-out', 'Interior Fit-Out', 'Milan Interio provides complete interior fit-out solutions, transforming design concepts into fully finished, functional, and visually refined spaces. Our turnkey approach integrates quality workmanship, premium materials, technical coordination, and detailed execution.', 4, 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=1200&q=80'),
+('custom-furniture-joinery', 'Custom Furniture & Joinery', 'Milan Interio specializes in bespoke furniture and joinery solutions designed to complement the architectural character and interior aesthetics of each space. We combine refined design, quality materials, skilled craftsmanship, and functional detailing.', 5, 'https://images.unsplash.com/photo-1538688525198-9b88f6f53126?auto=format&fit=crop&w=1200&q=80'),
+('renovation-remodelling', 'Renovation & Remodelling', 'Milan Interio provides comprehensive renovation and remodelling solutions to transform existing spaces into modern, functional, and aesthetically refined environments. We carefully assess existing conditions and develop practical design solutions.', 6, 'https://images.unsplash.com/photo-1581858726788-75bc0f6a952d?auto=format&fit=crop&w=1200&q=80'),
+('project-management', 'Project Management', 'Milan Interio provides professional project management services to ensure the smooth, coordinated, and successful delivery of interior design and fit-out projects with strong focus on quality, schedule, and cost control.', 7, 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=1200&q=80'),
+('exterior-design-development', 'Exterior Design & Development', 'Milan Interio provides comprehensive exterior design solutions that enhance the architectural character, functionality, and overall visual appeal of residential and commercial properties through thoughtful design and premium finishes.', 8, 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80'),
+('landscape-design-development', 'Landscape Design & Development', 'Milan Interio transforms outdoor areas into carefully planned and visually engaging environments, integrating architecture, greenery, hardscape elements, outdoor furniture, lighting, and functional circulation.', 9, 'https://images.unsplash.com/photo-1558904541-efa8c4a08931?auto=format&fit=crop&w=1200&q=80');
 
 -- 6. Service Detailed Items
 WITH service_ids AS (SELECT id, slug FROM public.services)
 INSERT INTO public.service_items (service_id, title, display_order) VALUES
--- 01 Interior Design & Space Planning
-((SELECT id FROM service_ids WHERE slug = 'interior-design-space-planning'), 'Concept development', 1),
-((SELECT id FROM service_ids WHERE slug = 'interior-design-space-planning'), 'Space planning', 2),
-((SELECT id FROM service_ids WHERE slug = 'interior-design-space-planning'), 'Furniture layouts', 3),
-((SELECT id FROM service_ids WHERE slug = 'interior-design-space-planning'), 'Material selection', 4),
-((SELECT id FROM service_ids WHERE slug = 'interior-design-space-planning'), 'Colour schemes', 5),
-((SELECT id FROM service_ids WHERE slug = 'interior-design-space-planning'), 'Lighting concepts', 6),
-((SELECT id FROM service_ids WHERE slug = 'interior-design-space-planning'), 'Interior detailing', 7),
-((SELECT id FROM service_ids WHERE slug = 'interior-design-space-planning'), '3D visualization', 8),
-((SELECT id FROM service_ids WHERE slug = 'interior-design-space-planning'), 'Design development', 9),
--- 02 Luxury Residential Interiors
-((SELECT id FROM service_ids WHERE slug = 'luxury-residential-interiors'), 'Luxury villas', 1),
-((SELECT id FROM service_ids WHERE slug = 'luxury-residential-interiors'), 'Apartments', 2),
-((SELECT id FROM service_ids WHERE slug = 'luxury-residential-interiors'), 'Living rooms', 3),
-((SELECT id FROM service_ids WHERE slug = 'luxury-residential-interiors'), 'Bedrooms', 4),
-((SELECT id FROM service_ids WHERE slug = 'luxury-residential-interiors'), 'Dining areas', 5),
-((SELECT id FROM service_ids WHERE slug = 'luxury-residential-interiors'), 'Majlis', 6),
-((SELECT id FROM service_ids WHERE slug = 'luxury-residential-interiors'), 'Kitchens', 7),
-((SELECT id FROM service_ids WHERE slug = 'luxury-residential-interiors'), 'Walk-in wardrobes', 8),
-((SELECT id FROM service_ids WHERE slug = 'luxury-residential-interiors'), 'Home offices', 9),
-((SELECT id FROM service_ids WHERE slug = 'luxury-residential-interiors'), 'Entertainment spaces', 10),
--- 03 Commercial & Office Interiors
-((SELECT id FROM service_ids WHERE slug = 'commercial-office-interiors'), 'Corporate offices', 1),
-((SELECT id FROM service_ids WHERE slug = 'commercial-office-interiors'), 'Executive offices', 2),
-((SELECT id FROM service_ids WHERE slug = 'commercial-office-interiors'), 'Reception areas', 3),
-((SELECT id FROM service_ids WHERE slug = 'commercial-office-interiors'), 'Meeting rooms', 4),
-((SELECT id FROM service_ids WHERE slug = 'commercial-office-interiors'), 'Boardrooms', 5),
-((SELECT id FROM service_ids WHERE slug = 'commercial-office-interiors'), 'Showrooms', 6),
-((SELECT id FROM service_ids WHERE slug = 'commercial-office-interiors'), 'Retail spaces', 7),
-((SELECT id FROM service_ids WHERE slug = 'commercial-office-interiors'), 'Clinics', 8),
-((SELECT id FROM service_ids WHERE slug = 'commercial-office-interiors'), 'Restaurants', 9),
-((SELECT id FROM service_ids WHERE slug = 'commercial-office-interiors'), 'Commercial facilities', 10),
--- 04 Turnkey Interior Fit-Out
-((SELECT id FROM service_ids WHERE slug = 'turnkey-interior-fit-out'), 'Civil works', 1),
-((SELECT id FROM service_ids WHERE slug = 'turnkey-interior-fit-out'), 'Partition works', 2),
-((SELECT id FROM service_ids WHERE slug = 'turnkey-interior-fit-out'), 'Gypsum ceilings', 3),
-((SELECT id FROM service_ids WHERE slug = 'turnkey-interior-fit-out'), 'Flooring', 4),
-((SELECT id FROM service_ids WHERE slug = 'turnkey-interior-fit-out'), 'Wall finishes', 5),
-((SELECT id FROM service_ids WHERE slug = 'turnkey-interior-fit-out'), 'Painting', 6),
-((SELECT id FROM service_ids WHERE slug = 'turnkey-interior-fit-out'), 'Decorative finishes', 7),
-((SELECT id FROM service_ids WHERE slug = 'turnkey-interior-fit-out'), 'Electrical works', 8),
-((SELECT id FROM service_ids WHERE slug = 'turnkey-interior-fit-out'), 'Lighting', 9),
-((SELECT id FROM service_ids WHERE slug = 'turnkey-interior-fit-out'), 'Plumbing modifications', 10),
-((SELECT id FROM service_ids WHERE slug = 'turnkey-interior-fit-out'), 'Joinery', 11),
-((SELECT id FROM service_ids WHERE slug = 'turnkey-interior-fit-out'), 'Furniture installation', 12),
-((SELECT id FROM service_ids WHERE slug = 'turnkey-interior-fit-out'), 'Final finishing', 13),
--- 05 Custom Furniture & Joinery
-((SELECT id FROM service_ids WHERE slug = 'custom-furniture-joinery'), 'Custom wardrobes', 1),
-((SELECT id FROM service_ids WHERE slug = 'custom-furniture-joinery'), 'Kitchens', 2),
-((SELECT id FROM service_ids WHERE slug = 'custom-furniture-joinery'), 'TV units', 3),
-((SELECT id FROM service_ids WHERE slug = 'custom-furniture-joinery'), 'Wall panels', 4),
-((SELECT id FROM service_ids WHERE slug = 'custom-furniture-joinery'), 'Reception counters', 5),
-((SELECT id FROM service_ids WHERE slug = 'custom-furniture-joinery'), 'Office furniture', 6),
-((SELECT id FROM service_ids WHERE slug = 'custom-furniture-joinery'), 'Vanity units', 7),
-((SELECT id FROM service_ids WHERE slug = 'custom-furniture-joinery'), 'Feature walls', 8),
-((SELECT id FROM service_ids WHERE slug = 'custom-furniture-joinery'), 'Decorative joinery', 9),
-((SELECT id FROM service_ids WHERE slug = 'custom-furniture-joinery'), 'Bespoke storage solutions', 10),
--- 07 3D Visualization
-((SELECT id FROM service_ids WHERE slug = '3d-visualization'), 'Photorealistic interiors', 1),
-((SELECT id FROM service_ids WHERE slug = '3d-visualization'), '3D walkthrough concepts', 2),
-((SELECT id FROM service_ids WHERE slug = '3d-visualization'), 'Material visualization', 3),
-((SELECT id FROM service_ids WHERE slug = '3d-visualization'), 'Furniture visualization', 4),
-((SELECT id FROM service_ids WHERE slug = '3d-visualization'), 'Lighting concepts', 5);
+-- 1. Interior Design & Space Planning
+((SELECT id FROM service_ids WHERE slug = 'interior-design-space-planning'), 'Concept Design & Mood Boards', 1),
+((SELECT id FROM service_ids WHERE slug = 'interior-design-space-planning'), 'Space Planning & Layouts', 2),
+((SELECT id FROM service_ids WHERE slug = 'interior-design-space-planning'), '3D Visualization & Photorealistic Rendering', 3),
+((SELECT id FROM service_ids WHERE slug = 'interior-design-space-planning'), 'Material & Finish Selection', 4),
+((SELECT id FROM service_ids WHERE slug = 'interior-design-space-planning'), 'Lighting & Furniture Planning', 5),
+
+-- 2. Residential Interiors
+((SELECT id FROM service_ids WHERE slug = 'residential-interiors'), 'Luxury Villas', 1),
+((SELECT id FROM service_ids WHERE slug = 'residential-interiors'), 'Apartments & Penthouse Interiors', 2),
+((SELECT id FROM service_ids WHERE slug = 'residential-interiors'), 'Living & Dining Areas', 3),
+((SELECT id FROM service_ids WHERE slug = 'residential-interiors'), 'Bedrooms & Dressing Rooms', 4),
+((SELECT id FROM service_ids WHERE slug = 'residential-interiors'), 'Kitchens & Bathrooms', 5),
+
+-- 3. Commercial & Office Interiors
+((SELECT id FROM service_ids WHERE slug = 'commercial-office-interiors'), 'Corporate Offices', 1),
+((SELECT id FROM service_ids WHERE slug = 'commercial-office-interiors'), 'Retail & Showrooms', 2),
+((SELECT id FROM service_ids WHERE slug = 'commercial-office-interiors'), 'Restaurants & Cafés', 3),
+((SELECT id FROM service_ids WHERE slug = 'commercial-office-interiors'), 'Hospitality & Reception Areas', 4),
+((SELECT id FROM service_ids WHERE slug = 'commercial-office-interiors'), 'Meeting & Conference Rooms', 5),
+
+-- 4. Interior Fit-Out
+((SELECT id FROM service_ids WHERE slug = 'interior-fit-out'), 'Complete Turnkey Fit-Out', 1),
+((SELECT id FROM service_ids WHERE slug = 'interior-fit-out'), 'Gypsum & False Ceilings', 2),
+((SELECT id FROM service_ids WHERE slug = 'interior-fit-out'), 'Flooring & Wall Finishes', 3),
+((SELECT id FROM service_ids WHERE slug = 'interior-fit-out'), 'Painting & Decorative Finishes', 4),
+((SELECT id FROM service_ids WHERE slug = 'interior-fit-out'), 'Glass & Aluminium Works', 5),
+((SELECT id FROM service_ids WHERE slug = 'interior-fit-out'), 'Joinery & Carpentry', 6),
+((SELECT id FROM service_ids WHERE slug = 'interior-fit-out'), 'Electrical & MEP Works', 7),
+
+-- 5. Custom Furniture & Joinery
+((SELECT id FROM service_ids WHERE slug = 'custom-furniture-joinery'), 'Bespoke Furniture', 1),
+((SELECT id FROM service_ids WHERE slug = 'custom-furniture-joinery'), 'Modular Kitchens', 2),
+((SELECT id FROM service_ids WHERE slug = 'custom-furniture-joinery'), 'Wardrobes & Walk-in Closets', 3),
+((SELECT id FROM service_ids WHERE slug = 'custom-furniture-joinery'), 'TV Units & Feature Walls', 4),
+((SELECT id FROM service_ids WHERE slug = 'custom-furniture-joinery'), 'Reception & Office Furniture', 5),
+
+-- 6. Renovation & Remodelling
+((SELECT id FROM service_ids WHERE slug = 'renovation-remodelling'), 'Villa Renovation', 1),
+((SELECT id FROM service_ids WHERE slug = 'renovation-remodelling'), 'Office Renovation', 2),
+((SELECT id FROM service_ids WHERE slug = 'renovation-remodelling'), 'Kitchen & Bathroom Remodelling', 3),
+((SELECT id FROM service_ids WHERE slug = 'renovation-remodelling'), 'Space Upgrades', 4),
+((SELECT id FROM service_ids WHERE slug = 'renovation-remodelling'), 'Existing Interior Modification', 5),
+
+-- 7. Project Management
+((SELECT id FROM service_ids WHERE slug = 'project-management'), 'Design Coordination', 1),
+((SELECT id FROM service_ids WHERE slug = 'project-management'), 'Material Procurement', 2),
+((SELECT id FROM service_ids WHERE slug = 'project-management'), 'Site Supervision', 3),
+((SELECT id FROM service_ids WHERE slug = 'project-management'), 'Contractor Coordination', 4),
+((SELECT id FROM service_ids WHERE slug = 'project-management'), 'Quality Control', 5),
+((SELECT id FROM service_ids WHERE slug = 'project-management'), 'Handover & Final Inspection', 6),
+
+-- 8. Exterior Design & Development
+((SELECT id FROM service_ids WHERE slug = 'exterior-design-development'), 'Architectural Elevation Concepts', 1),
+((SELECT id FROM service_ids WHERE slug = 'exterior-design-development'), 'Façade Design & Development', 2),
+((SELECT id FROM service_ids WHERE slug = 'exterior-design-development'), 'Entrance & Main Gate Design', 3),
+((SELECT id FROM service_ids WHERE slug = 'exterior-design-development'), 'Boundary Wall & Gate Design', 4),
+((SELECT id FROM service_ids WHERE slug = 'exterior-design-development'), 'Outdoor Living Areas', 5),
+((SELECT id FROM service_ids WHERE slug = 'exterior-design-development'), 'Terrace & Balcony Design', 6),
+((SELECT id FROM service_ids WHERE slug = 'exterior-design-development'), 'Pergolas & Canopies', 7),
+((SELECT id FROM service_ids WHERE slug = 'exterior-design-development'), 'Outdoor Kitchens & Seating Areas', 8),
+((SELECT id FROM service_ids WHERE slug = 'exterior-design-development'), 'Swimming Pool Surroundings', 9),
+((SELECT id FROM service_ids WHERE slug = 'exterior-design-development'), 'Paving & External Flooring', 10),
+((SELECT id FROM service_ids WHERE slug = 'exterior-design-development'), 'Driveways & Parking Areas', 11),
+((SELECT id FROM service_ids WHERE slug = 'exterior-design-development'), 'Outdoor Lighting Concepts', 12),
+((SELECT id FROM service_ids WHERE slug = 'exterior-design-development'), 'Decorative Architectural Features', 13),
+((SELECT id FROM service_ids WHERE slug = 'exterior-design-development'), 'External Cladding & Finishes', 14),
+((SELECT id FROM service_ids WHERE slug = 'exterior-design-development'), 'Material & Colour Coordination', 15),
+((SELECT id FROM service_ids WHERE slug = 'exterior-design-development'), 'Exterior Renovation & Upgrading', 16),
+((SELECT id FROM service_ids WHERE slug = 'exterior-design-development'), '3D Exterior Visualization', 17),
+
+-- 9. Landscape Design & Development
+((SELECT id FROM service_ids WHERE slug = 'landscape-design-development'), 'Landscape Concept Design', 1),
+((SELECT id FROM service_ids WHERE slug = 'landscape-design-development'), 'Garden & Green Area Planning', 2),
+((SELECT id FROM service_ids WHERE slug = 'landscape-design-development'), 'Softscape & Planting Design', 3),
+((SELECT id FROM service_ids WHERE slug = 'landscape-design-development'), 'Hardscape Design', 4),
+((SELECT id FROM service_ids WHERE slug = 'landscape-design-development'), 'Pathways & Walkways', 5),
+((SELECT id FROM service_ids WHERE slug = 'landscape-design-development'), 'Outdoor Seating Areas', 6),
+((SELECT id FROM service_ids WHERE slug = 'landscape-design-development'), 'Garden Features', 7),
+((SELECT id FROM service_ids WHERE slug = 'landscape-design-development'), 'Water Features & Fountains', 8),
+((SELECT id FROM service_ids WHERE slug = 'landscape-design-development'), 'Swimming Pool Landscape', 9),
+((SELECT id FROM service_ids WHERE slug = 'landscape-design-development'), 'Pergolas & Shaded Areas', 10),
+((SELECT id FROM service_ids WHERE slug = 'landscape-design-development'), 'Outdoor Kitchens & Entertainment Areas', 11),
+((SELECT id FROM service_ids WHERE slug = 'landscape-design-development'), 'Decorative Paving', 12),
+((SELECT id FROM service_ids WHERE slug = 'landscape-design-development'), 'Planters & Green Walls', 13),
+((SELECT id FROM service_ids WHERE slug = 'landscape-design-development'), 'Outdoor Lighting', 14),
+((SELECT id FROM service_ids WHERE slug = 'landscape-design-development'), 'Irrigation Coordination', 15),
+((SELECT id FROM service_ids WHERE slug = 'landscape-design-development'), 'Residential Villa Landscaping', 16),
+((SELECT id FROM service_ids WHERE slug = 'landscape-design-development'), 'Commercial & Hospitality Landscaping', 17),
+((SELECT id FROM service_ids WHERE slug = 'landscape-design-development'), 'Landscape Renovation & Upgrading', 18);
 
 -- 7. Process Steps
 INSERT INTO public.process_steps (step_number, title, description) VALUES
