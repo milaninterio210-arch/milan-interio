@@ -102,7 +102,7 @@ export default async function HomePage() {
 
       {/* Right Column: 4 Pillars Grid (Span 8) */}
       <div className="lg:col-span-7 animate-fade-up">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-0 divide-y md:divide-y-0 md:divide-x divide-milan-border/60">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-0 md:divide-x divide-milan-border/60">
           {Array.from({ length: 4 }).map((_, idx) => {
             const defaultTitles = [
               "PROPORTION",

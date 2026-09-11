@@ -61,8 +61,8 @@ export default async function ServicesPage() {
       </section>
 
       {/* Services list section */}
-      <section className="max-w-7xl mx-auto sm:px-4 sm:px-6 mb-16 sm:mb-24">
-        <div className="sm:border border-milan-border p-4 sm:p-10 sm:divide-y divide-milan-border/60">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 mb-16 sm:mb-24">
+        <div className="sm:border border-milan-border p-0 sm:p-10 divide-y divide-milan-border/40 sm:divide-milan-border/60">
           {services?.map((service, index) => {
             const items = serviceItems?.filter((item) => item.service_id === service.id) || [];
             

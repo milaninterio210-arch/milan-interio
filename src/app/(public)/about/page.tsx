@@ -50,9 +50,9 @@ export default async function AboutPage() {
   ];
 
   return (
-    <div className="py-10 sm:py-14 space-y-24 sm:space-y-10">
+    <div className="py-10 sm:py-14 space-y-12 sm:space-y-16 md:space-y-20">
       {/* SECTION 1: HERO (2-Column about details) */}
-      <section className="max-w-7xl mx-auto px-4 flex flex-col lg:flex-row items-stretch justify-between gap-12 lg:gap-16">
+      <section className="max-w-7xl mx-auto px-4 flex flex-col lg:flex-row items-stretch justify-between gap-10 lg:gap-16">
         {/* Left Column: text description */}
         <div className="w-full lg:w-1/2 space-y-6 text-left animate-fade-up">
           <p className="text-eyebrow tracking-widest text-milan-gold">ABOUT</p>
