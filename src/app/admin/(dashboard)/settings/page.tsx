@@ -280,7 +280,7 @@ export default function AdminSettingsPage() {
                 value={formData.contact_phone}
                 onChange={(e) => setFormData({ ...formData, contact_phone: e.target.value })}
                 className="w-full bg-milan-charcoal/50 border border-milan-border p-3 text-xs text-milan-ivory focus:border-milan-gold focus:outline-none transition-colors font-mono"
-                placeholder="+971 4 123 4567"
+                placeholder="+966 55 478 3438"
               />
             </div>
           </div>
@@ -295,7 +295,7 @@ export default function AdminSettingsPage() {
               value={formData.office_address}
               onChange={(e) => setFormData({ ...formData, office_address: e.target.value })}
               className="w-full bg-milan-charcoal/50 border border-milan-border p-3 text-xs text-milan-ivory focus:border-milan-gold focus:outline-none transition-colors resize-none leading-relaxed"
-              placeholder="Studio details..."
+              placeholder="Milan Interio, Dammam, KSA"
             />
           </div>
 

@@ -1,12 +1,26 @@
 import Link from "next/link";
 import Image from "next/image";
 import { PUBLIC_NAV_LINKS } from "@/lib/types";
+import { createClient } from "@/lib/supabase/server";
+import { MapPin, Phone, Mail, Globe } from "lucide-react";
 
-export function Footer() {
+export async function Footer() {
+  const supabase = await createClient();
+  const { data: settings } = await supabase
+    .from("site_settings")
+    .select("contact_email, contact_phone, office_address")
+    .eq("singleton_key", "default")
+    .single();
+
+  const officeAddress = settings?.office_address || "Milan Interio,\nDammam, KSA";
+  const contactPhone = settings?.contact_phone || "+966 55 478 3438";
+  const contactEmail = settings?.contact_email || "info@milaninterio.com";
+  const website = "www.milaninterio.com";
+
   return (
-    <footer className="bg-milan-charcoal">
-      <div className="max-w-7xl mx-auto px-4 py-12 sm:py-16">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 sm:gap-12 items-start">
+    <footer className="bg-milan-charcoal border-t border-milan-border">
+      <div className="max-w-7xl mx-auto px-6 py-12 sm:py-16">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 sm:gap-12 items-start">
           {/* Brand */}
           <div className="space-y-4">
             <Link href="/" className="inline-block group focus:outline-none" aria-label="MILAN INTERIO Home">
@@ -80,8 +94,45 @@ export function Footer() {
             </div>
           </div>
 
+          {/* Contact / Studio Details */}
+          <div>
+            <span className="text-eyebrow block mb-4 sm:mb-6">Studio & Contact</span>
+            <div className="space-y-3 text-xs text-milan-muted">
+              <div className="flex items-start gap-2.5">
+                <MapPin size={14} className="text-milan-gold shrink-0 mt-0.5" />
+                <span className="whitespace-pre-line leading-relaxed text-milan-ivory/90">
+                  {officeAddress}
+                </span>
+              </div>
+              <div className="flex items-center gap-2.5">
+                <Phone size={14} className="text-milan-gold shrink-0" />
+                <a
+                  href={`tel:${contactPhone.replace(/\s+/g, "")}`}
+                  className="hover:text-milan-gold transition-colors font-light"
+                >
+                  {contactPhone}
+                </a>
+              </div>
+              <div className="flex items-center gap-2.5">
+                <Mail size={14} className="text-milan-gold shrink-0" />
+                <a
+                  href={`mailto:${contactEmail}`}
+                  className="hover:text-milan-gold transition-colors font-light"
+                >
+                  {contactEmail}
+                </a>
+              </div>
+              <div className="flex items-center gap-2.5">
+                <Globe size={14} className="text-milan-gold shrink-0" />
+                <span className="text-milan-muted font-light">
+                  {website}
+                </span>
+              </div>
+            </div>
+          </div>
+
           {/* Brand Statement */}
-          <div className="sm:col-span-2 lg:col-span-1">
+          <div>
             <span className="text-eyebrow block mb-4 sm:mb-6">The Standard</span>
             <blockquote className="text-sm italic text-milan-muted font-serif leading-relaxed">
               &ldquo;Luxury is not defined by excess. It is defined by precision.&rdquo;

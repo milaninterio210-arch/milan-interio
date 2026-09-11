@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
 import { ContactForm } from "@/components/public/ContactForm";
+import { MapPin, Phone, Mail, Globe } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Start a Project",
@@ -17,8 +18,10 @@ export default async function ContactPage() {
     .eq("singleton_key", "default")
     .single();
 
-  const hasContactInfo =
-    settings?.contact_email || settings?.contact_phone || settings?.office_address;
+  const officeAddress = settings?.office_address || "Milan Interio,\nDammam, KSA";
+  const contactPhone = settings?.contact_phone || "+966 55 478 3438";
+  const contactEmail = settings?.contact_email || "info@milaninterio.com";
+  const website = "www.milaninterio.com";
 
   return (
     <div className="py-10 sm:py-20 lg:py-14 px-4 sm:px-12 md:px-16 lg:px-20 max-w-7xl mx-auto">
@@ -40,37 +43,50 @@ export default async function ContactPage() {
 
           {/* Contact Details */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 text-left pt-2">
-            <div>
-              <span className="text-[10px] tracking-widest text-milan-gold uppercase font-mono block font-semibold mb-1">
+            <div className="space-y-1">
+              <span className="text-[10px] tracking-widest text-milan-gold uppercase font-mono block font-semibold mb-1.5 flex items-center gap-2">
+                <Phone size={13} />
                 PHONE
               </span>
               <a
-                href={`tel:${settings?.contact_phone || "+91 00000 00000"}`}
-                className="text-xs sm:text-sm text-milan-ivory hover:text-milan-gold transition-colors font-light"
+                href={`tel:${contactPhone.replace(/\s+/g, "")}`}
+                className="text-xs sm:text-sm text-milan-ivory hover:text-milan-gold transition-colors font-light block"
               >
-                {settings?.contact_phone || "+91 00000 00000"}
+                {contactPhone}
               </a>
             </div>
 
-            <div>
-              <span className="text-[10px] tracking-widest text-milan-gold uppercase font-mono block font-semibold mb-1">
+            <div className="space-y-1">
+              <span className="text-[10px] tracking-widest text-milan-gold uppercase font-mono block font-semibold mb-1.5 flex items-center gap-2">
+                <Mail size={13} />
                 EMAIL
               </span>
               <a
-                href={`mailto:${settings?.contact_email || "hello@milaninterio.com"}`}
-                className="text-xs sm:text-sm text-milan-ivory hover:text-milan-gold transition-colors font-light"
+                href={`mailto:${contactEmail}`}
+                className="text-xs sm:text-sm text-milan-ivory hover:text-milan-gold transition-colors font-light block"
               >
-                {settings?.contact_email || "hello@milaninterio.com"}
+                {contactEmail}
               </a>
             </div>
 
-            <div className="sm:col-span-2">
-              <span className="text-[10px] tracking-widest text-milan-gold uppercase font-mono block font-semibold mb-1">
+            <div className="space-y-1 sm:col-span-2">
+              <span className="text-[10px] tracking-widest text-milan-gold uppercase font-mono block font-semibold mb-1.5 flex items-center gap-2">
+                <MapPin size={13} />
                 LOCATION
               </span>
               <p className="text-xs sm:text-sm text-milan-ivory font-light whitespace-pre-line leading-relaxed">
-                {settings?.office_address || "Malappuram, Kerala, India"}
+                {officeAddress}
               </p>
+            </div>
+
+            <div className="space-y-1 sm:col-span-2">
+              <span className="text-[10px] tracking-widest text-milan-gold uppercase font-mono block font-semibold mb-1.5 flex items-center gap-2">
+                <Globe size={13} />
+                WEBSITE
+              </span>
+              <span className="text-xs sm:text-sm text-milan-muted font-light block">
+                {website}
+              </span>
             </div>
           </div>
 
@@ -78,7 +94,7 @@ export default async function ContactPage() {
           <div className="relative aspect-[16/9] w-full overflow-hidden bg-milan-charcoal">
             <img
               src="/contact_map.jpg"
-              alt="Milan Interio studio location map Malappuram Kerala"
+              alt="Milan Interio studio location map"
               className="absolute inset-0 w-full h-full object-cover opacity-85 hover:opacity-100 transition-opacity duration-500"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-milan-primary/50 via-transparent to-transparent pointer-events-none" />

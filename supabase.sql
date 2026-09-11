@@ -315,7 +315,7 @@ INSERT INTO public.site_settings (
     'Elevating Spaces. Defining Luxury.',
     'Elegant. Functional. Timeless.',
     'We believe luxury is not simply about expensive materials. True luxury comes from proportion, craftsmanship, material harmony, lighting, functionality, and attention to detail.',
-    NULL, NULL, NULL,
+    'info@milaninterio.com', '+966 55 478 3438', 'Milan Interio, Dammam, KSA',
     NULL, NULL, NULL
 );
 
