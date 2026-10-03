@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import CloudinaryUploadButton from "@/components/admin/CloudinaryUploadButton";
+import { Sparkles, CheckCircle2, AlertCircle } from "lucide-react";
 
 export default function AdminSettingsPage() {
   const supabase = createClient();
@@ -17,13 +18,6 @@ export default function AdminSettingsPage() {
     supporting_tagline: "",
     design_philosophy: "",
     design_philosophy_explanation: "",
-    contact_email: "",
-    contact_phone: "",
-    cr_number: "",
-    vat_number: "",
-    office_address: "",
-    instagram_url: "",
-    linkedin_url: "",
     services_banner_image_url: "",
   });
 
@@ -32,7 +26,7 @@ export default function AdminSettingsPage() {
       try {
         const { data, error } = await supabase
           .from("site_settings")
-          .select("*")
+          .select("brand_name, primary_tagline, supporting_tagline, design_philosophy, design_philosophy_explanation, services_banner_image_url")
           .eq("singleton_key", "default")
           .single();
 
@@ -44,13 +38,6 @@ export default function AdminSettingsPage() {
             supporting_tagline: data.supporting_tagline || "",
             design_philosophy: data.design_philosophy || "",
             design_philosophy_explanation: data.design_philosophy_explanation || "",
-            contact_email: data.contact_email || "",
-            contact_phone: data.contact_phone || "",
-            cr_number: data.cr_number || "",
-            vat_number: data.vat_number || "",
-            office_address: data.office_address || "",
-            instagram_url: data.instagram_url || "",
-            linkedin_url: data.linkedin_url || "",
             services_banner_image_url: data.services_banner_image_url || "",
           });
         }
@@ -78,19 +65,12 @@ export default function AdminSettingsPage() {
           supporting_tagline: formData.supporting_tagline.trim(),
           design_philosophy: formData.design_philosophy.trim(),
           design_philosophy_explanation: formData.design_philosophy_explanation.trim(),
-          contact_email: formData.contact_email.trim() || null,
-          contact_phone: formData.contact_phone.trim() || null,
-          cr_number: formData.cr_number.trim() || null,
-          vat_number: formData.vat_number.trim() || null,
-          office_address: formData.office_address.trim() || null,
-          instagram_url: formData.instagram_url.trim() || null,
-          linkedin_url: formData.linkedin_url.trim() || null,
           services_banner_image_url: formData.services_banner_image_url.trim() || null,
         })
         .eq("singleton_key", "default");
 
       if (error) throw error;
-      setSuccessMsg("Global site settings updated successfully.");
+      setSuccessMsg("Global branding & site settings updated successfully.");
     } catch (err: any) {
       setErrorMsg("Failed to save: " + err.message);
     } finally {
@@ -116,34 +96,33 @@ export default function AdminSettingsPage() {
             GLOBAL SITE SETTINGS
           </h1>
           <p className="text-xs text-milan-muted mt-1 font-mono">
-            Configuration parameters for branding, SEO taglines, and public office contact details.
+            Configuration parameters for branding, SEO taglines, design philosophy, and banner assets.
           </p>
         </div>
       </header>
 
       {successMsg && (
         <div className="bg-emerald-950/40 border-l-4 border-emerald-500 p-4 text-xs text-emerald-400 font-mono flex items-center gap-3 animate-fade-in shadow-lg shadow-emerald-500/5">
-          <svg className="w-4 h-4 shrink-0 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
+          <CheckCircle2 size={16} className="text-emerald-400 shrink-0" />
           <span>{successMsg}</span>
         </div>
       )}
 
       {errorMsg && (
         <div className="bg-red-950/40 border-l-4 border-red-500 p-4 text-xs text-red-400 font-mono flex items-center gap-3 animate-fade-in shadow-lg shadow-red-500/5">
-          <svg className="w-4 h-4 shrink-0 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-          </svg>
+          <AlertCircle size={16} className="text-red-400 shrink-0" />
           <span>{errorMsg}</span>
         </div>
       )}
 
       <form onSubmit={handleSave} className="space-y-6">
         <div className="bg-milan-primary border border-milan-border p-6 space-y-6">
-          <h2 className="heading-display text-xs text-milan-gold tracking-widest">
-            Branding & Positioning
-          </h2>
+          <div className="flex items-center gap-2 text-milan-gold">
+            <Sparkles size={16} />
+            <h2 className="heading-display text-xs tracking-widest uppercase">
+              Branding & Positioning
+            </h2>
+          </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
@@ -252,126 +231,6 @@ export default function AdminSettingsPage() {
                   Recommended: Cinematic landscape aspect ratio (e.g. 16:9 or 21:9). Direct secure upload.
                 </p>
               </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-milan-primary border border-milan-border p-6 space-y-6">
-          <h2 className="heading-display text-xs text-milan-gold tracking-widest">
-            Contact & Office Details
-          </h2>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-2">
-              <label htmlFor="contact_email" className="text-[10px] tracking-wider text-milan-muted uppercase font-mono block">
-                Contact Email
-              </label>
-              <input
-                id="contact_email"
-                type="email"
-                value={formData.contact_email}
-                onChange={(e) => setFormData({ ...formData, contact_email: e.target.value })}
-                className="w-full bg-milan-charcoal/50 border border-milan-border p-3 text-xs text-milan-ivory focus:border-milan-gold focus:outline-none transition-colors font-mono"
-                placeholder="info@milaninterio.com"
-              />
-            </div>
-
-            <div className="space-y-2">
-              <label htmlFor="contact_phone" className="text-[10px] tracking-wider text-milan-muted uppercase font-mono block">
-                Contact Phone
-              </label>
-              <input
-                id="contact_phone"
-                type="text"
-                value={formData.contact_phone}
-                onChange={(e) => setFormData({ ...formData, contact_phone: e.target.value })}
-                className="w-full bg-milan-charcoal/50 border border-milan-border p-3 text-xs text-milan-ivory focus:border-milan-gold focus:outline-none transition-colors font-mono"
-                placeholder="+966 55 893 4342"
-              />
-            </div>
-          </div>
-
-          {/* Saudi Business & Legal Credentials */}
-          <div className="pt-4 border-t border-milan-border/40 space-y-4">
-            <div className="flex items-center justify-between">
-              <span className="text-[11px] font-mono tracking-widest text-milan-gold uppercase">
-                Saudi Business & Legal Credentials
-              </span>
-              <span className="text-[9px] font-mono text-milan-muted">KSA Compliance</span>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="space-y-2">
-                <label htmlFor="cr_number" className="text-[10px] tracking-wider text-milan-muted uppercase font-mono block">
-                  Commercial Registration (CR Number)
-                </label>
-                <input
-                  id="cr_number"
-                  type="text"
-                  value={formData.cr_number}
-                  onChange={(e) => setFormData({ ...formData, cr_number: e.target.value })}
-                  className="w-full bg-milan-charcoal/50 border border-milan-border p-3 text-xs text-milan-ivory focus:border-milan-gold focus:outline-none transition-colors font-mono"
-                  placeholder="e.g. 2050123456"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <label htmlFor="vat_number" className="text-[10px] tracking-wider text-milan-muted uppercase font-mono block">
-                  VAT / Tax Registration Number
-                </label>
-                <input
-                  id="vat_number"
-                  type="text"
-                  value={formData.vat_number}
-                  onChange={(e) => setFormData({ ...formData, vat_number: e.target.value })}
-                  className="w-full bg-milan-charcoal/50 border border-milan-border p-3 text-xs text-milan-ivory focus:border-milan-gold focus:outline-none transition-colors font-mono"
-                  placeholder="e.g. 310123456700003"
-                />
-              </div>
-            </div>
-          </div>
-
-          <div className="space-y-2">
-            <label htmlFor="office_address" className="text-[10px] tracking-wider text-milan-muted uppercase font-mono block">
-              Office Address
-            </label>
-            <textarea
-              id="office_address"
-              rows={3}
-              value={formData.office_address}
-              onChange={(e) => setFormData({ ...formData, office_address: e.target.value })}
-              className="w-full bg-milan-charcoal/50 border border-milan-border p-3 text-xs text-milan-ivory focus:border-milan-gold focus:outline-none transition-colors resize-none leading-relaxed"
-              placeholder="Milan Interio, Dammam, KSA"
-            />
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-2">
-              <label htmlFor="instagram_url" className="text-[10px] tracking-wider text-milan-muted uppercase font-mono block">
-                Instagram URL
-              </label>
-              <input
-                id="instagram_url"
-                type="url"
-                value={formData.instagram_url}
-                onChange={(e) => setFormData({ ...formData, instagram_url: e.target.value })}
-                className="w-full bg-milan-charcoal/50 border border-milan-border p-3 text-xs text-milan-ivory focus:border-milan-gold focus:outline-none transition-colors font-mono"
-                placeholder="https://instagram.com/..."
-              />
-            </div>
-
-            <div className="space-y-2">
-              <label htmlFor="linkedin_url" className="text-[10px] tracking-wider text-milan-muted uppercase font-mono block">
-                LinkedIn URL
-              </label>
-              <input
-                id="linkedin_url"
-                type="url"
-                value={formData.linkedin_url}
-                onChange={(e) => setFormData({ ...formData, linkedin_url: e.target.value })}
-                className="w-full bg-milan-charcoal/50 border border-milan-border p-3 text-xs text-milan-ivory focus:border-milan-gold focus:outline-none transition-colors font-mono"
-                placeholder="https://linkedin.com/company/..."
-              />
             </div>
           </div>
         </div>

@@ -41,7 +41,7 @@ export default async function HomePage() {
     .eq("is_featured", true)
     .eq("is_published", true)
     .order("display_order", { ascending: true })
-    .limit(3);
+    .limit(10);
 
   // 6. Fetch process steps (first 3 for homepage preview)
   const { data: processSteps } = await supabase

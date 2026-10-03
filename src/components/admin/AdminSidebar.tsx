@@ -21,6 +21,7 @@ import {
   Sliders,
   Award,
   Home,
+  PhoneCall,
 } from "lucide-react";
 
 interface AdminSidebarProps {
@@ -62,6 +63,7 @@ export default function AdminSidebar({ userEmail }: AdminSidebarProps) {
         { label: "Studio", href: "/admin/studio", icon: ImageIcon },
         { label: "Hero Banner", href: "/admin/hero", icon: Sliders },
         { label: "Inquiries", href: "/admin/inquiries", icon: Mail },
+        { label: "Contact & Info", href: "/admin/contact", icon: PhoneCall },
       ],
     },
     {
@@ -116,9 +118,9 @@ export default function AdminSidebar({ userEmail }: AdminSidebarProps) {
         />
       )}
 
-      {/* Sidebar Container */}
+      {/* Sidebar Container - Fixed on desktop, Drawer on mobile */}
       <aside
-        className={`fixed md:sticky top-[61px] md:top-0 left-0 h-[calc(100vh-61px)] md:h-screen w-64 bg-milan-primary border-r border-milan-border flex flex-col justify-between py-3 z-30 transition-transform duration-300 md:translate-x-0 ${
+        className={`fixed top-[61px] md:top-0 left-0 bottom-0 h-[calc(100vh-61px)] md:h-screen w-64 bg-milan-primary border-r border-milan-border flex flex-col justify-between py-3 z-30 transition-transform duration-300 md:translate-x-0 ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
