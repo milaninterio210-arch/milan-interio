@@ -5,6 +5,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 
 export function CinematicIntro() {
+  const [mounted, setMounted] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
   const [isDestroyed, setIsDestroyed] = useState(false);
 
@@ -25,6 +26,7 @@ export function CinematicIntro() {
   }, [isClosing, isDestroyed]);
 
   useEffect(() => {
+    setMounted(true);
     // If already seen in this session, destroy immediately
     try {
       if (sessionStorage.getItem("milan_intro_seen")) {
@@ -52,7 +54,7 @@ export function CinematicIntro() {
     };
   }, [handleDismiss]);
 
-  if (isDestroyed) return null;
+  if (!mounted || isDestroyed) return null;
 
   return (
     <div

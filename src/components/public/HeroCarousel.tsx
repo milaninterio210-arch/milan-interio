@@ -161,20 +161,24 @@ export default function HeroCarousel({ slides }: HeroCarouselProps) {
         <>
           {/* Left Arrow */}
           <button
+            type="button"
             onClick={handlePrev}
-            className="absolute left-4 top-1/2 -translate-y-1/2 z-20 p-2 text-milan-ivory/60 hover:text-milan-gold hover:scale-115 transition-all cursor-pointer hidden md:block bg-transparent border-0"
+            className="absolute left-3 sm:left-6 top-1/2 -translate-y-1/2 z-20 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-milan-charcoal/60 hover:bg-milan-gold hover:text-milan-primary backdrop-blur-md border border-milan-gold/30 text-milan-ivory/80 flex items-center justify-center transition-all duration-300 cursor-pointer shadow-xl active:scale-90 group"
             aria-label="Previous Slide"
+            title="Previous Slide"
           >
-            <ChevronLeft size={24} />
+            <ChevronLeft size={20} className="transition-transform group-hover:-translate-x-0.5" />
           </button>
 
           {/* Right Arrow */}
           <button
+            type="button"
             onClick={handleNext}
-            className="absolute right-4 top-1/2 -translate-y-1/2 z-20 p-2 text-milan-ivory/60 hover:text-milan-gold hover:scale-115 transition-all cursor-pointer hidden md:block bg-transparent border-0"
+            className="absolute right-3 sm:right-6 top-1/2 -translate-y-1/2 z-20 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-milan-charcoal/60 hover:bg-milan-gold hover:text-milan-primary backdrop-blur-md border border-milan-gold/30 text-milan-ivory/80 flex items-center justify-center transition-all duration-300 cursor-pointer shadow-xl active:scale-90 group"
             aria-label="Next Slide"
+            title="Next Slide"
           >
-            <ChevronRight size={24} />
+            <ChevronRight size={20} className="transition-transform group-hover:translate-x-0.5" />
           </button>
 
           {/* Indicators / Dots */}

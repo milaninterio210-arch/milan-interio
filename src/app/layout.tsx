@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Script from "next/script";
 import localFont from "next/font/local";
 import "./globals.css";
 
@@ -75,21 +74,6 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className="min-h-screen flex flex-col antialiased" suppressHydrationWarning>
-        <Script
-          id="milan-intro-init"
-          strategy="beforeInteractive"
-          dangerouslySetInnerHTML={{
-            __html: `
-              try {
-                if (sessionStorage.getItem('milan_intro_seen')) {
-                  document.documentElement.classList.add('milan-intro-seen');
-                } else {
-                  document.documentElement.classList.add('milan-intro-active');
-                }
-              } catch(e) {}
-            `,
-          }}
-        />
         {children}
       </body>
     </html>
