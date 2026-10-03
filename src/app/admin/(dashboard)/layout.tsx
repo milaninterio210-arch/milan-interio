@@ -40,11 +40,13 @@ export default async function AdminDashboardLayout({
   }
 
   return (
-    <div className="min-h-screen bg-milan-charcoal text-milan-ivory flex flex-col md:flex-row">
+    <div className="min-h-screen bg-milan-charcoal text-milan-ivory">
       <AdminSidebar userEmail={user.email} />
-      <main className="flex-1 p-6 md:p-12 overflow-y-auto max-w-7xl mx-auto w-full">
-        {children}
-      </main>
+      <div className="md:pl-64 flex flex-col min-h-screen">
+        <main className="flex-1 p-6 md:p-12 max-w-7xl mx-auto w-full">
+          {children}
+        </main>
+      </div>
     </div>
   );
 }
