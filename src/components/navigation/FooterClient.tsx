@@ -170,28 +170,12 @@ export function FooterClient({
             </div>
           </div>
 
-          {/* Brand Statement & Legal Info */}
+          {/* Brand Statement */}
           <div className="space-y-4">
             <span className="text-eyebrow block mb-4 sm:mb-6">The Standard</span>
             <blockquote className="text-sm italic text-milan-muted font-serif leading-relaxed">
               &ldquo;Luxury is not defined by excess. It is defined by precision.&rdquo;
             </blockquote>
-            {(crNumber || vatNumber) && (
-              <div className="pt-2 text-[10px] font-mono space-y-1 text-milan-muted">
-                {crNumber && (
-                  <div className="flex items-center gap-2">
-                    <span className="text-milan-gold font-medium uppercase tracking-wider text-[9px]">CR:</span>
-                    <span className="text-milan-ivory/80 tracking-wider">{crNumber}</span>
-                  </div>
-                )}
-                {vatNumber && (
-                  <div className="flex items-center gap-2">
-                    <span className="text-milan-gold font-medium uppercase tracking-wider text-[9px]">VAT:</span>
-                    <span className="text-milan-ivory/80 tracking-wider">{vatNumber}</span>
-                  </div>
-                )}
-              </div>
-            )}
           </div>
         </div>
 
