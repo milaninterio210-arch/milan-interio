@@ -19,6 +19,8 @@ export default function AdminSettingsPage() {
     design_philosophy_explanation: "",
     contact_email: "",
     contact_phone: "",
+    cr_number: "",
+    vat_number: "",
     office_address: "",
     instagram_url: "",
     linkedin_url: "",
@@ -44,6 +46,8 @@ export default function AdminSettingsPage() {
             design_philosophy_explanation: data.design_philosophy_explanation || "",
             contact_email: data.contact_email || "",
             contact_phone: data.contact_phone || "",
+            cr_number: data.cr_number || "",
+            vat_number: data.vat_number || "",
             office_address: data.office_address || "",
             instagram_url: data.instagram_url || "",
             linkedin_url: data.linkedin_url || "",
@@ -76,6 +80,8 @@ export default function AdminSettingsPage() {
           design_philosophy_explanation: formData.design_philosophy_explanation.trim(),
           contact_email: formData.contact_email.trim() || null,
           contact_phone: formData.contact_phone.trim() || null,
+          cr_number: formData.cr_number.trim() || null,
+          vat_number: formData.vat_number.trim() || null,
           office_address: formData.office_address.trim() || null,
           instagram_url: formData.instagram_url.trim() || null,
           linkedin_url: formData.linkedin_url.trim() || null,
@@ -280,8 +286,48 @@ export default function AdminSettingsPage() {
                 value={formData.contact_phone}
                 onChange={(e) => setFormData({ ...formData, contact_phone: e.target.value })}
                 className="w-full bg-milan-charcoal/50 border border-milan-border p-3 text-xs text-milan-ivory focus:border-milan-gold focus:outline-none transition-colors font-mono"
-                placeholder="+966 55 478 3438"
+                placeholder="+966 55 893 4342"
               />
+            </div>
+          </div>
+
+          {/* Saudi Business & Legal Credentials */}
+          <div className="pt-4 border-t border-milan-border/40 space-y-4">
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] font-mono tracking-widest text-milan-gold uppercase">
+                Saudi Business & Legal Credentials
+              </span>
+              <span className="text-[9px] font-mono text-milan-muted">KSA Compliance</span>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <label htmlFor="cr_number" className="text-[10px] tracking-wider text-milan-muted uppercase font-mono block">
+                  Commercial Registration (CR Number)
+                </label>
+                <input
+                  id="cr_number"
+                  type="text"
+                  value={formData.cr_number}
+                  onChange={(e) => setFormData({ ...formData, cr_number: e.target.value })}
+                  className="w-full bg-milan-charcoal/50 border border-milan-border p-3 text-xs text-milan-ivory focus:border-milan-gold focus:outline-none transition-colors font-mono"
+                  placeholder="e.g. 2050123456"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <label htmlFor="vat_number" className="text-[10px] tracking-wider text-milan-muted uppercase font-mono block">
+                  VAT / Tax Registration Number
+                </label>
+                <input
+                  id="vat_number"
+                  type="text"
+                  value={formData.vat_number}
+                  onChange={(e) => setFormData({ ...formData, vat_number: e.target.value })}
+                  className="w-full bg-milan-charcoal/50 border border-milan-border p-3 text-xs text-milan-ivory focus:border-milan-gold focus:outline-none transition-colors font-mono"
+                  placeholder="e.g. 310123456700003"
+                />
+              </div>
             </div>
           </div>
 

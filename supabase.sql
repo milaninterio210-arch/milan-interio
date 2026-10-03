@@ -40,10 +40,13 @@ CREATE TABLE IF NOT EXISTS public.site_settings (
     design_philosophy_explanation TEXT NOT NULL DEFAULT 'We believe luxury is not simply about expensive materials. True luxury comes from proportion, craftsmanship, material harmony, lighting, functionality, and attention to detail.',
     contact_email TEXT,
     contact_phone TEXT,
+    cr_number TEXT,
+    vat_number TEXT,
     office_address TEXT,
     instagram_url TEXT,
     linkedin_url TEXT,
     logo_url TEXT,
+    services_banner_image_url TEXT,
     created_at TIMESTAMPTZ DEFAULT now() NOT NULL,
     updated_at TIMESTAMPTZ DEFAULT now() NOT NULL
 );
@@ -306,7 +309,7 @@ INSERT INTO public.site_settings (
     supporting_tagline,
     design_philosophy,
     design_philosophy_explanation,
-    contact_email, contact_phone, office_address,
+    contact_email, contact_phone, cr_number, vat_number, office_address,
     instagram_url, linkedin_url, logo_url
 ) VALUES (
     'default',
@@ -315,7 +318,7 @@ INSERT INTO public.site_settings (
     'Elevating Spaces. Defining Luxury.',
     'Elegant. Functional. Timeless.',
     'We believe luxury is not simply about expensive materials. True luxury comes from proportion, craftsmanship, material harmony, lighting, functionality, and attention to detail.',
-    'info@milaninterio.com', '+966 55 478 3438', 'Milan Interio, Dammam, KSA',
+    'info@milaninterio.com', '+966 55 893 4342', NULL, NULL, 'Milan Interio, Dammam, KSA',
     NULL, NULL, NULL
 );
 

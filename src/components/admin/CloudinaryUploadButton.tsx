@@ -96,7 +96,8 @@ export default function CloudinaryUploadButton({
       }
 
       const uploadData = await uploadRes.json();
-      onUploadSuccess(uploadData.secure_url, uploadData.public_id);
+      const optimizedUrl = uploadData.secure_url ? uploadData.secure_url.replace("/upload/", "/upload/f_auto,q_auto/") : uploadData.secure_url;
+      onUploadSuccess(optimizedUrl, uploadData.public_id);
     } catch (err: any) {
       onUploadError?.(err.message);
       alert("Upload failed: " + err.message);

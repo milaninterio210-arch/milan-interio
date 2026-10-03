@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
 import { ContactForm } from "@/components/public/ContactForm";
-import { MapPin, Phone, Mail, Globe } from "lucide-react";
+import { MapPin, Phone, Mail, Globe, Building2, ShieldCheck } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Start a Project",
@@ -14,13 +14,15 @@ export default async function ContactPage() {
 
   const { data: settings } = await supabase
     .from("site_settings")
-    .select("contact_email, contact_phone, office_address")
+    .select("contact_email, contact_phone, office_address, cr_number, vat_number")
     .eq("singleton_key", "default")
     .single();
 
   const officeAddress = settings?.office_address || "Milan Interio,\nDammam, KSA";
-  const contactPhone = settings?.contact_phone || "+966 55 478 3438";
+  const contactPhone = settings?.contact_phone || "+966 55 893 4342";
   const contactEmail = settings?.contact_email || "info@milaninterio.com";
+  const crNumber = settings?.cr_number || "";
+  const vatNumber = settings?.vat_number || "";
   const website = "www.milaninterio.com";
 
   return (
@@ -41,8 +43,8 @@ export default async function ContactPage() {
             </p>
           </div>
 
-          {/* Contact Details */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 text-left pt-2">
+          {/* Contact Details & Saudi Business Information */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 text-left pt-2">
             <div className="space-y-1">
               <span className="text-[10px] tracking-widest text-milan-gold uppercase font-mono block font-semibold mb-1.5 flex items-center gap-2">
                 <Phone size={13} />
@@ -68,6 +70,31 @@ export default async function ContactPage() {
                 {contactEmail}
               </a>
             </div>
+
+            {/* CR & VAT Number Display */}
+            {crNumber && (
+              <div className="space-y-1">
+                <span className="text-[10px] tracking-widest text-milan-gold uppercase font-mono block font-semibold mb-1.5 flex items-center gap-2">
+                  <Building2 size={13} />
+                  CR NUMBER
+                </span>
+                <span className="text-xs sm:text-sm text-milan-ivory font-mono tracking-wider block">
+                  {crNumber}
+                </span>
+              </div>
+            )}
+
+            {vatNumber && (
+              <div className="space-y-1">
+                <span className="text-[10px] tracking-widest text-milan-gold uppercase font-mono block font-semibold mb-1.5 flex items-center gap-2">
+                  <ShieldCheck size={13} />
+                  VAT NUMBER
+                </span>
+                <span className="text-xs sm:text-sm text-milan-ivory font-mono tracking-wider block">
+                  {vatNumber}
+                </span>
+              </div>
+            )}
 
             <div className="space-y-1 sm:col-span-2">
               <span className="text-[10px] tracking-widest text-milan-gold uppercase font-mono block font-semibold mb-1.5 flex items-center gap-2">
