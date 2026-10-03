@@ -15,10 +15,13 @@ export interface SiteSettings {
   design_philosophy_explanation: string;
   contact_email: string | null;
   contact_phone: string | null;
+  cr_number: string | null;
+  vat_number: string | null;
   office_address: string | null;
   instagram_url: string | null;
   linkedin_url: string | null;
   logo_url: string | null;
+  services_banner_image_url?: string | null;
   created_at: string;
   updated_at: string;
 }
