@@ -74,13 +74,19 @@ export default function FeaturedProjectsSlider({ projects }: FeaturedProjectsSli
     }, 4000);
   }, []);
 
-  // Compute base translate position
+  // Step size per slide
+  const step = itemStep > 0 ? itemStep : 320;
+
+  // Maximum valid slide index before wrapping
+  const maxIndex = maxTranslate > 0 && step > 0 ? Math.ceil(maxTranslate / step) : Math.max(0, total - 1);
+
+  // Compute base translate position: clamp to maxTranslate so no empty void is ever shown
   const baseTranslate =
     total <= 1 || maxTranslate <= 0
       ? 0
-      : current === total - 1
-        ? maxTranslate
-        : Math.min(current * (itemStep || 300), maxTranslate);
+      : current === 0
+        ? 0
+        : Math.min(current * step, maxTranslate);
 
   // Active translate incorporating live drag offset
   const activeTranslate = isDragging
@@ -93,7 +99,7 @@ export default function FeaturedProjectsSlider({ projects }: FeaturedProjectsSli
 
     const timer = setInterval(() => {
       setCurrent((prev) => {
-        if (prev >= total - 1) {
+        if (prev >= maxIndex) {
           return 0; // Wrap around smoothly to the start
         }
         return prev + 1;
@@ -101,7 +107,7 @@ export default function FeaturedProjectsSlider({ projects }: FeaturedProjectsSli
     }, 4500);
 
     return () => clearInterval(timer);
-  }, [total, isPaused, isDragging]);
+  }, [total, isPaused, isDragging, maxIndex]);
 
   if (!projects || total === 0) return null;
 
@@ -109,7 +115,7 @@ export default function FeaturedProjectsSlider({ projects }: FeaturedProjectsSli
     if (total <= 1) return;
     temporarilyPause();
     setCurrent((prev) => {
-      if (prev >= total - 1) return 0; // Loop to first slide
+      if (prev >= maxIndex) return 0; // Loop to first slide
       return prev + 1;
     });
   };
@@ -118,14 +124,14 @@ export default function FeaturedProjectsSlider({ projects }: FeaturedProjectsSli
     if (total <= 1) return;
     temporarilyPause();
     setCurrent((prev) => {
-      if (prev <= 0) return total - 1; // Loop to last slide
+      if (prev <= 0) return maxIndex; // Loop to last slide
       return prev - 1;
     });
   };
 
   const handleGoTo = (index: number) => {
     temporarilyPause();
-    setCurrent(Math.max(0, Math.min(index, total - 1)));
+    setCurrent(Math.max(0, Math.min(index, maxIndex)));
   };
 
   // --- Unified Touch & Mouse Drag Handlers ---
@@ -199,111 +205,28 @@ export default function FeaturedProjectsSlider({ projects }: FeaturedProjectsSli
   return (
     <section
       className="relative py-8 sm:py-16 overflow-hidden bg-milan-primary select-none"
-      onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={onMouseLeave}
       aria-label="Featured Projects Slider"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
         <div className="flex flex-col lg:flex-row items-start lg:items-center gap-6 sm:gap-8 lg:gap-10 w-full">
-          {/* Left Column: Heading, Info & Controls */}
-          <div className="w-full lg:w-[280px] xl:w-[320px] shrink-0 flex flex-col justify-center space-y-3 sm:space-y-6">
-            {/* Title & Description */}
-            <div className="space-y-2 sm:space-y-4">
-              <div className="flex items-end justify-between">
-                <div className="space-y-0.5 sm:space-y-1">
-                  <span className="text-xl sm:text-3xl md:text-4xl font-serif text-milan-gold font-normal tracking-wide block">
-                    Featured
-                  </span>
-                  <h2 className="text-2xl sm:text-4xl md:text-5xl font-serif text-milan-ivory font-medium tracking-tight uppercase block">
-                    Projects
-                  </h2>
-                </div>
-
-                {/* Mobile Quick Navigation Arrows & Counter */}
-                {total > 1 && (
-                  <div className="flex sm:hidden items-center gap-2">
-                    {/* Slide Counter for Mobile */}
-                    <div className="font-mono text-xs text-milan-muted pr-1">
-                      <span className="text-milan-gold font-bold">{String(current + 1).padStart(2, "0")}</span>
-                      <span className="mx-1 opacity-40">/</span>
-                      <span>{String(total).padStart(2, "0")}</span>
-                    </div>
-
-                    <button
-                      type="button"
-                      onClick={handlePrev}
-                      className="w-10 h-10 border border-milan-gold/40 bg-milan-charcoal text-milan-ivory hover:text-milan-gold hover:border-milan-gold flex items-center justify-center transition-all duration-300 active:scale-95 cursor-pointer shadow-md"
-                      aria-label="Previous Project"
-                      title="Previous Slide"
-                    >
-                      <ChevronLeft size={18} />
-                    </button>
-                    <button
-                      type="button"
-                      onClick={handleNext}
-                      className="w-10 h-10 border border-milan-gold/40 bg-milan-emerald/90 text-milan-ivory hover:text-milan-gold hover:border-milan-gold flex items-center justify-center transition-all duration-300 active:scale-95 cursor-pointer shadow-md"
-                      aria-label="Next Project"
-                      title="Next Slide"
-                    >
-                      <ChevronRight size={18} />
-                    </button>
-                  </div>
-                )}
-              </div>
-
-              <p className="text-xs sm:text-sm text-milan-muted font-light leading-relaxed max-w-sm line-clamp-2 sm:line-clamp-none">
-                A curated selection of our most distinguished architectural and interior endeavors, crafted with refined timelessness.
-              </p>
+          {/* Left Column: Heading & Description Only (Left controls hidden) */}
+          <div className="w-full lg:w-[280px] xl:w-[320px] shrink-0 flex flex-col justify-center space-y-3 sm:space-y-4">
+            <div className="space-y-1 sm:space-y-2">
+              <span className="text-xl sm:text-3xl md:text-4xl font-serif text-milan-gold font-normal tracking-wide block">
+                Featured
+              </span>
+              <h2 className="text-2xl sm:text-4xl md:text-5xl font-serif text-milan-ivory font-medium tracking-tight uppercase block">
+                Projects
+              </h2>
             </div>
 
-            {/* Desktop Navigation Column Controls */}
-            {total > 1 && (
-              <div className="hidden sm:flex flex-col gap-3 pt-1">
-                <div className="flex items-center gap-3">
-                  {/* Left Visible Arrow */}
-                  <button
-                    type="button"
-                    onClick={handlePrev}
-                    className="w-12 h-12 border border-milan-gold/40 bg-milan-charcoal/90 hover:bg-milan-gold text-milan-ivory hover:text-milan-primary hover:border-milan-gold flex items-center justify-center transition-all duration-300 cursor-pointer active:scale-95 group shadow-xl"
-                    aria-label="Previous Project"
-                    title="Previous Slide"
-                  >
-                    <ChevronLeft
-                      size={22}
-                      className="transition-transform duration-200 group-hover:-translate-x-0.5"
-                    />
-                  </button>
-
-                  {/* Right Visible Arrow */}
-                  <button
-                    type="button"
-                    onClick={handleNext}
-                    className="w-12 h-12 border border-milan-gold/40 bg-milan-emerald/90 hover:bg-milan-gold text-milan-ivory hover:text-milan-primary hover:border-milan-gold flex items-center justify-center transition-all duration-300 cursor-pointer active:scale-95 group shadow-xl"
-                    aria-label="Next Project"
-                    title="Next Slide"
-                  >
-                    <ChevronRight
-                      size={22}
-                      className="transition-transform duration-200 group-hover:translate-x-0.5"
-                    />
-                  </button>
-
-                  {/* Slide Counter (e.g. 01 / 05) */}
-                  <div className="font-mono text-sm tracking-wider text-milan-muted pl-3 flex items-center gap-1.5 py-1 px-3 bg-milan-charcoal/60 border border-milan-border/50">
-                    <span className="text-milan-gold font-bold text-base">{String(current + 1).padStart(2, "0")}</span>
-                    <span className="opacity-40">/</span>
-                    <span className="text-milan-ivory/80 font-medium">{String(total).padStart(2, "0")}</span>
-                  </div>
-                </div>
-
-                <span className="text-[10px] uppercase font-mono tracking-widest text-milan-muted/70">
-                  Drag with mouse or use arrow keys
-                </span>
-              </div>
-            )}
+            <p className="text-xs sm:text-sm text-milan-muted font-light leading-relaxed max-w-sm">
+              A curated selection of our most distinguished architectural and interior endeavors, crafted with refined timelessness.
+            </p>
           </div>
 
-          {/* Right Column: Carousel Track with Movement Buttons */}
+          {/* Right Column: Carousel Track with Floating Arrows & Indicators */}
           <div className="w-full lg:flex-1 min-w-0 relative group/slider">
             {/* Direct Slide Movement Buttons (Floating on the sides of the track) */}
             {total > 1 && (
@@ -312,22 +235,22 @@ export default function FeaturedProjectsSlider({ projects }: FeaturedProjectsSli
                 <button
                   type="button"
                   onClick={handlePrev}
-                  className="absolute left-2 sm:left-3 top-[38%] -translate-y-1/2 z-30 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-milan-charcoal/95 backdrop-blur-md border border-milan-gold text-milan-gold hover:text-milan-primary hover:bg-milan-gold shadow-2xl flex items-center justify-center transition-all duration-300 cursor-pointer active:scale-90 group/btn"
+                  className="absolute -left-3 sm:-left-5 top-[38%] -translate-y-1/2 z-30 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-milan-charcoal/95 backdrop-blur-md border border-milan-gold/60 text-milan-gold hover:text-milan-primary hover:bg-milan-gold shadow-2xl flex items-center justify-center transition-all duration-300 cursor-pointer active:scale-90 group/btn"
                   aria-label="Move Slide Left"
                   title="Previous Slide"
                 >
-                  <ChevronLeft size={22} className="transition-transform duration-200 group-hover/btn:-translate-x-0.5 stroke-[2.5]" />
+                  <ChevronLeft size={20} className="transition-transform duration-200 group-hover/btn:-translate-x-0.5 stroke-[2.5]" />
                 </button>
 
                 {/* Right Floating Arrow */}
                 <button
                   type="button"
                   onClick={handleNext}
-                  className="absolute right-2 sm:right-3 top-[38%] -translate-y-1/2 z-30 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-milan-charcoal/95 backdrop-blur-md border border-milan-gold text-milan-gold hover:text-milan-primary hover:bg-milan-gold shadow-2xl flex items-center justify-center transition-all duration-300 cursor-pointer active:scale-90 group/btn"
+                  className="absolute -right-3 sm:-right-5 top-[38%] -translate-y-1/2 z-30 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-milan-charcoal/95 backdrop-blur-md border border-milan-gold/60 text-milan-gold hover:text-milan-primary hover:bg-milan-gold shadow-2xl flex items-center justify-center transition-all duration-300 cursor-pointer active:scale-90 group/btn"
                   aria-label="Move Slide Right"
                   title="Next Slide"
                 >
-                  <ChevronRight size={22} className="transition-transform duration-200 group-hover/btn:translate-x-0.5 stroke-[2.5]" />
+                  <ChevronRight size={20} className="transition-transform duration-200 group-hover/btn:translate-x-0.5 stroke-[2.5]" />
                 </button>
               </>
             )}
@@ -348,7 +271,7 @@ export default function FeaturedProjectsSlider({ projects }: FeaturedProjectsSli
                 className={`flex gap-4 sm:gap-7 ${isDragging
                     ? "transition-none"
                     : "transition-transform duration-600 ease-[cubic-bezier(0.25,1,0.5,1)]"
-                  } will-change-transform pr-6`}
+                  } will-change-transform`}
                 style={{
                   transform: `translateX(-${activeTranslate}px)`,
                 }}
@@ -363,8 +286,9 @@ export default function FeaturedProjectsSlider({ projects }: FeaturedProjectsSli
                           handleGoTo(idx);
                         }
                       }}
-                      className={`w-full sm:w-[260px] md:w-[280px] lg:w-[300px] xl:w-[320px] shrink-0 group flex flex-col transition-opacity duration-300 ${isCurrent ? "opacity-100" : "opacity-90 hover:opacity-100"
-                        }`}
+                      className={`w-full sm:w-[calc(50%-14px)] shrink-0 group flex flex-col transition-all duration-300 ${
+                        isCurrent ? "opacity-100 scale-100" : "opacity-90 hover:opacity-100"
+                      }`}
                     >
                       {/* Image Container */}
                       <Link
@@ -448,11 +372,11 @@ export default function FeaturedProjectsSlider({ projects }: FeaturedProjectsSli
             </div>
 
             {/* Bottom Slide Indicator Bar */}
-            {total > 1 && (
+            {total > 1 && maxIndex > 0 && (
               <div className="mt-4 sm:mt-6 flex items-center justify-center pt-3 border-t border-milan-border/40">
                 {/* Clickable Slide Indicators */}
                 <div className="flex items-center gap-1.5 sm:gap-2">
-                  {projects.map((_, idx) => {
+                  {Array.from({ length: maxIndex + 1 }).map((_, idx) => {
                     const isActive = idx === current;
                     return (
                       <button

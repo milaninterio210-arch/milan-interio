@@ -460,79 +460,92 @@ export default function AdminServicesPage() {
         </div>
       )}
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        {/* LEFT COLUMN: Services list (Span 5) */}
-        <div className="lg:col-span-5 space-y-4">
-          <span className="text-[10px] tracking-widest text-milan-gold uppercase font-mono block">
-            Service List ({services.length})
-          </span>
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        {/* LEFT COLUMN: Sticky Services list (Span 4) */}
+        <div className="lg:col-span-4 lg:sticky lg:top-6 lg:self-start space-y-3">
+          <div className="flex items-center justify-between pb-1 border-b border-milan-border/40">
+            <span className="text-[10px] tracking-widest text-milan-gold uppercase font-mono block">
+              Services ({services.length})
+            </span>
+            <span className="text-[9px] text-milan-muted font-mono">Select to Edit</span>
+          </div>
 
-          <div className="space-y-2 max-h-[70vh] overflow-y-auto pr-2">
+          <div className="space-y-2 max-h-[calc(100vh-160px)] overflow-y-auto pr-1.5 scrollbar-thin">
             {services.length === 0 ? (
               <div className="bg-milan-primary border border-milan-border p-6 text-center text-xs text-milan-muted">
                 No services defined. Add one above.
               </div>
             ) : (
-              services.map((service, idx) => (
-                <div
-                  key={service.id}
-                  onClick={() => handleSelectService(service)}
-                  className={`border p-4 flex items-center justify-between gap-4 cursor-pointer transition-colors duration-200 ${
-                    selectedService?.id === service.id
-                      ? "bg-milan-emerald border-milan-gold/30 text-milan-ivory"
-                      : "bg-milan-primary border-milan-border text-milan-muted hover:border-milan-gold/25"
-                  }`}
-                >
-                  <div className="flex items-center space-x-3 truncate">
-                    <span className="text-xs font-mono text-milan-gold">
-                      {String(idx + 1).padStart(2, "0")}
-                    </span>
-                    <span className="text-xs uppercase tracking-wider truncate font-semibold">
-                      {service.title}
-                    </span>
-                  </div>
+              services.map((service, idx) => {
+                const isSelected = selectedService?.id === service.id && !isServiceCreateMode;
+                return (
+                  <div
+                    key={service.id}
+                    onClick={() => handleSelectService(service)}
+                    className={`border p-3.5 flex items-center justify-between gap-3 cursor-pointer transition-all duration-200 ${
+                      isSelected
+                        ? "bg-milan-emerald border-milan-gold text-milan-ivory shadow-md"
+                        : "bg-milan-primary border-milan-border text-milan-muted hover:border-milan-gold/40 hover:text-milan-ivory"
+                    }`}
+                  >
+                    <div className="flex items-center space-x-2.5 truncate">
+                      <span className={`text-[11px] font-mono ${isSelected ? "text-milan-gold font-bold" : "text-milan-gold/70"}`}>
+                        {String(idx + 1).padStart(2, "0")}
+                      </span>
+                      <span className="text-xs uppercase tracking-wider truncate font-medium">
+                        {service.title}
+                      </span>
+                    </div>
 
-                  <div className="flex items-center space-x-2 shrink-0">
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleReorderService(service, "up");
-                      }}
-                      disabled={idx === 0}
-                      className="p-1 hover:text-milan-gold disabled:opacity-30 cursor-pointer"
-                      title="Move Up"
-                    >
-                      <ArrowUp size={12} />
-                    </button>
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleReorderService(service, "down");
-                      }}
-                      disabled={idx === services.length - 1}
-                      className="p-1 hover:text-milan-gold disabled:opacity-30 cursor-pointer"
-                      title="Move Down"
-                    >
-                      <ArrowDown size={12} />
-                    </button>
-                    <ChevronRight size={14} className="text-milan-gold" />
+                    <div className="flex items-center space-x-1 shrink-0">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleReorderService(service, "up");
+                        }}
+                        disabled={idx === 0}
+                        className="p-1 hover:text-milan-gold disabled:opacity-20 cursor-pointer transition-colors"
+                        title="Move Up"
+                      >
+                        <ArrowUp size={12} />
+                      </button>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleReorderService(service, "down");
+                        }}
+                        disabled={idx === services.length - 1}
+                        className="p-1 hover:text-milan-gold disabled:opacity-20 cursor-pointer transition-colors"
+                        title="Move Down"
+                      >
+                        <ArrowDown size={12} />
+                      </button>
+                      <ChevronRight size={13} className={isSelected ? "text-milan-gold" : "text-milan-muted/50"} />
+                    </div>
                   </div>
-                </div>
-              ))
+                );
+              })
             )}
           </div>
         </div>
 
-        {/* RIGHT COLUMN: Service Form & Scope items (Span 7) */}
-        <div className="lg:col-span-7 space-y-6">
+        {/* RIGHT COLUMN: Service Form & Scope items (Span 8) */}
+        <div className="lg:col-span-8 space-y-6 min-w-0">
           {isServiceCreateMode || selectedService ? (
             <div className="space-y-6">
               {/* Part 1: Service Metadata Editor */}
-              <form onSubmit={handleSaveService} className="bg-milan-primary border border-milan-border p-6 space-y-4">
-                <div className="flex items-center justify-between border-b border-milan-border/50 pb-3">
-                  <h3 className="heading-display text-xs text-milan-gold tracking-widest">
-                    {isServiceCreateMode ? "New Service Parameters" : "Edit Service Details"}
-                  </h3>
+              <form onSubmit={handleSaveService} className="bg-milan-primary border border-milan-border p-6 space-y-5">
+                <div className="flex items-center justify-between border-b border-milan-border pb-3">
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs font-serif text-milan-gold uppercase tracking-widest">
+                      {isServiceCreateMode ? "Create New Service" : "Service Parameters"}
+                    </span>
+                    {!isServiceCreateMode && selectedService && (
+                      <span className="text-[10px] font-mono text-milan-muted">
+                        / {selectedService.slug}
+                      </span>
+                    )}
+                  </div>
                   {!isServiceCreateMode && selectedService && (
                     <button
                       type="button"
@@ -554,7 +567,7 @@ export default function AdminServicesPage() {
                     required
                     value={serviceFormData.title}
                     onChange={(e) => handleTitleChange(e.target.value)}
-                    className="w-full bg-milan-charcoal/50 border border-milan-border p-3 text-xs text-milan-ivory focus:border-milan-gold focus:outline-none"
+                    className="w-full bg-milan-charcoal/50 border border-milan-border p-3 text-xs text-milan-ivory focus:border-milan-gold focus:outline-none font-medium"
                     placeholder="e.g. Turnkey Interior Fit-Out"
                   />
                 </div>
@@ -589,7 +602,7 @@ export default function AdminServicesPage() {
                   </div>
                 </div>
 
-                 <div className="space-y-2">
+                <div className="space-y-2">
                   <label htmlFor="service_description" className="text-[10px] tracking-wider text-milan-muted uppercase font-mono block">
                     Public Description
                   </label>
@@ -599,6 +612,7 @@ export default function AdminServicesPage() {
                     value={serviceFormData.description}
                     onChange={(e) => setServiceFormData(prev => ({ ...prev, description: e.target.value }))}
                     className="w-full bg-milan-charcoal/50 border border-milan-border p-3 text-xs text-milan-ivory focus:border-milan-gold focus:outline-none resize-none leading-relaxed"
+                    placeholder="Provide an overview of this service discipline..."
                   />
                 </div>
 
@@ -620,26 +634,31 @@ export default function AdminServicesPage() {
                   <button
                     type="submit"
                     disabled={saving}
-                    className="px-6 py-3 border border-milan-gold bg-milan-gold text-milan-primary hover:bg-transparent hover:text-milan-gold text-[10px] tracking-widest font-semibold uppercase transition-all duration-300 disabled:opacity-50 cursor-pointer"
+                    className="w-full sm:w-auto px-7 py-3 border border-milan-gold bg-milan-gold text-milan-primary hover:bg-transparent hover:text-milan-gold text-[10px] tracking-widest font-semibold uppercase transition-all duration-300 disabled:opacity-50 cursor-pointer"
                   >
                     {saving ? "SAVING SERVICE..." : "SAVE SERVICE"}
                   </button>
                 </div>
               </form>
 
-              {/* Part 2: Scope Items CRUD (Module 6) — only if not in service creation mode */}
+              {/* Part 2: Scope Items CRUD — only if not in service creation mode */}
               {!isServiceCreateMode && selectedService && (
-                <div className="bg-milan-primary border border-milan-border p-6 space-y-4">
-                  <div className="flex items-center justify-between border-b border-milan-border/50 pb-3">
-                    <h3 className="heading-display text-xs text-milan-gold tracking-widest">
-                      Manage Capability Scope Tags
-                    </h3>
+                <div className="bg-milan-primary border border-milan-border p-6 space-y-5">
+                  <div className="flex items-center justify-between border-b border-milan-border pb-3">
+                    <div className="flex items-center gap-2">
+                      <h3 className="heading-display text-xs text-milan-gold tracking-widest uppercase">
+                        Manage Capability Scope Tags
+                      </h3>
+                      <span className="text-[10px] font-mono text-milan-muted bg-milan-charcoal/60 px-2 py-0.5 border border-milan-border/50">
+                        {serviceItems.length} Tags
+                      </span>
+                    </div>
                     {!isItemCreateMode && !editingItem && (
                       <button
                         onClick={handleOpenItemCreate}
-                        className="flex items-center space-x-1.5 px-3 py-1.5 border border-milan-border text-milan-muted hover:text-milan-gold hover:border-milan-gold/40 text-[9px] uppercase tracking-wider font-mono cursor-pointer"
+                        className="flex items-center space-x-1.5 px-3 py-1.5 border border-milan-border text-milan-gold hover:border-milan-gold hover:bg-milan-gold/10 text-[9px] uppercase tracking-wider font-mono cursor-pointer transition-colors"
                       >
-                        <Plus size={10} />
+                        <Plus size={12} />
                         <span>Add Tag</span>
                       </button>
                     )}
@@ -647,10 +666,10 @@ export default function AdminServicesPage() {
 
                   {/* Scope Item Editor */}
                   {(isItemCreateMode || editingItem) && (
-                    <form onSubmit={handleSaveItem} className="border border-milan-border bg-milan-charcoal/20 p-4 space-y-4 animate-fade-in">
-                      <div className="flex items-center justify-between">
-                        <span className="text-[10px] font-mono text-milan-gold">
-                          {isItemCreateMode ? "Add Scope capability" : "Edit Scope capability"}
+                    <form onSubmit={handleSaveItem} className="border border-milan-gold/30 bg-milan-charcoal/40 p-4 space-y-4 animate-fade-in">
+                      <div className="flex items-center justify-between border-b border-milan-border/40 pb-2">
+                        <span className="text-[10px] font-mono text-milan-gold uppercase tracking-wider">
+                          {isItemCreateMode ? "+ New Scope Capability" : "Edit Scope Capability"}
                         </span>
                         <button
                           type="button"
@@ -673,8 +692,8 @@ export default function AdminServicesPage() {
                             required
                             value={itemFormData.title}
                             onChange={(e) => setItemFormData({ ...itemFormData, title: e.target.value })}
-                            className="w-full bg-milan-charcoal border border-milan-border p-2 text-xs text-milan-ivory focus:border-milan-gold focus:outline-none"
-                            placeholder="e.g. Concept development"
+                            className="w-full bg-milan-charcoal border border-milan-border p-2.5 text-xs text-milan-ivory focus:border-milan-gold focus:outline-none"
+                            placeholder="e.g. Concept Development"
                           />
                         </div>
                         <div className="space-y-2">
@@ -685,7 +704,7 @@ export default function AdminServicesPage() {
                             required
                             value={itemFormData.display_order}
                             onChange={(e) => setItemFormData({ ...itemFormData, display_order: Number(e.target.value) })}
-                            className="w-full bg-milan-charcoal border border-milan-border p-2 text-xs text-milan-ivory focus:border-milan-gold focus:outline-none font-mono"
+                            className="w-full bg-milan-charcoal border border-milan-border p-2.5 text-xs text-milan-ivory focus:border-milan-gold focus:outline-none font-mono"
                           />
                         </div>
                       </div>
@@ -697,64 +716,78 @@ export default function AdminServicesPage() {
                           rows={2}
                           value={itemFormData.description}
                           onChange={(e) => setItemFormData({ ...itemFormData, description: e.target.value })}
-                          className="w-full bg-milan-charcoal border border-milan-border p-2 text-xs text-milan-ivory focus:border-milan-gold focus:outline-none resize-none"
+                          className="w-full bg-milan-charcoal border border-milan-border p-2.5 text-xs text-milan-ivory focus:border-milan-gold focus:outline-none resize-none"
+                          placeholder="Brief explanation of this capability..."
                         />
                       </div>
 
-                      <button
-                        type="submit"
-                        disabled={saving}
-                        className="px-4 py-2 bg-milan-gold text-milan-primary text-[9px] font-semibold tracking-wider uppercase disabled:opacity-50 cursor-pointer"
-                      >
-                        {saving ? "Saving Tag..." : "Save Tag"}
-                      </button>
+                      <div className="flex gap-2">
+                        <button
+                          type="submit"
+                          disabled={saving}
+                          className="px-5 py-2 bg-milan-gold text-milan-primary text-[9px] font-semibold tracking-wider uppercase disabled:opacity-50 cursor-pointer"
+                        >
+                          {saving ? "Saving Tag..." : "Save Tag"}
+                        </button>
+                      </div>
                     </form>
                   )}
 
                   {/* Scope Items List */}
                   {serviceItems.length === 0 ? (
-                    <p className="text-xs text-milan-muted italic">No capabilities mapped to this service yet.</p>
+                    <div className="p-4 border border-dashed border-milan-border text-center text-xs text-milan-muted italic">
+                      No capability scope tags added to this service yet. Click &quot;Add Tag&quot; above.
+                    </div>
                   ) : (
                     <div className="space-y-2">
                       {serviceItems.map((item, idx) => (
                         <div
                           key={item.id}
-                          className="flex items-center justify-between gap-4 p-3 bg-milan-charcoal/30 border border-milan-border"
+                          className="flex items-center justify-between gap-4 p-3.5 bg-milan-charcoal/30 border border-milan-border/70 hover:border-milan-gold/30 transition-colors"
                         >
-                          <div className="min-w-0">
-                            <span className="text-[10px] text-milan-ivory font-semibold block truncate">
-                              {item.title}
+                          <div className="min-w-0 flex items-center gap-3">
+                            <span className="text-[10px] font-mono text-milan-gold/70">
+                              {String(idx + 1).padStart(2, "0")}
                             </span>
-                            {item.description && (
-                              <span className="text-[10px] text-milan-muted block truncate mt-0.5 font-light">
-                                {item.description}
+                            <div>
+                              <span className="text-xs text-milan-ivory font-medium block truncate">
+                                {item.title}
                               </span>
-                            )}
+                              {item.description && (
+                                <span className="text-[10px] text-milan-muted block truncate mt-0.5 font-light">
+                                  {item.description}
+                                </span>
+                              )}
+                            </div>
                           </div>
-                          <div className="flex items-center space-x-2 shrink-0">
+                          <div className="flex items-center space-x-1.5 shrink-0">
                             <button
                               onClick={() => handleReorderItem(item, "up")}
                               disabled={idx === 0}
-                              className="p-1 hover:text-milan-gold disabled:opacity-30 cursor-pointer"
+                              className="p-1.5 text-milan-muted hover:text-milan-gold disabled:opacity-20 cursor-pointer transition-colors"
+                              title="Move Up"
                             >
                               <ArrowUp size={12} />
                             </button>
                             <button
                               onClick={() => handleReorderItem(item, "down")}
                               disabled={idx === serviceItems.length - 1}
-                              className="p-1 hover:text-milan-gold disabled:opacity-30 cursor-pointer"
+                              className="p-1.5 text-milan-muted hover:text-milan-gold disabled:opacity-20 cursor-pointer transition-colors"
+                              title="Move Down"
                             >
                               <ArrowDown size={12} />
                             </button>
                             <button
                               onClick={() => handleOpenItemEdit(item)}
-                              className="p-1 text-milan-muted hover:text-milan-gold cursor-pointer"
+                              className="p-1.5 text-milan-muted hover:text-milan-gold cursor-pointer transition-colors"
+                              title="Edit Tag"
                             >
                               <Edit2 size={12} />
                             </button>
                             <button
                               onClick={() => handleDeleteItem(item.id, item.title)}
-                              className="p-1 text-red-400 hover:text-red-300 cursor-pointer"
+                              className="p-1.5 text-red-400 hover:text-red-300 cursor-pointer transition-colors"
+                              title="Delete Tag"
                             >
                               <Trash2 size={12} />
                             </button>
