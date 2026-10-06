@@ -32,32 +32,69 @@ const aspekta = localFont({
   display: "swap",
 });
 
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.milaninterio.com";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: {
-    default: "MILAN INTERIO — Luxury, Designed Around You",
+    default: "MILAN INTERIO | Luxury Interior Design in Saudi Arabia",
     template: "%s | MILAN INTERIO",
   },
   description:
-    "Premium interior design and fit-out studio. Elevating Spaces. Defining Luxury. Elegant. Functional. Timeless.",
+    "Milan Interio delivers premium interior design and fit-out solutions for villas, residences, offices, and commercial spaces across Saudi Arabia — Dammam, Riyadh, Jeddah, and beyond.",
   keywords: [
-    "interior design",
-    "luxury interiors",
-    "fit-out",
-    "custom joinery",
-    "furniture design",
+    "interior design Saudi Arabia",
+    "interior designers Saudi Arabia",
+    "luxury interior design",
+    "villa interior design",
+    "residential interior design",
+    "commercial interior design",
+    "office interior design",
+    "interior design Dammam",
+    "interior design Riyadh",
+    "interior design Jeddah",
+    "interior design Khobar",
+    "تصميم داخلي السعودية",
+    "تصميم داخلي الدمام",
+    "تصميم داخلي الرياض",
+    "تصميم داخلي جدة",
     "Milan Interio",
+    "fit-out Saudi Arabia",
   ],
   openGraph: {
     type: "website",
     locale: "en_US",
     siteName: "MILAN INTERIO",
-    title: "MILAN INTERIO — Luxury, Designed Around You",
+    url: SITE_URL,
+    title: "MILAN INTERIO | Luxury Interior Design in Saudi Arabia",
     description:
-      "Premium interior design and fit-out studio. Elevating Spaces. Defining Luxury.",
+      "Premium interior design and fit-out solutions for villas, residences, offices and commercial spaces across Saudi Arabia.",
+    images: [
+      {
+        url: "/Logo/Logo.png",
+        width: 200,
+        height: 113,
+        alt: "MILAN INTERIO — Luxury Interior Design Saudi Arabia",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "MILAN INTERIO | Luxury Interior Design in Saudi Arabia",
+    description:
+      "Premium interior design and fit-out solutions for villas, residences, offices and commercial spaces across Saudi Arabia.",
+    images: ["/Logo/Logo.png"],
+  },
+  alternates: {
+    canonical: SITE_URL,
   },
   robots: {
     index: true,
     follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+    },
   },
 };
 
@@ -66,6 +103,45 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const organizationSchema = {
+    "@context": "https://schema.org",
+    "@type": "InteriorDesigner",
+    "@id": `${SITE_URL}/#organization`,
+    name: "Milan Interio",
+    alternateName: "MILAN INTERIO",
+    url: SITE_URL,
+    logo: `${SITE_URL}/Logo/Logo.png`,
+    image: `${SITE_URL}/Logo/Logo.png`,
+    description:
+      "Milan Interio is a premium interior design and fit-out studio delivering elegant, functional, and timeless spaces across Saudi Arabia.",
+    address: {
+      "@type": "PostalAddress",
+      addressLocality: "Dammam",
+      addressCountry: "SA",
+    },
+    telephone: "+966558934342",
+    email: "info@milaninterio.com",
+    areaServed: [
+      { "@type": "City", name: "Dammam" },
+      { "@type": "City", name: "Khobar" },
+      { "@type": "City", name: "Dhahran" },
+      { "@type": "City", name: "Riyadh" },
+      { "@type": "City", name: "Jeddah" },
+    ],
+    sameAs: [],
+  };
+
+  const websiteSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "@id": `${SITE_URL}/#website`,
+    url: SITE_URL,
+    name: "MILAN INTERIO",
+    publisher: {
+      "@id": `${SITE_URL}/#organization`,
+    },
+  };
+
   return (
     <html
       lang="en"
@@ -74,6 +150,14 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className="min-h-screen flex flex-col antialiased" suppressHydrationWarning>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
+        />
         {children}
       </body>
     </html>

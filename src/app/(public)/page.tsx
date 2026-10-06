@@ -1,8 +1,26 @@
+import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
 import Link from "next/link";
 import { ArrowRight, ChevronRight, Scale, Gem, Hammer, Sparkles } from "lucide-react";
 import HeroCarousel from "@/components/public/HeroCarousel";
 import FeaturedProjectsSlider from "@/components/public/FeaturedProjectsSlider";
+
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.milaninterio.com";
+
+export const metadata: Metadata = {
+  title: "MILAN INTERIO | Luxury Interior Design in Saudi Arabia",
+  description:
+    "Milan Interio is a luxury interior design and fit-out studio in Saudi Arabia. We create elegant, functional, and timeless spaces for villas, residences, offices, and commercial projects across Dammam, Riyadh, Jeddah, and beyond.",
+  alternates: {
+    canonical: SITE_URL,
+  },
+  openGraph: {
+    title: "MILAN INTERIO | Luxury Interior Design in Saudi Arabia",
+    description:
+      "Milan Interio is a luxury interior design and fit-out studio in Saudi Arabia. We create elegant, functional, and timeless spaces for villas, residences, offices, and commercial projects.",
+    url: SITE_URL,
+  },
+};
 
 export default async function HomePage() {
   const supabase = await createClient();

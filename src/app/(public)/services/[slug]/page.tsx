@@ -8,6 +8,8 @@ interface ServiceDetailPageProps {
   params: Promise<{ slug: string }>;
 }
 
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.milaninterio.com";
+
 export async function generateMetadata({
   params,
 }: ServiceDetailPageProps): Promise<Metadata> {
@@ -24,9 +26,21 @@ export async function generateMetadata({
     return { title: "Service Not Found" };
   }
 
+  const description =
+    service.description ||
+    `Discover Milan Interio's ${service.title} service for residential, commercial, and villa projects across Saudi Arabia.`;
+
   return {
-    title: service.title,
-    description: service.description || `Learn about MILAN INTERIO's ${service.title} service.`,
+    title: `${service.title} | Interior Design Services in Saudi Arabia`,
+    description,
+    alternates: {
+      canonical: `${SITE_URL}/services/${slug}`,
+    },
+    openGraph: {
+      title: `${service.title} | Interior Design Services in Saudi Arabia`,
+      description,
+      url: `${SITE_URL}/services/${slug}`,
+    },
   };
 }
 

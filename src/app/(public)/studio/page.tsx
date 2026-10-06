@@ -3,10 +3,21 @@ import { createClient } from "@/lib/supabase/server";
 import Link from "next/link";
 import ConsultationCTA from "@/components/public/ConsultationCTA";
 
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.milaninterio.com";
+
 export const metadata: Metadata = {
-  title: "Studio Archive",
+  title: "Studio Archive | Interior Design Inspiration by MILAN INTERIO",
   description:
-    "Explore the MILAN INTERIO studio archive — a curated photography collection of luxury, architectural interior design elements.",
+    "Explore the Milan Interio studio archive — a curated photography collection of luxury interior design details, materials, textures, and architectural elements from projects across Saudi Arabia.",
+  alternates: {
+    canonical: `${SITE_URL}/studio`,
+  },
+  openGraph: {
+    title: "Studio Archive | Interior Design Inspiration by MILAN INTERIO",
+    description:
+      "Explore the Milan Interio studio archive — a curated photography collection of luxury interior design details, materials, textures, and architectural elements from projects across Saudi Arabia.",
+    url: `${SITE_URL}/studio`,
+  },
 };
 
 export default async function StudioPage() {

@@ -2,10 +2,21 @@ import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
 import ConsultationCTA from "@/components/public/ConsultationCTA";
 
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.milaninterio.com";
+
 export const metadata: Metadata = {
-  title: "Our Process",
+  title: "Our Design Process | How Milan Interio Works in Saudi Arabia",
   description:
-    "Discover the six stages of the MILAN INTERIO standard — Discover, Concept, Develop, Execute, Refine, and Handover.",
+    "Discover the six structured phases of the Milan Interio design process — from initial discovery and concept development through to final handover across Saudi Arabia.",
+  alternates: {
+    canonical: `${SITE_URL}/process`,
+  },
+  openGraph: {
+    title: "Our Design Process | How Milan Interio Works in Saudi Arabia",
+    description:
+      "Discover the six structured phases of the Milan Interio design process — from initial discovery and concept development through to final handover across Saudi Arabia.",
+    url: `${SITE_URL}/process`,
+  },
 };
 
 export default async function ProcessPage() {

@@ -44,7 +44,7 @@ export function FooterClient({
         {/* =========================================================================
            DESKTOP VIEW: Full 4-Column Layout (md: and up)
            ========================================================================= */}
-        <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-4 gap-10 sm:gap-12 items-start">
+        <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-5 gap-10 sm:gap-12 items-start">
           {/* Brand */}
           <div className="space-y-4">
             <Link href="/" className="inline-block group focus:outline-none" aria-label="MILAN INTERIO Home">
@@ -133,6 +133,45 @@ export function FooterClient({
                 </li>
               </ul>
             </div>
+          </div>
+
+          {/* City SEO Links */}
+          <div>
+            <span className="text-eyebrow block mb-4 sm:mb-6">Locations</span>
+            <ul className="space-y-3">
+              <li>
+                <Link
+                  href="/interior-design-dammam"
+                  className="text-xs text-milan-muted hover:text-milan-ivory transition-colors tracking-wider block"
+                >
+                  DAMMAM
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/interior-design-khobar"
+                  className="text-xs text-milan-muted hover:text-milan-ivory transition-colors tracking-wider block"
+                >
+                  AL KHOBAR
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/interior-design-riyadh"
+                  className="text-xs text-milan-muted hover:text-milan-ivory transition-colors tracking-wider block"
+                >
+                  RIYADH
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/interior-design-jeddah"
+                  className="text-xs text-milan-muted hover:text-milan-ivory transition-colors tracking-wider block"
+                >
+                  JEDDAH
+                </Link>
+              </li>
+            </ul>
           </div>
 
           {/* Contact / Studio Details */}

@@ -3,10 +3,21 @@ import { createClient } from "@/lib/supabase/server";
 import { ContactForm } from "@/components/public/ContactForm";
 import { MapPin, Phone, Mail, Globe, Building2, ShieldCheck } from "lucide-react";
 
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.milaninterio.com";
+
 export const metadata: Metadata = {
-  title: "Start a Project",
+  title: "Contact Us | Interior Design Consultation in Saudi Arabia",
   description:
-    "Get in touch with MILAN INTERIO to schedule a premium design consultation for your space.",
+    "Start your interior design project with Milan Interio. Request a premium design consultation for your villa, residence, office, or commercial space in Saudi Arabia.",
+  alternates: {
+    canonical: `${SITE_URL}/contact`,
+  },
+  openGraph: {
+    title: "Contact Us | Interior Design Consultation in Saudi Arabia",
+    description:
+      "Start your interior design project with Milan Interio. Request a premium design consultation for your villa, residence, office, or commercial space in Saudi Arabia.",
+    url: `${SITE_URL}/contact`,
+  },
 };
 
 export default async function ContactPage() {
