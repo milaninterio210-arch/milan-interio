@@ -3,10 +3,21 @@ import { createClient } from "@/lib/supabase/server";
 import { Compass, Target } from "lucide-react";
 import ConsultationCTA from "@/components/public/ConsultationCTA";
 
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.milaninterio.com";
+
 export const metadata: Metadata = {
-  title: "About",
+  title: "About Milan Interio | Premium Interior Design Studio in Saudi Arabia",
   description:
-    "Learn about MILAN INTERIO — our vision, mission, design philosophy, and commitment to creating elegant and functional interiors.",
+    "Discover Milan Interio — a premium interior design and fit-out studio based in Saudi Arabia. Our philosophy: elegant, functional, and timeless spaces crafted with precision.",
+  alternates: {
+    canonical: `${SITE_URL}/about`,
+  },
+  openGraph: {
+    title: "About Milan Interio | Premium Interior Design Studio in Saudi Arabia",
+    description:
+      "Discover Milan Interio — a premium interior design and fit-out studio based in Saudi Arabia. Our philosophy: elegant, functional, and timeless spaces crafted with precision.",
+    url: `${SITE_URL}/about`,
+  },
 };
 
 export default async function AboutPage() {
