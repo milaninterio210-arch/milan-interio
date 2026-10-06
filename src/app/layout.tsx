@@ -99,6 +99,18 @@ export const metadata: Metadata = {
   verification: {
     google: "dGThTtb-6b08MIMlzESj2fLnUOSVZ-w0n9vVeN-_cZM",
   },
+  icons: {
+    icon: [
+      { url: "/Logo/milaninterio-favicon.png" },
+      { url: "/Logo/milaninterio-favicon.png", sizes: "32x32", type: "image/png" },
+      { url: "/Logo/milaninterio-favicon.png", sizes: "192x192", type: "image/png" },
+      { url: "/Logo/milaninterio-favicon.png", sizes: "512x512", type: "image/png" },
+    ],
+    shortcut: "/Logo/milaninterio-favicon.png",
+    apple: [
+      { url: "/Logo/milaninterio-favicon.png", sizes: "180x180", type: "image/png" },
+    ],
+  },
 };
 
 export default function RootLayout({
