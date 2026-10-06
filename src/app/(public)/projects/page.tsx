@@ -3,10 +3,21 @@ import { createClient } from "@/lib/supabase/server";
 import ProjectsGallery from "@/components/public/ProjectsGallery";
 import ConsultationCTA from "@/components/public/ConsultationCTA";
 
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.milaninterio.com";
+
 export const metadata: Metadata = {
-  title: "Projects",
+  title: "Interior Design Portfolio | MILAN INTERIO Projects in Saudi Arabia",
   description:
-    "Explore MILAN INTERIO's portfolio of luxury interior design projects across residential, commercial, hospitality, office, and retail spaces.",
+    "View Milan Interio's portfolio of luxury interior design projects across Saudi Arabia — residential villas, commercial spaces, offices, hospitality, and retail environments.",
+  alternates: {
+    canonical: `${SITE_URL}/projects`,
+  },
+  openGraph: {
+    title: "Interior Design Portfolio | MILAN INTERIO Projects in Saudi Arabia",
+    description:
+      "View Milan Interio's portfolio of luxury interior design projects across Saudi Arabia — residential villas, commercial spaces, offices, hospitality, and retail environments.",
+    url: `${SITE_URL}/projects`,
+  },
 };
 
 export default async function ProjectsPage() {

@@ -4,10 +4,21 @@ import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import ConsultationCTA from "@/components/public/ConsultationCTA";
 
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.milaninterio.com";
+
 export const metadata: Metadata = {
-  title: "Services",
+  title: "Interior Design Services in Saudi Arabia | MILAN INTERIO",
   description:
-    "Explore MILAN INTERIO's premium interior design services — from space planning and luxury residential interiors to turnkey fit-outs and custom joinery.",
+    "Explore Milan Interio's full range of luxury interior design services in Saudi Arabia — residential, villa, commercial, office, fit-out, landscaping, and more.",
+  alternates: {
+    canonical: `${SITE_URL}/services`,
+  },
+  openGraph: {
+    title: "Interior Design Services in Saudi Arabia | MILAN INTERIO",
+    description:
+      "Explore Milan Interio's full range of luxury interior design services in Saudi Arabia — residential, villa, commercial, office, fit-out, landscaping, and more.",
+    url: `${SITE_URL}/services`,
+  },
 };
 
 export default async function ServicesPage() {

@@ -8,6 +8,8 @@ interface ProjectDetailPageProps {
   params: Promise<{ slug: string }>;
 }
 
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.milaninterio.com";
+
 export async function generateMetadata({
   params,
 }: ProjectDetailPageProps): Promise<Metadata> {
@@ -16,7 +18,7 @@ export async function generateMetadata({
 
   const { data: project } = await supabase
     .from("projects")
-    .select("title, description")
+    .select("title, description, category, location, cover_image_url")
     .eq("slug", slug)
     .eq("is_published", true)
     .single();
@@ -25,9 +27,26 @@ export async function generateMetadata({
     return { title: "Project Not Found" };
   }
 
+  const description =
+    project.description ||
+    `${project.category} interior design project${
+      project.location ? ` in ${project.location}` : " in Saudi Arabia"
+    } by Milan Interio.`;
+
   return {
-    title: project.title,
-    description: project.description || `Case study of ${project.title} by MILAN INTERIO.`,
+    title: `${project.title} | Interior Design Project`,
+    description,
+    alternates: {
+      canonical: `${SITE_URL}/projects/${slug}`,
+    },
+    openGraph: {
+      title: `${project.title} | Interior Design Project`,
+      description,
+      url: `${SITE_URL}/projects/${slug}`,
+      images: project.cover_image_url
+        ? [{ url: project.cover_image_url, alt: project.title }]
+        : undefined,
+    },
   };
 }
 
