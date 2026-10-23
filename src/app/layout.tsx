@@ -164,6 +164,9 @@ export default function RootLayout({
       data-scroll-behavior="smooth"
       suppressHydrationWarning
     >
+      <head>
+        <meta name="google-site-verification" content="dGThTtb-6b08MIMlzESj2fLnUOSVZ-w0n9vVeN-_cZM" />
+      </head>
       <body className="min-h-screen flex flex-col antialiased" suppressHydrationWarning>
         <script
           type="application/ld+json"
